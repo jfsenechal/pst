@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OperationalObjective extends Model
 {
@@ -12,15 +13,20 @@ class OperationalObjective extends Model
     ];
 
     /**
-     * @return BelongsToMany<StrategicObjective>
+     * Get the strategic objective that owns the operational objective.
      */
-    public function strategicObjectives(): BelongsToMany
+    public function strategicObjective(): BelongsTo
     {
-        return $this->belongsToMany(StrategicObjective::class);
+        return $this->belongsTo(StrategicObjective::class);
     }
 
-    public function actions(): BelongsToMany
+    /**
+     * Get the actions for the Operational Objective.
+     * @return HasMany<OperationalObjective>
+     */
+    public function actions(): HasMany
     {
-        return $this->BelongsToMany(Action::class);
+        return $this->hasMany(OperationalObjective::class);
     }
+
 }

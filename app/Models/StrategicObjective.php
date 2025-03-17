@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StrategicObjective extends Model
 {
@@ -11,8 +11,12 @@ class StrategicObjective extends Model
         'name',
     ];
 
-    public function odds(): BelongsToMany
+    /**
+     * Get the operational objectives for the strategic objective.
+     * @return HasMany<Comment>
+     */
+    public function odds(): HasMany
     {
-        return $this->BelongsToMany(OperationalObjective::class);
+        return $this->hasMany(Comment::class);
     }
 }

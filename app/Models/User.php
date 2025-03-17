@@ -68,6 +68,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         ];
     }
 
+    /**
+     * The roles that belong to the user.
+     */
     public function roles(): BelongsToMany
     {
         return $this->BelongsToMany(Role::class);
@@ -92,7 +95,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         }
 
         if ($panel->getId() === 'front') {
-            return $this->hasRole(Role::ROLE_WALKER);
+            return $this->hasRole(Role::ROLE_AGENT);
         }
 
         return false;

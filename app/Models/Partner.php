@@ -11,7 +11,6 @@ class Partner extends Model
         'name',
     ];
 
-
     /**
      * @return BelongsToMany<Action>
      */

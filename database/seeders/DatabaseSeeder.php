@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'name' => Role::ROLE_ADMIN,
         ]);
         $runnerRole = Role::factory()->create([
-            'name' => Role::ROLE_WALKER,
+            'name' => Role::ROLE_AGENT,
         ]);
         $user = User::factory()
             ->hasAttached($adminRole)
