@@ -51,7 +51,7 @@ return new class extends Migration {
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->text('description')->nullable(false);
+            $table->text('description')->nullable(true);
             $table->timestamps();
         });
 
