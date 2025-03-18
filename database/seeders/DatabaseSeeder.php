@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constant\RoleEnum;
 use App\Models\Registration;
 use App\Models\Role;
 use App\Models\User;
@@ -20,14 +21,19 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $adminRole = Role::factory()->create([
-            'name' => Role::ROLE_ADMIN,
+            'name' => RoleEnum::ADMIN->value,
         ]);
-        $runnerRole = Role::factory()->create([
-            'name' => Role::ROLE_AGENT,
-        ]);
-        $user = User::factory()
+
+        foreach (RoleEnum::cases() as $role) {
+            if ($role !== RoleEnum::ADMIN) {
+                Role::factory()->create([
+                    'name' => $role->value,
+                ]);
+            }
+        }
+
+        User::factory()
             ->hasAttached($adminRole)
-            ->hasAttached($runnerRole)
             ->create([
                 'first_name' => 'Jf',
                 'last_name' => 'Sénéchal',

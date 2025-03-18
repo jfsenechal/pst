@@ -7,11 +7,11 @@ use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
+enum SynergyEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
 {
-    case CANCELED = 0;
-    case NEW = 1;
-    case PENDING = 2;
+    case CPAS = "CPAS";
+    case VILLE = "VILLE";
+    case COMMON = "COMMON";
 
     public static function toArray(): array
     {
@@ -26,36 +26,36 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
     public function getLabel(): string
     {
         return match ($this) {
-            self::CANCELED => 'Paid',
-            self::NEW => 'Not paid',
-            self::PENDING => 'Pending',
+             self::CPAS => 'Cpas',
+             self::VILLE => 'Ville',
+             self::COMMON => 'Cpas et Ville',
         };
     }
 
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::CANCELED => 'danger',
-            self::NEW => 'success',
-            self::PENDING => 'warning',
+            self::CPAS => 'danger',
+            self::VILLE => 'success',
+            self::COMMON => 'warning',
         };
     }
 
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::CANCELED => 'danger',
-            self::NEW => 'success',
-            self::PENDING => 'warning',
+            self::CPAS => 'danger',
+            self::VILLE => 'success',
+            self::COMMON => 'warning',
         };
     }
 
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::CANCELED => 'heroicon-m-clock',
-            self::NEW => 'heroicon-m-exclamation-circle',
-            self::PENDING => 'heroicon-m-check',
+            self::CPAS => 'heroicon-m-clock',
+            self::VILLE => 'heroicon-m-exclamation-circle',
+            self::COMMON => 'heroicon-m-check',
         };
     }
 }

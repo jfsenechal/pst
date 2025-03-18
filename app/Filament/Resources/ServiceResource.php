@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
 use App\Filament\Resources\ServiceResource\Pages;
-use App\Filament\Resources\ServiceResource\RelationManagers\AgentServiceRelationManager;
+use App\Filament\Resources\ServiceResource\RelationManagers\ServiceUserRelationManager;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -57,7 +57,7 @@ class ServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            AgentServiceRelationManager::class
+            ServiceUserRelationManager::class
         ];
     }
 

@@ -87,6 +87,22 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return false;
     }
 
+    /**
+     * @return BelongsToMany<Service>
+     */
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class);
+    }
+
+    /**
+     * @return BelongsToMany<Action>
+     */
+    public function actions(): BelongsToMany
+    {
+        return $this->belongsToMany(Action::class);
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {

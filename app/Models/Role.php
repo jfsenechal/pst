@@ -11,9 +11,6 @@ class Role extends Model
     use HasFactory;
 
     public $timestamps = false;
-    const ROLE_ADMIN = 'admin';
-    const ROLE_AGENT = 'agent';
-
     protected $fillable = ['name'];
 
     /**

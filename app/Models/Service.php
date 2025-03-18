@@ -11,9 +11,9 @@ class Service extends Model
         'name',
     ];
 
-    public function agents(): BelongsToMany
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Agent::class);
+        return $this->belongsToMany(User::class);
     }
 
     /**

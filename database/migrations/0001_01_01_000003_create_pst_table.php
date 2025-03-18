@@ -1,13 +1,14 @@
 <?php
 
 use App\Constant\ActionStateEnum;
+use App\Constant\SynergyEnum;
 use App\Models\Action;
-use App\Models\Agent;
 use App\Models\Odd;
 use App\Models\OperationalObjective;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\StrategicObjective;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -41,13 +42,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('agents', function (Blueprint $table) {
-            $table->id();
-            $table->string('first_name')->nullable(false);
-            $table->string('last_name')->nullable(false);
-            $table->timestamps();
-        });
-
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
@@ -65,6 +59,7 @@ return new class extends Migration {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('synergy', SynergyEnum::toArray())->default(SynergyEnum::COMMON->value);
             $table->timestamps();
         });
 
@@ -74,10 +69,10 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('action_agent', function (Blueprint $table) {
+        Schema::create('action_user', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
-            $table->foreignIdFor(Agent::class)->constrained('agents')->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
         });
 
         Schema::create('action_partner', function (Blueprint $table) {
@@ -98,9 +93,9 @@ return new class extends Migration {
             $table->foreignIdFor(Odd::class)->constrained('odds')->cascadeOnDelete();
         });
 
-        Schema::create('agent_service', function (Blueprint $table) {
+        Schema::create('service_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Agent::class)->constrained('agents')->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(Service::class)->constrained('services')->cascadeOnDelete();
         });
     }
@@ -110,14 +105,13 @@ return new class extends Migration {
         Schema::dropIfExists('action_odd');
         Schema::dropIfExists('action_service');
         Schema::dropIfExists('action_partner');
-        Schema::dropIfExists('action_agent');
-        Schema::dropIfExists('agent_service');
+        Schema::dropIfExists('action_user');
+        Schema::dropIfExists('service_user');
         Schema::dropIfExists('odds');
         Schema::dropIfExists('services');
         Schema::dropIfExists('politicians');
         Schema::dropIfExists('comments');
         Schema::dropIfExists('partners');
-        Schema::dropIfExists('agents');
         Schema::dropIfExists('actions');
         Schema::dropIfExists('operational_objectives');
         Schema::dropIfExists('strategic_objectives');

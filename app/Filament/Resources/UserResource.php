@@ -3,9 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
+use App\Constant\RoleEnum;
 use App\Filament\Actions\GeneratePasswordAction;
 use App\Filament\Resources\UserResource\Pages;
-use App\Models\Role;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -109,6 +109,6 @@ class UserResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::getUser()->hasRole(Role::ROLE_ADMIN);
+        return Auth::getUser()->hasRole(RoleEnum::ADMIN->value);
     }
 }
