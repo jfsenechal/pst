@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Agent extends Model
 {
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
     ];
 
     /**
