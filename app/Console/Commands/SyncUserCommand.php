@@ -49,6 +49,8 @@ class SyncUserCommand extends Command
             }
         }
 
+        $this->removeOldUsers();
+
         return SfCommand::SUCCESS;
     }
 
@@ -73,6 +75,19 @@ class SyncUserCommand extends Command
                 'email' => $userLdap->getAttributeValue('mail')[0],
             ]
         );
+    }
+
+    private function removeOldUsers(): void
+    {
+        $ldapUsernames = array_map(function (UserLdap $userLdap) {
+            return $userLdap->getAttributeValue('samaccountname')[0];
+        }, UserLdap::all()->toArray());
+        foreach (User::all() as $user) {
+            if (in_array($user->username, $ldapUsernames)) {
+                // $user->delete();
+                $this->info('Removed '.$user->first_name.' '.$user->last_name);
+            }
+        }
     }
 
     private function isActif(UserLdap $userLdap): bool
