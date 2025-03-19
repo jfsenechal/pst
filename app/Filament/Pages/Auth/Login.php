@@ -5,12 +5,24 @@ namespace App\Filament\Pages\Auth;
 use App\Auth\LdapAuthService;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Component;
+use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Pages\Auth\Login as BasePage;
 
 class Login extends BasePage
 {
+    protected function getEmailFormComponent(): Component
+    {
+        return TextInput::make('email')
+            ->label('Nom d\'utilisateur')
+            ->required()
+            ->autocomplete()
+            ->autofocus()
+            ->extraInputAttributes(['tabindex' => 1]);
+    }
+
     public function authenticate(): ?LoginResponse
     {
         try {
@@ -27,13 +39,15 @@ class Login extends BasePage
             $this->throwFailureValidationException();
         } else {
             Filament::auth()->login($user, true);
+            $user = Filament::auth()->user();
         }
 
-        /*  if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
-              $this->throwFailureValidationException();
-          }*/
+        /*
+        if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
+            $this->throwFailureValidationException();
+        }
 
-        $user = Filament::auth()->user();
+        $user = Filament::auth()->user();*/
 
         if (
             ($user instanceof FilamentUser) &&
@@ -55,8 +69,8 @@ class Login extends BasePage
 
         if (app()->environment('local')) {
             $this->form->fill([
-                'email' => 'jf@marche.be',
-                'password' => 'marge',
+                'email' => config('app.pst.user_login_test'),
+                'password' => config('app.pst.user_password_test'),
                 'remember' => true,
             ]);
         }

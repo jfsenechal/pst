@@ -13,6 +13,9 @@ class LdapAuthService
         $user = User::where('username', '=', $username)->first();
         if ($user) {
             $userLdap = UserLdap::where('sAMAccountName', '=', $user->username)->first();
+            if (!$userLdap) {
+                return null;
+            }
             $connection = Container::getConnection('default');
 
             if ($connection->auth()->attempt($userLdap->getDn(), $password)) {

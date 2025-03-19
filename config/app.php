@@ -123,4 +123,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'pst' => [
+        'user_login_test' =>env('PST_USER_LOGIN_TEST', null),
+        'user_password_test' =>env('PST_USER_PASSWORD_TEST', null),
+    ]
 ];
