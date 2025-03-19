@@ -20,6 +20,13 @@ class StrategicObjectiveResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadgeColor22(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
+
     public static function getModelLabel(): string
     {
         return 'Objectif Stratégique (OS)';
