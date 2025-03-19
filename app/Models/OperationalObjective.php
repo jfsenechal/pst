@@ -26,11 +26,11 @@ class OperationalObjective extends Model
 
     /**
      * Get the actions for the Operational Objective.
-     * @return HasMany<OperationalObjective>
+     * @return HasMany<Action>
      */
     public function actions(): HasMany
     {
-        return $this->hasMany(OperationalObjective::class);
+        return $this->hasMany(Action::class);
     }
 
 }

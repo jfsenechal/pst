@@ -2,18 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\OperationalObjectiveResource\Pages;
-use App\Filament\Resources\OperationalObjectiveResource\RelationManagers\ActionsRelationManager;
-use App\Models\OperationalObjective;
+use App\Filament\Resources\ActionResource\Pages;
+use App\Models\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class OperationalObjectiveResource extends Resource
+class ActionResource extends Resource
 {
-    protected static ?string $model = OperationalObjective::class;
+    protected static ?string $model = Action::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -22,21 +21,24 @@ class OperationalObjectiveResource extends Resource
         return false;
     }
 
-    public static function getModelLabel(): string
-    {
-        return 'Objectif Opérationnel (OO)';
-    }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('strategic_objective_id')
-                    ->relationship('strategicObjective', 'name')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\DatePicker::make('due_date'),
+                Forms\Components\Textarea::make('budget_estimate')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('financing_mode')
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('progress_indicator')
+                    ->required(),
+                Forms\Components\Textarea::make('work_plan')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('evaluation_indicator')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -44,11 +46,12 @@ class OperationalObjectiveResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('strategicObjective.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('due_date')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('progress_indicator'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -75,17 +78,17 @@ class OperationalObjectiveResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ActionsRelationManager::class,
+            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOperationalObjectives::route('/'),
-            'create' => Pages\CreateOperationalObjective::route('/create'),
-            'view' => Pages\ViewOperationalObjective::route('/{record}'),
-            'edit' => Pages\EditOperationalObjective::route('/{record}/edit'),
+            'index' => Pages\ListActions::route('/'),
+            'create' => Pages\CreateAction::route('/create'),
+            'view' => Pages\ViewAction::route('/{record}'),
+            'edit' => Pages\EditAction::route('/{record}/edit'),
         ];
     }
 }

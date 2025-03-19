@@ -33,6 +33,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();

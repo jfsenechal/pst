@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\StrategicObjectiveResource\RelationManagers;
+namespace App\Filament\Resources\OperationalObjectiveResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -9,9 +9,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class OosRelationManager extends RelationManager
+class ActionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'oos';
+    protected static string $relationship = 'actions';
 
     /**
      * @param Model $ownerRecord
@@ -20,7 +20,7 @@ class OosRelationManager extends RelationManager
      */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return $ownerRecord->oos()->count().' Objectifs Opérationnels (OO)';
+        return $ownerRecord->actions()->count().' Actions';
     }
 
     public function isReadOnly(): bool
@@ -33,14 +33,12 @@ class OosRelationManager extends RelationManager
         return $form
             ->columns(1)
             ->schema([
-                Forms\Components\Select::make('strategic_objective_id')
-                    ->relationship('strategicObjective', 'name')
-                    ->label('Objectif Opérationnel')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->label('Intitulé')
                     ->maxLength(255),
+                Forms\Components\RichEditor::make('description')
+                    ->label('Description'),
             ]);
     }
 
@@ -51,16 +49,14 @@ class OosRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('actions_count')
-                    ->label('Actions')
-                    ->counts('actions'),
+                Tables\Columns\TextColumn::make('Agents'),
+                Tables\Columns\TextColumn::make('Services'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->label('Ajouter une Oo'),
+                Tables\Actions\CreateAction::make()->label('Ajouter une Oo'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
