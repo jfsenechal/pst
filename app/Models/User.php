@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Constant\RoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasName;
@@ -26,6 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'name',
         'first_name',
         'last_name',
+        'username',
         'email',
         'password',
         'plainPassword',
@@ -87,6 +89,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return false;
     }
 
+    public function addRole(Role $role): void
+    {
+        $this->roles()->attach($role);
+    }
+
     /**
      * @return BelongsToMany<Service>
      */
@@ -107,11 +114,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     {
         if ($panel->getId() === 'admin') {
             //&& $this->hasVerifiedEmail()
-            return $this->hasRole(Role::ROLE_ADMIN);
+            return $this->hasRole(RoleEnum::ADMIN->value);
         }
 
         if ($panel->getId() === 'front') {
-            return $this->hasRole(Role::ROLE_AGENT);
+            return $this->hasRole(RoleEnum::AGENT->value);
         }
 
         return false;

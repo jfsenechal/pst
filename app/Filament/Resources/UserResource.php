@@ -63,13 +63,21 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultPaginationPageOption(50)
+            ->defaultSort('last_name')
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')
+                Tables\Columns\TextColumn::make('last_name')
+                    ->label('Nom')
+                    ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('second_name')
+                Tables\Columns\TextColumn::make('first_name')
+                    ->label('Prénom')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('roles.name'),
+                Tables\Columns\TextColumn::make('username')
+                    ->label('Nom d\'utilisateur')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

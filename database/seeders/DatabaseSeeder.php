@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Jf',
                 'last_name' => 'Sénéchal',
                 'email' => 'jf@marche.be',
+                'username'=>'jf@marche.be',
                 'password' => static::$password ??= Hash::make('marge'),
             ]);
     }
