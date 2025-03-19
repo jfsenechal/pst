@@ -2,21 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 
 class StrategicObjective extends Model
 {
+    use HasFactory, Notifiable;
+
     protected $fillable = [
         'name',
     ];
 
     /**
      * Get the operational objectives for the strategic objective.
-     * @return HasMany<Comment>
+     * @return HasMany<OperationalObjective>
      */
-    public function odds(): HasMany
+    public function oos(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(OperationalObjective::class);
     }
 }

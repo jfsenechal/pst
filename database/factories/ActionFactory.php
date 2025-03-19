@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Action;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Role>
- */
-class AgentFactory extends Factory
+class ActionFactory extends Factory
 {
+    protected $model = Action::class;
+
     /**
      * Define the model's default state.
      *
@@ -17,8 +17,7 @@ class AgentFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name' => fake()->name(),
-            'last_name' => fake()->name(),
+            'name' => fake()->name(),
         ];
     }
 }
