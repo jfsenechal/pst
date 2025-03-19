@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Ldap\User as UserLdap;
 use App\Models\User;
 use Auth;
 use Exception;
 use Filament\Facades\Filament;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Support\Facades\Request;
-use LdapRecord\Container;
 
 class ApiLoginController
 {
@@ -24,14 +23,12 @@ class ApiLoginController
         }
         try {
             //$user = User::query()->where('id', '=', $request->bearerToken())->firstOrFail();
-            $user = User::query()->find(1);
-            if (!$user) {
+            $user = User::query()->where('username', config('app.pst.user_login_test'))->first();
+            if (!$user instanceof FilamentUser) {
                 return response()->json(['status' => 'error', 'message' => 'Invalid token'], 401);
             }
 
             Filament::auth()->login($user, true);
-
-            //Auth::login($user);
 
             return response()->json(['status' => 'success', 'message' => 'Authenticated'.$user->name]);
         } catch (Exception $e) {
