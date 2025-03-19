@@ -38,6 +38,9 @@ class SyncUserCommand extends Command
             if (!$userLdap->getAttributeValue('mail')) {
                 continue;
             }
+            if (!$this->isActif($userLdap)) {
+                continue;
+            }
             $username = $userLdap->getAttributeValue('samaccountname')[0];
             if (!$user = User::where('username', $username)->first()) {
                 $this->addUser($username, $userLdap);
@@ -70,6 +73,13 @@ class SyncUserCommand extends Command
                 'email' => $userLdap->getAttributeValue('mail')[0],
             ]
         );
+    }
+
+    private function isActif(UserLdap $userLdap): bool
+    {
+        $useraccountcontrol = $userLdap->getAttributeValue('userAccountControl')[0];
+
+        return 66050 != $useraccountcontrol;
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ApiLoginController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
 
-Route::post('/jfs', LoginController::class);
+Route::post('/jfs', ApiLoginController::class);
