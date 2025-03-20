@@ -4,10 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StrategicObjectiveResource\Pages;
 use App\Filament\Resources\StrategicObjectiveResource\RelationManagers\OosRelationManager;
+use App\Form\StrategicObjectiveForm;
 use App\Models\StrategicObjective;
-use Filament\Infolists;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Infolist;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,6 +27,11 @@ class StrategicObjectiveResource extends Resource
     public static function getModelLabel(): string
     {
         return 'Objectif Stratégique (OS)';
+    }
+
+    public static function form(Form $form): Form
+    {
+        return StrategicObjectiveForm::createForm($form);
     }
 
     public static function table(Table $table): Table
@@ -57,24 +61,6 @@ class StrategicObjectiveResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
-    }
-
-    public static function infolist222(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                RepeatableEntry::make('oos')
-                    ->label('Objectifs Opérationnels (OO)')
-                    ->schema([
-                        Infolists\Components\Grid::make()
-                            ->inlineLabel(true)
-                            ->columns(2)
-                            ->schema([
-                                Infolists\Components\TextEntry::make('name')
-                                    ->label('Intitule'),
-                            ]),
-                    ]),
             ]);
     }
 

@@ -3,8 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
+use App\Constant\SynergyEnum;
 use App\Filament\Resources\ServiceResource\Pages;
 use App\Filament\Resources\ServiceResource\RelationManagers\ServiceUserRelationManager;
+use App\Form\ServiceForm;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -25,14 +27,7 @@ class ServiceResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('initials')
-                    ->maxLength(30),
-            ]);
+        return ServiceForm::createForm($form);
     }
 
     public static function table(Table $table): Table
@@ -42,6 +37,9 @@ class ServiceResource extends Resource
             ->defaultSort('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('initials')
+                    ->label('Initiales')
                     ->searchable(),
             ])
             ->filters([
@@ -61,7 +59,7 @@ class ServiceResource extends Resource
     public static function getRelations(): array
     {
         return [
-            ServiceUserRelationManager::class
+            //      ServiceUserRelationManager::class,
         ];
     }
 

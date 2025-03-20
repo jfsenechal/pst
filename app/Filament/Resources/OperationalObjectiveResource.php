@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OperationalObjectiveResource\Pages;
 use App\Filament\Resources\OperationalObjectiveResource\RelationManagers\ActionsRelationManager;
+use App\Form\OperationalObjectiveForm;
 use App\Models\OperationalObjective;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,15 +29,7 @@ class OperationalObjectiveResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('strategic_objective_id')
-                    ->relationship('strategicObjective', 'name')
-                    ->required(),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return OperationalObjectiveForm::createForm($form);
     }
 
     public static function table(Table $table): Table

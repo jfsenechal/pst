@@ -24,6 +24,7 @@ class Action extends Model
         'work_plan',
         'budget_estimate',
         'financing_mode',
+        'operational_objective_id'
     ];
 
     /**

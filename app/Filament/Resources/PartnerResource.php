@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
 use App\Filament\Resources\PartnerResource\Pages;
+use App\Form\PartnerForm;
 use App\Models\Partner;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,15 +36,7 @@ class PartnerResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('initials')
-                    ->maxLength(30),
-                Forms\Components\Textarea::make('description'),
-            ]);
+        return PartnerForm::createForm($form);
     }
 
     public static function table(Table $table): Table

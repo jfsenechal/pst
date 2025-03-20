@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActionResource\Pages;
+use App\Form\ActionForm;
 use App\Models\Action;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -18,15 +18,12 @@ class ActionResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return true;
     }
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\DatePicker::make('due_date'),
-            ]);
+        return ActionForm::createForm($form);
     }
 
     public static function table(Table $table): Table
@@ -78,4 +75,6 @@ class ActionResource extends Resource
             'edit' => Pages\EditAction::route('/{record}/edit'),
         ];
     }
+
+
 }

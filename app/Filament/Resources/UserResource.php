@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
 use App\Constant\RoleEnum;
-use App\Filament\Actions\GeneratePasswordAction;
 use App\Filament\Resources\UserResource\Pages;
+use App\Form\UserForm;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -14,7 +14,6 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
@@ -25,29 +24,16 @@ class UserResource extends Resource
         return NavigationGroupEnum::SETTINGS->getLabel();
     }
 
+    public static function getModelLabel(): string
+    {
+        return 'Agents';
+    }
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('first_name')
-                    ->required()
-                    ->maxLength(120),
-                Forms\Components\TextInput::make('second_name')
-                    ->required()
-                    ->maxLength(120),
-                Forms\Components\TextInput::make('email')
-                    ->required()
-                    ->email()
-                    ->unique(ignoreRecord: true)
-                    ->label('Email address')
-                    ->maxLength(120),
-                Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload(),
-            ]);
+        return UserForm::createForm($form);
     }
 
     public static function table(Table $table): Table

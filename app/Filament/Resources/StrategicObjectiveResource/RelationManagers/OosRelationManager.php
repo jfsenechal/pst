@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\StrategicObjectiveResource\RelationManagers;
 
 use App\Constant\ActionStateEnum;
+use App\Filament\Resources\OperationalObjectiveResource;
+use App\Form\ActionForm;
 use App\Models\Action as ActionPst;
 use App\Models\OperationalObjective;
 use Filament\Forms;
@@ -43,6 +45,7 @@ class OosRelationManager extends RelationManager
                 Forms\Components\Select::make('strategic_objective_id')
                     ->relationship('strategicObjective', 'name')
                     ->label('Objectif Opérationnel')
+                    ->helperText('Vous pouvez le déplacer')
                     ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -70,25 +73,12 @@ class OosRelationManager extends RelationManager
                     ->label('Ajouter une Oo'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\Action::make('add_action')
-                    ->label('Ajouter une action')
-                    ->icon('heroicon-s-plus')
-                    ->form(function (Form $form): Form {
-                        return self::createForm($form);
-                    })
-                    ->action(
-                        (function (array $data, OperationalObjective $record): void {
-
-                         dd($data);
-                            $this->saveAction($data, $record);
-
-                            Notification::make()
-                                ->success()
-                                ->title(__('messages.form.registration.notification.finish.title'))
-                                ->body(__('messages.form.registration.notification.finish.body'))
-                                ->send();
-                        })
+                Tables\Actions\ViewAction::make()
+                    ->url(
+                        fn(OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
+                            'view',
+                            ['record' => $record]
+                        )
                     ),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
@@ -115,113 +105,29 @@ class OosRelationManager extends RelationManager
         ]);
     }
 
-    public static function createForm(Form $form): Form
+    private function btnAddActionBug(): Action
     {
-        return $form
-            ->model(ActionPst::class)
-            ->live()
-            ->columns(1)
-            ->schema([
-                Wizard::make([
-                    Wizard\Step::make('necessary_data')
-                        ->label('Projet')
-                        ->schema(
-                            self::fieldsProject(),
-                        ),
-                    Wizard\Step::make('team')
-                        ->label('Equipes')
-                        ->schema(
-                            self::fieldsTeam(),
-                        ),
-                    Wizard\Step::make('Info')
-                        ->label('info')
-                        ->schema(
-                            self::fieldsDescription(),
-                        ),
-                    Wizard\Step::make('financing')
-                        ->label('Financement')
-                        ->schema(
-                            self::fieldsFinancing(),
-                        ),
-                ])
-                    ->nextAction(
-                        fn(Action $action) => $action
-                            ->label('Suivant')
-                            ->color('success'),
-                    )->previousAction(
-                        fn(Action $action) => $action
-                            ->label('Précédent')
-                            ->color('secondary'),
-                    )
-                    ->submitAction(view('components.btn_add', ['label' => 'Ajouter l\'action'])),
-            ]);
+        return Tables\Actions\Action::make('add_action')
+            ->label('Ajouter une action')
+            ->icon('heroicon-s-plus')
+            ->form(function (Form $form): Form {
+                return ActionForm::createForm($form, $this->getOwnerRecord());
+            })
+            ->action(
+                (function (array $data, OperationalObjective $record): void {
+
+                    dd($data);
+                    //j'ai pas acces a services,users,...
+                    $this->saveAction($data, $record);
+
+                    Notification::make()
+                        ->success()
+                        ->title(__('messages.form.registration.notification.finish.title'))
+                        ->body(__('messages.form.registration.notification.finish.body'))
+                        ->send();
+                })
+            );
     }
 
-    public static function fieldsProject(): array
-    {
-        return [
-            Forms\Components\TextInput::make('name')
-                ->label('Intitulé')
-                ->required()
-                ->maxLength(150),
-            Forms\Components\Grid::make(2)
-                ->schema([
-                    Forms\Components\Select::make('progress_indicator')
-                        ->label('Indicateur d\'avancement')
-                        ->default(ActionStateEnum::NEW->value)
-                        ->options(ActionStateEnum::class)
-                        ->suffixIcon('tabler-ladder'),
-                    Forms\Components\DatePicker::make('due_date')
-                        ->label('Date d\'échéance')
-                        ->suffixIcon('tabler-calendar-stats'),
-                ]),
-            Forms\Components\RichEditor::make('description'),
-        ];
-    }
-
-    private static function fieldsTeam(): array
-    {
-        return [
-            Forms\Components\Select::make('users')
-                ->label('Agents')
-                ->relationship(
-                    name: 'users',
-                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')->orderBy('first_name'),
-                )
-                ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
-                ->searchable(['first_name', 'last_name'])
-                ->multiple(),
-            Forms\Components\Select::make('action_service')
-                ->label('Services')
-                ->relationship(name: 'services', titleAttribute: 'name')
-                ->preload()
-                ->multiple(),
-            Forms\Components\Select::make('partners')
-                ->label('Partenaires')
-                ->relationship(name: 'partners', titleAttribute: 'name')
-                ->multiple(),
-        ];
-    }
-
-    private static function fieldsFinancing(): array
-    {
-        return [
-            Forms\Components\Textarea::make('budget_estimate')
-                ->label('Budget estimé'),
-
-            Forms\Components\Textarea::make('financing_mode')
-                ->label('Mode de financement'),
-        ];
-    }
-
-    private static function fieldsDescription(): array
-    {
-        return [
-            Forms\Components\Textarea::make('evaluation_indicator')
-                ->label('Indicateur d\'évaluation'),
-            Forms\Components\Textarea::make('work_plan')
-                ->label('Plan de travail'),
-        ];
-    }
 
 }
