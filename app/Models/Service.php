@@ -13,6 +13,7 @@ class Service extends Model
     use HasFactory, Notifiable;
     protected $fillable = [
         'name',
+        'initials'
     ];
 
     public function users(): BelongsToMany

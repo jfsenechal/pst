@@ -14,6 +14,16 @@ class Action extends Model
 
     protected $fillable = [
         'name',
+        'users',
+        'partners',
+        'services',
+        'progress_indicator',
+        'due_date',
+        'description',
+        'evaluation_indicator',
+        'work_plan',
+        'budget_estimate',
+        'financing_mode',
     ];
 
     /**

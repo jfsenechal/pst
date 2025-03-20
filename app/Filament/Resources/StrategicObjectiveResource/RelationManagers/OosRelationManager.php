@@ -150,7 +150,7 @@ class OosRelationManager extends RelationManager
                     )->previousAction(
                         fn(Action $action) => $action
                             ->label('Précédent')
-                            ->color('warning'),
+                            ->color('secondary'),
                     )
                     ->submitAction(view('components.btn_add', ['label' => 'Ajouter l\'action'])),
             ]);
