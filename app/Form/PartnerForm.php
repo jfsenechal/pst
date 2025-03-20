@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PartnerForm
 {
-    public function createForm(Form $form, Model|Partner $record = null): Form
+    public static function createForm(Form $form, Model|Partner $record = null): Form
     {
         return $form
             ->schema([

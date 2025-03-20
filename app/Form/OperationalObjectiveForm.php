@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OperationalObjectiveForm
 {
-    public function createForm(Form $form, Model|OperationalObjective $record = null): Form
+    public static function createForm(Form $form, Model|OperationalObjective $record = null): Form
     {
 
         return $form

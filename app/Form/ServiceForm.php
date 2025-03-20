@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServiceForm
 {
-    public function createForm(Form $form, Model|Service $record = null): Form
+    public static function createForm(Form $form, Model|Service $record = null): Form
     {
         return $form
             ->schema([

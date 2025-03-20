@@ -42,15 +42,15 @@ class OosRelationManager extends RelationManager
         return $form
             ->columns(1)
             ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->label('Intitulé')
+                    ->maxLength(255),
                 Forms\Components\Select::make('strategic_objective_id')
                     ->relationship('strategicObjective', 'name')
                     ->label('Objectif Opérationnel')
                     ->helperText('Vous pouvez le déplacer')
                     ->required(),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Intitulé')
-                    ->maxLength(255),
             ]);
     }
 
@@ -70,7 +70,7 @@ class OosRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Ajouter une Oo'),
+                    ->label('Ajouter un Oo'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
