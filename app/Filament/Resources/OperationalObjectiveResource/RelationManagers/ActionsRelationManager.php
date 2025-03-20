@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\OperationalObjectiveResource\RelationManagers;
 
+use App\Filament\Resources\ActionResource;
+use App\Models\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -23,7 +25,7 @@ class ActionsRelationManager extends RelationManager
         return false;
     }
 
-    public function form(Form $form): Form
+    public function form22(Form $form): Form
     {
         return $form
             ->columns(1)
@@ -44,8 +46,6 @@ class ActionsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('Agents'),
-                Tables\Columns\TextColumn::make('Services'),
             ])
             ->filters([
                 //
@@ -54,7 +54,13 @@ class ActionsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()->label('Ajouter une Oo'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->url(
+                        fn(Action $record): string => ActionResource::getUrl(
+                            'view',
+                            ['record' => $record]
+                        )
+                    ),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

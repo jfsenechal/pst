@@ -36,9 +36,6 @@ class OperationalObjectiveResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('strategicObjective.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

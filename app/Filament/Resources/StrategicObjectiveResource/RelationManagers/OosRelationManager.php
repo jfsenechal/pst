@@ -22,11 +22,6 @@ class OosRelationManager extends RelationManager
 {
     protected static string $relationship = 'oos';
 
-    /**
-     * @param Model $ownerRecord
-     * @param string $pageClass
-     * @return string|null
-     */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return $ownerRecord->oos()->count().' Objectifs Opérationnels (OO)';
@@ -34,7 +29,7 @@ class OosRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return false;
+        return true;
     }
 
     public function form(Form $form): Form
