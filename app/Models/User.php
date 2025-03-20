@@ -70,6 +70,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         ];
     }
 
+    public function name(): string
+    {
+        return $this->last_name .' '.$this->first_name;
+    }
+
     /**
      * The roles that belong to the user.
      */

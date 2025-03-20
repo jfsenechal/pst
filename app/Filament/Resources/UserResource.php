@@ -43,16 +43,6 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->label('Email address')
                     ->maxLength(120),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required(fn($livewire) => $livewire instanceof Pages\CreateUser)
-                    ->revealable(filament()->arePasswordsRevealable())
-                    ->rule(Password::default())
-                    ->autocomplete('new-password')
-                    ->suffixActions([
-                        GeneratePasswordAction::make(),
-                    ])
-                    ->maxLength(255),
                 Forms\Components\Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()
