@@ -15,6 +15,8 @@ class PartnerResource extends Resource
 {
     protected static ?string $model = Partner::class;
 
+    protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationIcon = 'tabler-user-share';
 
     public static function getNavigationGroup(): ?string

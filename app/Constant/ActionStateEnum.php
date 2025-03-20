@@ -26,9 +26,9 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
     public function getLabel(): string
     {
         return match ($this) {
-            self::CANCELED => 'Paid',
-            self::NEW => 'Not paid',
-            self::PENDING => 'Pending',
+            self::CANCELED => 'Annulé',
+            self::NEW => 'Nouveau',
+            self::PENDING => 'En cours',
         };
     }
 

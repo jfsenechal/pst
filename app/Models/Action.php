@@ -25,7 +25,7 @@ class Action extends Model
     }
 
     /**
-     * @return BelongsToMany<Agent>
+     * @return BelongsToMany<User>
      */
     public function users(): BelongsToMany
     {

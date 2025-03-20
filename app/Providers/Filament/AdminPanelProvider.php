@@ -67,3 +67,8 @@ FilamentView::registerRenderHook(
     PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
     fn(): View => view('filament.login_form'),
 );
+
+FilamentView::registerRenderHook(
+    PanelsRenderHook::SIDEBAR_NAV_START,
+    fn(): View => view('filament.search_form'),
+);
