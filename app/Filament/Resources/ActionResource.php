@@ -25,20 +25,7 @@ class ActionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\DatePicker::make('due_date'),
-                Forms\Components\Textarea::make('budget_estimate')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('financing_mode')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('progress_indicator')
-                    ->required(),
-                Forms\Components\Textarea::make('work_plan')
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('evaluation_indicator')
-                    ->columnSpanFull(),
             ]);
     }
 

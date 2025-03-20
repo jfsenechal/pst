@@ -73,13 +73,14 @@ class OosRelationManager extends RelationManager
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\Action::make('add_action')
                     ->label('Ajouter une action')
-                    ->icon('heroicon-s-plus')->form(function (Form $form): Form {
+                    ->icon('heroicon-s-plus')
+                    ->form(function (Form $form): Form {
                         return self::createForm($form);
                     })
                     ->action(
                         (function (array $data, OperationalObjective $record): void {
 
-                            dd($data);
+                         dd($data);
                             $this->saveAction($data, $record);
 
                             Notification::make()
@@ -190,9 +191,10 @@ class OosRelationManager extends RelationManager
                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
                 ->searchable(['first_name', 'last_name'])
                 ->multiple(),
-            Forms\Components\Select::make('services')
+            Forms\Components\Select::make('action_service')
                 ->label('Services')
                 ->relationship(name: 'services', titleAttribute: 'name')
+                ->preload()
                 ->multiple(),
             Forms\Components\Select::make('partners')
                 ->label('Partenaires')

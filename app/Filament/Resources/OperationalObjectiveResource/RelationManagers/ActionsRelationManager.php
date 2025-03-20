@@ -13,11 +13,6 @@ class ActionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'actions';
 
-    /**
-     * @param Model $ownerRecord
-     * @param string $pageClass
-     * @return string|null
-     */
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return $ownerRecord->actions()->count().' Actions';

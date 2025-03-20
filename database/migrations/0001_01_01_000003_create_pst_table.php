@@ -76,30 +76,35 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
+            $table->unique(['action_id', 'user_id']);
         });
 
         Schema::create('action_partner', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Partner::class)->constrained('partners')->cascadeOnDelete();
+            $table->unique(['action_id', 'partner_id']);
         });
 
         Schema::create('action_service', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Service::class)->constrained('services')->cascadeOnDelete();
+            $table->unique(['action_id', 'service_id']);
         });
 
         Schema::create('action_odd', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Odd::class)->constrained('odds')->cascadeOnDelete();
+            $table->unique(['action_id', 'odd_id']);
         });
 
         Schema::create('service_users', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->foreignIdFor(Service::class)->constrained('services')->cascadeOnDelete();
+            $table->unique(['user_id', 'service_id']);
         });
     }
 
