@@ -3,13 +3,17 @@
 namespace App\Filament\Resources\StrategicObjectiveResource\RelationManagers;
 
 use App\Constant\ActionStateEnum;
+use App\Models\Action as ActionPst;
+use App\Models\OperationalObjective;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class OosRelationManager extends RelationManager
@@ -71,7 +75,20 @@ class OosRelationManager extends RelationManager
                     ->label('Ajouter une action')
                     ->icon('heroicon-s-plus')->form(function (Form $form): Form {
                         return self::createForm($form);
-                    }),
+                    })
+                    ->action(
+                        (function (array $data, OperationalObjective $record): void {
+
+                            dd($data);
+                            $this->saveAction($data, $record);
+
+                            Notification::make()
+                                ->success()
+                                ->title(__('messages.form.registration.notification.finish.title'))
+                                ->body(__('messages.form.registration.notification.finish.body'))
+                                ->send();
+                        })
+                    ),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -82,9 +99,25 @@ class OosRelationManager extends RelationManager
             ]);
     }
 
+    private function saveAction(array $data, OperationalObjective $record): void
+    {
+        ActionPst::create([
+            "operational_objective_id" => $data['operational_objective_id'],
+            "name" => $data['name'],
+            "progress_indicator" => $record->id,
+            "due_date" => $data['due_date'],
+            "description" => $data['description'],
+            "evaluation_indicator" => $data['evaluation_indicator'],
+            "work_plan" => $data['work_plan'],
+            "budget_estimate" => $data['budget_estimate'],
+            "financing_mode" => $data['financing_mode'],
+        ]);
+    }
+
     public static function createForm(Form $form): Form
     {
         return $form
+            ->model(ActionPst::class)
             ->live()
             ->columns(1)
             ->schema([
@@ -150,13 +183,12 @@ class OosRelationManager extends RelationManager
         return [
             Forms\Components\Select::make('users')
                 ->label('Agents')
-                ->searchable()
-                ->relationship(name: 'users', titleAttribute: 'name')
-                ->multiple(),
-            Forms\Components\Select::make('politicians')
-                ->label('Mandataires')
-                ->helperText('Superviseurs')
-                ->relationship(name: 'users', titleAttribute: 'name')
+                ->relationship(
+                    name: 'users',
+                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')->orderBy('first_name'),
+                )
+                ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
+                ->searchable(['first_name', 'last_name'])
                 ->multiple(),
             Forms\Components\Select::make('services')
                 ->label('Services')
