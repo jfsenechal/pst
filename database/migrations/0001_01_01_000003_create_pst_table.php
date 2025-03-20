@@ -46,7 +46,8 @@ return new class extends Migration {
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->text('description')->nullable(true);
+            $table->string('initials')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
 
@@ -60,6 +61,7 @@ return new class extends Migration {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('initials')->nullable();
             $table->enum('synergy', SynergyEnum::toArray())->default(SynergyEnum::COMMON->value);
             $table->timestamps();
         });

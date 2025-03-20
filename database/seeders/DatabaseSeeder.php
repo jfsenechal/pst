@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Constant\RoleEnum;
 use App\Models\OperationalObjective;
+use App\Models\Partner;
 use App\Models\Role;
+use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -43,6 +45,16 @@ class DatabaseSeeder extends Seeder
                 'password' => static::$password ??= Hash::make('marge'),
             ]);
 
+        $services = ['Tiers-lieu e-Square', 'Population', 'Service Juridique', 'Educateurs de rue'];
+        foreach ($services as $service) {
+            Service::factory()->create(['name' => $service]);
+        }
+
+        $partners = ['Infor jeunes', 'Région Wallonne', 'Wallonia ASBL'];
+        foreach ($partners as $partner) {
+            Partner::factory()->create(['name' => $partner]);
+        }
+
         $so1 = StrategicObjective::factory()->create([
             'name' =>
                 'Être une Commune Solidaire et Inclusive',
@@ -64,8 +76,8 @@ class DatabaseSeeder extends Seeder
         ];
         foreach ($oos as $oo) {
             OperationalObjective::factory()
-                ->has($so1)
                 ->create([
+                    'strategic_objective_id' => $so1->id,
                     'name' => $oo,
                 ]);
         }

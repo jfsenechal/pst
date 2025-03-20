@@ -41,6 +41,8 @@ class PartnerResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('initials')
+                    ->maxLength(30),
                 Forms\Components\Textarea::make('description'),
             ]);
     }
