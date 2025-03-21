@@ -32,6 +32,15 @@ class OosRelationManager extends RelationManager
         return true;
     }
 
+    public static function getBreadcrumb(Model $record = null): string
+    {
+        if ($record && $record->strategicObjective) {
+            return $record->strategicObjective->name . ' > ' . $record->name;
+        }
+
+        return 'Operational Objectives22';
+    }
+
     public function form(Form $form): Form
     {
         return $form

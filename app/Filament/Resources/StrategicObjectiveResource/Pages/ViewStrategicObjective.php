@@ -16,6 +16,15 @@ class ViewStrategicObjective extends ViewRecord
         return $this->record->name ?? 'Empty name';
     }
 
+    public function getBreadcrumbs(): array
+    {
+        return [
+            StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
+            'OS'
+            //$this->getBreadcrumb(),
+        ];
+    }
+
     /**
      * no form in view
      */

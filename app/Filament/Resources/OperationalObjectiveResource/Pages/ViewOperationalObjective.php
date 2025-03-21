@@ -25,7 +25,8 @@ class ViewOperationalObjective extends ViewRecord
         return [
             StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
             StrategicObjectiveResource::getUrl('view', ['record' => $parent]) => $parent->name,
-            $this->getBreadcrumb(),
+            'OO',
+            // $this->getBreadcrumb(),
         ];
     }
 

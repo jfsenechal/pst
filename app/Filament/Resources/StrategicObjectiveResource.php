@@ -10,8 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Resources\Pages\Page;
-use App\Filament\Resources\OperationalObjectiveResource\Pages as PagesOo;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class StrategicObjectiveResource extends Resource
 {
@@ -81,5 +81,10 @@ class StrategicObjectiveResource extends Resource
             'view' => Pages\ViewStrategicObjective::route('/{record}'),
             'edit' => Pages\EditStrategicObjective::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
     }
 }

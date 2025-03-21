@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\ActionResource\Pages;
 
 use App\Filament\Resources\ActionResource;
+use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\StrategicObjectiveResource;
+use App\Models\OperationalObjective;
 use Filament\Actions;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
@@ -17,10 +20,29 @@ class ViewAction extends ViewRecord
 {
     protected static string $resource = ActionResource::class;
 
+    public function getTitle(): string
+    {
+        return $this->record->name ?? 'Empty name';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make(),
+        ];
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        $oo = $this->record->operationalObjective()->first();
+        $os = $oo->strategicObjective()->first();
+
+        return [
+            StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
+            StrategicObjectiveResource::getUrl('view', ['record' => $os]) => $os->name,
+            OperationalObjectiveResource::getUrl('view', ['record' => $oo]) => $oo->name,
+            'Action'
+            //$this->getBreadcrumb(),
         ];
     }
 
