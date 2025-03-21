@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OperationalObjectiveResource\Pages;
 
 use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\StrategicObjectiveResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Form;
@@ -14,6 +15,18 @@ class ViewOperationalObjective extends ViewRecord
     public function getTitle(): string
     {
         return $this->record->name ?? 'Empty name';
+
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        $parent = $this->record->strategicObjective()->first();
+
+        return [
+            StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
+            StrategicObjectiveResource::getUrl('view', ['record' => $parent]) => $parent->name,
+            $this->getBreadcrumb(),
+        ];
     }
 
     /**

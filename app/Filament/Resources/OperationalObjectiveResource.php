@@ -10,12 +10,16 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class OperationalObjectiveResource extends Resource
 {
     protected static ?string $model = OperationalObjective::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function shouldRegisterNavigation(): bool
     {
@@ -76,5 +80,10 @@ class OperationalObjectiveResource extends Resource
             'view' => Pages\ViewOperationalObjective::route('/{record}'),
             'edit' => Pages\EditOperationalObjective::route('/{record}/edit'),
         ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
     }
 }
