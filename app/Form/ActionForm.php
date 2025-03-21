@@ -52,7 +52,29 @@ class ActionForm
             ]);
     }
 
-    public static function fieldsProject(): array
+
+    public static function editForm(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Grid::make(3)
+                    ->schema([
+                        Forms\Components\Section::make()
+                            ->schema([
+                                Forms\Components\TextInput::make('title'),
+                                Forms\Components\Textarea::make('body'),
+                            ])
+                            ->columnSpan(2),
+                        Forms\Components\Section::make()
+                            ->schema([
+                                Forms\Components\TextInput::make('title2'),
+                            ])
+                            ->columnSpan(1),
+                    ])
+            ]);
+    }
+
+    private static function fieldsProject(): array
     {
         return [
             Forms\Components\TextInput::make('name')
