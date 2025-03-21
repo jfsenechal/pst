@@ -72,6 +72,22 @@ return new class extends Migration {
             $table->timestamps();
         });
 
+        Schema::create('media', function (Blueprint $table) {
+            $table->id();
+
+            $table->morphs('model');
+            $table->uuid()->nullable()->unique();
+            $table->string('name');
+            $table->string('file_name');
+            $table->string('mime_type')->nullable();
+            $table->string('disk');
+            $table->string('conversions_disk')->nullable();
+            $table->unsignedBigInteger('size');
+            $table->unsignedInteger('order_column')->nullable()->index();
+
+            $table->nullableTimestamps();
+        });
+
         Schema::create('action_user', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
