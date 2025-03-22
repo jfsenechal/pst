@@ -2,9 +2,15 @@
 
 namespace App\Filament\Resources\ActionResource\Pages;
 
+use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
+use App\Models\Action;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ViewEntry;
+use Filament\Support\Colors\Color;
 use App\Models\OperationalObjective;
 use Filament\Actions;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -41,16 +47,50 @@ class ViewAction extends ViewRecord
             StrategicObjectiveResource::getUrl('index') => 'Objectifs Stratégiques',
             StrategicObjectiveResource::getUrl('view', ['record' => $os]) => $os->name,
             OperationalObjectiveResource::getUrl('view', ['record' => $oo]) => $oo->name,
-            'Action'
+            'Action',
             //$this->getBreadcrumb(),
         ];
     }
 
+
     public function infolist(Infolist $infolist): Infolist
     {
-     return   $infolist
-            ->schema([
+        return $infolist->schema([
+            Split::make([
+                Section::make([
+                    TextEntry::make('name')
+                        ->weight(FontWeight::Bold),
+                    TextEntry::make('description')
+                        ->markdown()
+                        ->prose(),
+                ]),
+                Section::make([
+                    TextEntry::make('progress_indicator')
+                        ->label('Statut')
+                        ->label('Indicateur d\'avancement')
+                        ->formatStateUsing(fn ($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
+                        ->icon(
+                            fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
+                            ) ?? 'heroicon-m-question-mark-circle'
+                        )
+                        ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
+                    TextEntry::make('created_at')
+                        ->label('Créé le')
+                        ->dateTime(),
+                    TextEntry::make('due_date')
+                        ->label('Date d\'échéance')
+                        ->dateTime(),
+                ])->grow(false),
+            ])
+                ->columnSpanFull()
+                ->from('md'),
+        ]);
+    }
 
+    public function infolist22(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
                 Split::make([
                     Section::make([
                         TextEntry::make('title')
