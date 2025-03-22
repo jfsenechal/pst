@@ -25,7 +25,7 @@ class Action extends Model
         'work_plan',
         'budget_estimate',
         'financing_mode',
-        'operational_objective_id'
+        'operational_objective_id',
     ];
 
     /**
@@ -58,6 +58,14 @@ class Action extends Model
     public function partners(): BelongsToMany
     {
         return $this->belongsToMany(Partner::class);
+    }
+
+    /**
+     * @return BelongsToMany<Media>
+     */
+    public function medias(): BelongsToMany
+    {
+        return $this->belongsToMany(Media::class);
     }
 
     /**

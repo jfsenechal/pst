@@ -72,48 +72,53 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('media', function (Blueprint $table) {
+        Schema::create('medias', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->morphs('model');
             $table->uuid()->nullable()->unique();
             $table->string('name');
             $table->string('file_name');
             $table->string('mime_type')->nullable();
             $table->string('disk');
-            $table->string('conversions_disk')->nullable();
             $table->unsignedBigInteger('size');
-            $table->unsignedInteger('order_column')->nullable()->index();
 
             $table->nullableTimestamps();
         });
 
-        Schema::create('action_user', function (Blueprint $table) {
+        Schema::create('action_users', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
             $table->unique(['action_id', 'user_id']);
         });
 
-        Schema::create('action_partner', function (Blueprint $table) {
+        Schema::create('action_partners', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Partner::class)->constrained('partners')->cascadeOnDelete();
             $table->unique(['action_id', 'partner_id']);
         });
 
-        Schema::create('action_service', function (Blueprint $table) {
+        Schema::create('action_services', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Service::class)->constrained('services')->cascadeOnDelete();
             $table->unique(['action_id', 'service_id']);
         });
 
-        Schema::create('action_odd', function (Blueprint $table) {
+        Schema::create('action_odds', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->foreignIdFor(Odd::class)->constrained('odds')->cascadeOnDelete();
             $table->unique(['action_id', 'odd_id']);
+        });
+
+        Schema::create('action_comments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
+            $table->foreignIdFor(Comment::class)->constrained('odds')->cascadeOnDelete();
+            $table->unique(['action_id', 'comment_id']);
         });
 
         Schema::create('service_users', function (Blueprint $table) {
@@ -126,10 +131,12 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('action_odd');
-        Schema::dropIfExists('action_service');
-        Schema::dropIfExists('action_partner');
-        Schema::dropIfExists('action_user');
+        Schema::dropIfExists('action_odds');
+        Schema::dropIfExists('action_services');
+        Schema::dropIfExists('action_partners');
+        Schema::dropIfExists('action_users');
+        Schema::dropIfExists('medias');
+        Schema::dropIfExists('action_comments');
         Schema::dropIfExists('service_user');
         Schema::dropIfExists('odds');
         Schema::dropIfExists('services');
