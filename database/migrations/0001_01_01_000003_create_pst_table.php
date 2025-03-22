@@ -3,7 +3,6 @@
 use App\Constant\ActionStateEnum;
 use App\Constant\SynergyEnum;
 use App\Models\Action;
-use App\Models\Odd;
 use App\Models\OperationalObjective;
 use App\Models\Partner;
 use App\Models\Service;
@@ -47,6 +46,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->nullable(false);
             $table->string('initials')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -69,6 +70,7 @@ return new class extends Migration {
         Schema::create('odds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -107,20 +109,6 @@ return new class extends Migration {
             $table->unique(['action_id', 'service_id']);
         });
 
-        Schema::create('action_odds', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
-            $table->foreignIdFor(Odd::class)->constrained('odds')->cascadeOnDelete();
-            $table->unique(['action_id', 'odd_id']);
-        });
-
-        Schema::create('action_comments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
-            $table->foreignIdFor(Comment::class)->constrained('odds')->cascadeOnDelete();
-            $table->unique(['action_id', 'comment_id']);
-        });
-
         Schema::create('service_users', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
@@ -131,12 +119,7 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('action_odds');
-        Schema::dropIfExists('action_services');
-        Schema::dropIfExists('action_partners');
-        Schema::dropIfExists('action_users');
         Schema::dropIfExists('medias');
-        Schema::dropIfExists('action_comments');
         Schema::dropIfExists('service_user');
         Schema::dropIfExists('odds');
         Schema::dropIfExists('services');
@@ -144,6 +127,9 @@ return new class extends Migration {
         Schema::dropIfExists('comments');
         Schema::dropIfExists('partners');
         Schema::dropIfExists('actions');
+        Schema::dropIfExists('action_services');
+        Schema::dropIfExists('action_partners');
+        Schema::dropIfExists('action_users');
         Schema::dropIfExists('operational_objectives');
         Schema::dropIfExists('strategic_objectives');
     }

@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
+    protected $fillable = [
+        'content',
+    ];
+
     /**
      * Get the action that owns the comment.
      */
