@@ -11,7 +11,6 @@ class OperationalObjectiveForm
 {
     public static function createForm(Form $form, Model|OperationalObjective $record = null): Form
     {
-
         return $form
             ->schema([
                 Forms\Components\Select::make('strategic_objective_id')

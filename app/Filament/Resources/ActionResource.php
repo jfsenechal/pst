@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActionResource\Pages;
 use App\Form\ActionForm;
+use Illuminate\Contracts\Support\Htmlable;
 use App\Models\Action;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ActionResource extends Resource
 {
@@ -50,8 +52,16 @@ class ActionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('tabler-trash'),
+                Tables\Actions\EditAction::make()
+                    ->icon('tabler-edit'),
             ])
+            ->headerActions(
+                [
+
+                ]
+            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -76,5 +86,9 @@ class ActionResource extends Resource
         ];
     }
 
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return $record->name;
+    }
 
 }

@@ -47,7 +47,7 @@ class Action extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, table: 'action_users');
     }
 
     /**
@@ -55,15 +55,15 @@ class Action extends Model
      */
     public function partners(): BelongsToMany
     {
-        return $this->belongsToMany(Partner::class);
+        return $this->belongsToMany(Partner::class, table: 'action_partners');
     }
 
     /**
-     * @return BelongsToMany<Media>
+     * @return HasMany<Media>
      */
-    public function medias(): BelongsToMany
+    public function medias(): HasMany
     {
-        return $this->belongsToMany(Media::class);
+        return $this->hasMany(Media::class);
     }
 
     /**

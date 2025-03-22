@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Constant\ActionStateEnum;
+use App\Models\Action;
 use App\Models\OperationalObjective;
 use Filament\Forms;
 use Filament\Forms\Components\Wizard;
@@ -108,7 +109,7 @@ class ActionForm
                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
                 ->searchable(['first_name', 'last_name'])
                 ->multiple(),
-            Forms\Components\Select::make('action_service')
+            Forms\Components\Select::make('action_services')
                 ->label('Services')
                 ->relationship(name: 'services', titleAttribute: 'name')
                 ->preload()

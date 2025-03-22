@@ -56,7 +56,10 @@ class OperationalObjectiveResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('tabler-edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('tabler-trash'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

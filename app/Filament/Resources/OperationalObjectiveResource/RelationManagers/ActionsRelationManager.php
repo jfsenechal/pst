@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OperationalObjectiveResource\RelationManagers;
 
 use App\Filament\Resources\ActionResource;
+use App\Form\ActionForm;
 use App\Models\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -51,7 +52,10 @@ class ActionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->label('Ajouter une Oo'),
+                Tables\Actions\CreateAction::make()
+                    ->label('Ajouter une action')
+                    ->icon('tabler-plus')
+                    ->form(fn(Form $form): Form => ActionForm::createForm($form)),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
@@ -61,8 +65,10 @@ class ActionsRelationManager extends RelationManager
                             ['record' => $record]
                         )
                     ),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->icon('tabler-edit'),
+                Tables\Actions\DeleteAction::make()
+                    ->icon('tabler-trash'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

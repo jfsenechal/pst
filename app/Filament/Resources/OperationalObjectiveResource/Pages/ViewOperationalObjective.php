@@ -5,8 +5,8 @@ namespace App\Filament\Resources\OperationalObjectiveResource\Pages;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\ViewRecord;
 
 class ViewOperationalObjective extends ViewRecord
 {
@@ -15,7 +15,6 @@ class ViewOperationalObjective extends ViewRecord
     public function getTitle(): string
     {
         return $this->record->name ?? 'Empty name';
-
     }
 
     public function getBreadcrumbs(): array
@@ -42,7 +41,10 @@ class ViewOperationalObjective extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\DeleteAction::make()
+                ->icon('tabler-trash'),
         ];
     }
 }

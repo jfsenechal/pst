@@ -13,6 +13,9 @@ use Filament\Pages\Auth\Login as BasePage;
 
 class Login extends BasePage
 {
+    /**
+     * remove type email
+     */
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('email')
