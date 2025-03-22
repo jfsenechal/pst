@@ -6,13 +6,11 @@ use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
-use App\Models\Action;
-use Filament\Infolists\Components\Grid;
-use Filament\Infolists\Components\Group;
-use Filament\Infolists\Components\ViewEntry;
-use Filament\Support\Colors\Color;
-use App\Models\OperationalObjective;
+use App\Models\Partner;
+use App\Models\Service;
+use App\Models\User;
 use Filament\Actions;
+use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
@@ -58,17 +56,24 @@ class ViewAction extends ViewRecord
         return $infolist->schema([
             Split::make([
                 Section::make([
-                    TextEntry::make('name')
-                        ->weight(FontWeight::Bold),
                     TextEntry::make('description')
-                        ->markdown()
+                        ->label(false)
+                        ->html()
+                        ->prose(),
+                    TextEntry::make('work_plan')
+                        ->label('Plan de travail')
+                        ->html()
+                        ->prose(),
+                    TextEntry::make('evaluation_indicator')
+                        ->label('Indicateur d\'évaluation')
+                        ->html()
                         ->prose(),
                 ]),
                 Section::make([
                     TextEntry::make('progress_indicator')
                         ->label('Statut')
                         ->label('Indicateur d\'avancement')
-                        ->formatStateUsing(fn ($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
+                        ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
                         ->icon(
                             fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
                             ) ?? 'heroicon-m-question-mark-circle'
@@ -84,30 +89,43 @@ class ViewAction extends ViewRecord
             ])
                 ->columnSpanFull()
                 ->from('md'),
-        ]);
-    }
-
-    public function infolist22(Infolist $infolist): Infolist
-    {
-        return $infolist
-            ->schema([
-                Split::make([
-                    Section::make([
-                        TextEntry::make('title')
-                            ->weight(FontWeight::Bold),
-                        TextEntry::make('content')
-                            ->markdown()
-                            ->prose(),
-                    ])->grow(true),
-                    Section::make([
-                        TextEntry::make('created_at')
-                            ->dateTime(),
-                        TextEntry::make('published_at')
-                            ->dateTime(),
-                    ])
-                        ->grow(false),
+            Fieldset::make('team')
+                ->label('Team')
+                ->schema([
+                    TextEntry::make('users')
+                        ->label('Agents')
+                        ->badge()
+                        ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
+                    TextEntry::make('services')
+                        ->label('Services')
+                        ->badge()
+                        ->formatStateUsing(fn(Service $state): string => $state->name),
+                    TextEntry::make('partners')
+                        ->label('Partenaires')
+                        ->badge()
+                        ->formatStateUsing(fn(Partner $state): string => $state->name),
                 ]),
-            ]);
+            Fieldset::make('budget')
+                ->label('Financement')
+                ->schema([
+                    TextEntry::make('budget_estimate')
+                        ->markdown()->label('Budget estimé')
+                        ->prose(),
+                    TextEntry::make('financing_mode')
+                        ->markdown()->label('Mode de financement')
+                        ->prose(),
+                ]),
+            Fieldset::make('budget')
+                ->label('Financement')
+                ->schema([
+                    TextEntry::make('budget_estimate')
+                        ->markdown()->label('Budget estimé')
+                        ->prose(),
+                    TextEntry::make('financing_mode')
+                        ->markdown()->label('Mode de financement')
+                        ->prose(),
+                ]),
+        ]);
     }
 
     private function tableft(): array
