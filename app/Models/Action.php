@@ -15,9 +15,6 @@ class Action extends Model
 
     protected $fillable = [
         'name',
-        'users',
-        'partners',
-        'services',
         'progress_indicator',
         'due_date',
         'description',
@@ -37,11 +34,12 @@ class Action extends Model
     }
 
     /**
+     * <!> table name else select bug relationship
      * @return BelongsToMany<Service>
      */
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Service::class);
+        return $this->belongsToMany(Service::class, table: 'action_services');
     }
 
     /**

@@ -11,9 +11,10 @@ class Service extends Model
 {
     /** @use HasFactory<\Database\Factories\ServiceFactory> */
     use HasFactory, Notifiable;
+
     protected $fillable = [
         'name',
-        'initials'
+        'initials',
     ];
 
     public function users(): BelongsToMany

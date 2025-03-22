@@ -81,5 +81,6 @@ class DatabaseSeeder extends Seeder
                     'name' => $oo,
                 ]);
         }
+
     }
 }
