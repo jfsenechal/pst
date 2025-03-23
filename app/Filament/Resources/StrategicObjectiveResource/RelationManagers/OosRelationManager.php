@@ -29,13 +29,13 @@ class OosRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
 
     public static function getBreadcrumb(Model $record = null): string
     {
         if ($record && $record->strategicObjective) {
-            return $record->strategicObjective->name . ' > ' . $record->name;
+            return $record->strategicObjective->name.' > '.$record->name;
         }
 
         return 'Operational Objectives22';
@@ -74,7 +74,8 @@ class OosRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Ajouter un Oo'),
+                    ->label('Ajouter un Oo')
+                    ->icon('tabler-plus'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()

@@ -37,8 +37,10 @@ class ViewStrategicObjective extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\DeleteAction::make()
+                ->icon('tabler-trash'),
         ];
     }
 }

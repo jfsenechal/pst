@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActionResource\Pages;
 use App\Form\ActionForm;
+use App\Models\Media;
 use Illuminate\Contracts\Support\Htmlable;
 use App\Models\Action;
 use Filament\Forms\Form;

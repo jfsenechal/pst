@@ -3,9 +3,12 @@
 namespace App\Form;
 
 use App\Constant\ActionStateEnum;
-use App\Models\Action;
+use App\Models\Action as ActionPst;
+use App\Models\Media;
 use App\Models\OperationalObjective;
 use Filament\Forms;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,8 +32,8 @@ class ActionForm
                         ->schema(
                             self::fieldsTeam(),
                         ),
-                    Wizard\Step::make('Info')
-                        ->label('info')
+                    Wizard\Step::make('info')
+                        ->label('Informations')
                         ->schema(
                             self::fieldsDescription(),
                         ),
@@ -39,13 +42,17 @@ class ActionForm
                         ->schema(
                             self::fieldsFinancing(),
                         ),
+                    Wizard\Step::make('attachments')
+                        ->label('Médias')
+                        ->schema(self::fieldsAttachment()),
                 ])
+                    ->skippable()
                     ->nextAction(
-                        fn(\Filament\Forms\Components\Actions\Action $action) => $action
+                        fn(Action $action) => $action
                             ->label('Suivant')
                             ->color('success'),
                     )->previousAction(
-                        fn(\Filament\Forms\Components\Actions\Action $action) => $action
+                        fn(Action $action) => $action
                             ->label('Précédent')
                             ->color('secondary'),
                     )
@@ -71,7 +78,7 @@ class ActionForm
                                 Forms\Components\TextInput::make('title2'),
                             ])
                             ->columnSpan(1),
-                    ])
+                    ]),
             ]);
     }
 
@@ -104,12 +111,13 @@ class ActionForm
                 ->label('Agents')
                 ->relationship(
                     name: 'users',
-                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')->orderBy('first_name'),
+                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
+                        ->orderBy('first_name'),
                 )
                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
                 ->searchable(['first_name', 'last_name'])
                 ->multiple(),
-            Forms\Components\Select::make('action_services')
+            Forms\Components\Select::make('action_service')
                 ->label('Services')
                 ->relationship(name: 'services', titleAttribute: 'name')
                 ->preload()
@@ -140,6 +148,33 @@ class ActionForm
             Forms\Components\Textarea::make('work_plan')
                 ->label('Plan de travail'),
         ];
+    }
+
+    private static function fieldsAttachment(): array
+    {
+        return
+            [
+                FileUpload::make('medias')
+                    ->label('Pièces jointes')
+                    ->multiple()
+                    ->disk('public') // Set storage disk
+                    ->directory('uploads') // Define upload directory
+                    //  ->preserveFilenames()
+                    ->storeFileNamesIn('file_name')
+                    ->downloadable()
+                    ->maxSize(10240)
+                    ->saveRelationshipsUsing(function (FileUpload $component, array $state, ActionPst $record) {
+                        foreach ($state as $filePath) {
+                            Media::create([
+                                'action_id' => $record->id,
+                                'file_name' => $filePath,
+                                'mime_type' => "image/jpeg",
+                                'disk' => 'public',
+                                'size' => 1024,
+                            ]);
+                        }
+                    }),
+            ];
     }
 
 }

@@ -47,6 +47,10 @@ class PartnerResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('initials')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone'),
             ])
             ->filters([
                 //
@@ -62,10 +66,20 @@ class PartnerResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePartners::route('/'),
+            'index' => Pages\ListPartners::route('/'),
+            'create' => Pages\CreatePartner::route('/create'),
+            'view' => Pages\ViewPartner::route('/{record}'),
+            'edit' => Pages\EditPartner::route('/{record}/edit'),
         ];
     }
 }

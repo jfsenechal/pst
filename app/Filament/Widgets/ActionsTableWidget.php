@@ -8,19 +8,20 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
-class ActionsTable extends BaseWidget
+class ActionsTableWidget extends BaseWidget
 {
     public function table(Table $table): Table
     {
+        $user = auth()->user();
         return $table
             ->query(
-                ActionPst::query()->published()
+                ActionPst::findByUser($user->id)
             )
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('name'),
             ])
             ->actions([
-                Tables\Actions\Action::make('takeQuiz')
+                Tables\Actions\ViewAction::make('takeQuiz')
                     ->url(fn (ActionPst $record) => ActionResource::getUrl('view',['record' => $record->id]))
             ]);
     }

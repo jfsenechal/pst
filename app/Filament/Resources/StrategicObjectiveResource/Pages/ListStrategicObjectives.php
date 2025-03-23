@@ -13,7 +13,9 @@ class ListStrategicObjectives extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Ajouter un OS')
+                ->icon('tabler-plus'),
         ];
     }
 }

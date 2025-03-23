@@ -72,7 +72,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 
     public function name(): string
     {
-        return $this->last_name .' '.$this->first_name;
+        return $this->last_name.' '.$this->first_name;
     }
 
     /**

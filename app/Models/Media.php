@@ -14,6 +14,8 @@ class Media extends Model
 
     protected $fillable = [
         'name',
+        'action_id',
+        'uuid',
         'file_name',
         'mime_type',
         'disk',

@@ -18,7 +18,6 @@ use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Support\Enums\FontWeight;
 
 class ViewAction extends ViewRecord
 {
@@ -32,7 +31,10 @@ class ViewAction extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\DeleteAction::make()
+                ->icon('tabler-trash'),
         ];
     }
 
@@ -115,15 +117,10 @@ class ViewAction extends ViewRecord
                         ->markdown()->label('Mode de financement')
                         ->prose(),
                 ]),
-            Fieldset::make('budget')
-                ->label('Financement')
+            Fieldset::make('medias')
+                ->label('Médias')
                 ->schema([
-                    TextEntry::make('budget_estimate')
-                        ->markdown()->label('Budget estimé')
-                        ->prose(),
-                    TextEntry::make('financing_mode')
-                        ->markdown()->label('Mode de financement')
-                        ->prose(),
+
                 ]),
         ]);
     }

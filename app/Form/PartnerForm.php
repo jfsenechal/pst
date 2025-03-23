@@ -12,13 +12,25 @@ class PartnerForm
     public static function createForm(Form $form, Model|Partner $record = null): Form
     {
         return $form
+            ->columns(2)
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('initials')
+                    ->default(null)
                     ->maxLength(30),
-                Forms\Components\Textarea::make('description'),
+                Forms\Components\TextInput::make('phone')
+                    ->label('Téléphone')
+                    ->tel()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
             ]);
     }
 }

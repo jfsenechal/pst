@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,10 @@ class Action extends Model
         'operational_objective_id',
     ];
 
+    protected $casts = [
+        'medias' => 'array',
+    ];
+
     /**
      * Get the operational objective that owns the action.
      */
@@ -39,7 +44,7 @@ class Action extends Model
      */
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Service::class, table: 'action_services');
+        return $this->belongsToMany(Service::class);
     }
 
     /**
@@ -47,7 +52,7 @@ class Action extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, table: 'action_users');
+        return $this->belongsToMany(User::class);
     }
 
     /**
@@ -55,7 +60,7 @@ class Action extends Model
      */
     public function partners(): BelongsToMany
     {
-        return $this->belongsToMany(Partner::class, table: 'action_partners');
+        return $this->belongsToMany(Partner::class);
     }
 
     /**
@@ -73,6 +78,20 @@ class Action extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    /**
+     *
+     */
+    public static function findByUser(int $userId): Builder
+    {
+        return  Action::query()->whereHas('users', function ($query) use ($userId) {
+            $query->where('users.id', $userId);
+        })->orWhereHas('services', function ($query) use ($userId) {
+            $query->whereHas('users', function ($query) use ($userId) {
+                $query->where('users.id', $userId);
+            });
+        });
     }
 
 }
