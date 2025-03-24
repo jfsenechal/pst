@@ -175,4 +175,13 @@ class ActionForm
             ];
     }
 
+    public static function fieldsReminder(): array
+    {
+        return
+            [
+                Forms\Components\Textarea::make('content')
+                    ->label('Contenu')
+                    ->required(),
+            ];
+    }
 }

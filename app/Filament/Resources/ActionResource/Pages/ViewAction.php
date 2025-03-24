@@ -39,36 +39,52 @@ class ViewAction extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            ActionGroup::make([
-                ActionAction::make('add_media')
-                    ->label('Add Media')
-                    ->icon('tabler-plus')
-                    ->form(
-                        ActionForm::fieldsAttachment()
-                    )
-                    ->action(function (array $data) {
-                        Media::create([
-                            'action_id' => $this->record->id,
-                            'name' => $data['file_name'],
-                            'file_name' => $data['media'],
-                            'mime_type' => $data['file_mime'],
-                            'disk' => 'public',
-                            'size' => $data['file_size'],
-                        ]);
-                        Notification::make()
-                            ->title('Media added successfully')
-                            ->success()
-                            ->send();
-                    }),
-            ])
-                ->label('More actions')
-                ->button()
-                ->size(ActionSize::Large)
-                ->color('secondary'),
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
             Actions\DeleteAction::make()
                 ->icon('tabler-trash'),
+            ActionGroup::make([
+                    ActionAction::make('add_media')
+                        ->label('Ajouter un média')
+                        ->icon('tabler-plus')
+                        ->form(
+                            ActionForm::fieldsAttachment()
+                        )
+                        ->action(function (array $data) {
+                            Media::create([
+                                'action_id' => $this->record->id,
+                                'name' => $data['file_name'],
+                                'file_name' => $data['media'],
+                                'mime_type' => $data['file_mime'],
+                                'disk' => 'public',
+                                'size' => $data['file_size'],
+                            ]);
+                            Notification::make()
+                                ->title('Media added successfully')
+                                ->success()
+                                ->send();
+                        }),
+                    ActionAction::make('rapport')
+                        ->label('Rapport')
+                        ->icon('tabler-pdf')
+                        ->modal()
+                        ->modalHeading('Exporter en pdf')
+                        ->modalDescription('Export en pdf'),
+                    ActionAction::make('reminder')
+                        ->label('Houspiller')
+                        ->icon('tabler-school-bell')
+                        ->modal()
+                        ->modalHeading('Ou ça en est ?')
+                        ->modalDescription('Vous trouvez que le projet n\'avance pas. Houspiller les agents!')
+                        ->form(
+                            ActionForm::fieldsReminder()
+                        ),
+                ]
+            )
+                ->label('Autres actions')
+                ->button()
+                ->size(ActionSize::Large)
+                ->color('secondary'),
         ];
     }
 
