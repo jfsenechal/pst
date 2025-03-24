@@ -41,6 +41,7 @@ class StrategicObjectiveResource extends Resource
         return $table
             ->defaultPaginationPageOption(50)
             ->recordTitleAttribute('name')
+            ->defaultSort('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')

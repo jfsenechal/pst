@@ -34,7 +34,8 @@ class ServiceResource extends Resource
             ->defaultSort('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('initials')
                     ->label('Initiales')
                     ->searchable(),
