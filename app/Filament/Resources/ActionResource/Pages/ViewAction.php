@@ -122,7 +122,7 @@ class ViewAction extends ViewRecord
                             ->prose(),
                     ]),
                     Section::make([
-                        TextEntry::make('progress_indicator')
+                        TextEntry::make('state')
                             ->label('Statut')
                             ->label('Indicateur d\'avancement')
                             ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
@@ -231,7 +231,7 @@ class ViewAction extends ViewRecord
             TextEntry::make('due_date')->dateTime(),
             TextEntry::make('evaluation_indicator'),
             TextEntry::make('work_plan'),
-            TextEntry::make('progress_indicator'),
+            TextEntry::make('state'),
             TextEntry::make('users'),
             TextEntry::make('partners'),
         ];

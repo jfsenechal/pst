@@ -39,12 +39,15 @@ class StrategicObjectiveResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultPaginationPageOption(50)
+            ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('oos_count')
-                    ->label('Oos')
+                    ->label('Objectifs Opérationnels (OO)')
                     ->tooltip('Objectif Opérationnel')
                     ->counts('oos'),
                 Tables\Columns\TextColumn::make('created_at')

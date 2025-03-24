@@ -27,10 +27,10 @@ class AppServiceProvider extends ServiceProvider
         if (!app()->environment('production')) {
             Mail::alwaysTo('jf@marche.be');
         }
-        FilamentView::registerRenderHook(
+    /*    FilamentView::registerRenderHook(
             PanelsRenderHook::SIDEBAR_NAV_START,
             fn(): string => Blade::render('@livewire(Filament\Livewire\GlobalSearch::class, [\'lazy\' => true])'),
-        );
+        );*/
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
             fn(): View => view('filament.login_form'),

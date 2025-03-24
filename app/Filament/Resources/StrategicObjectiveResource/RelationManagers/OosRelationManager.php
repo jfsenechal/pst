@@ -2,20 +2,13 @@
 
 namespace App\Filament\Resources\StrategicObjectiveResource\RelationManagers;
 
-use App\Constant\ActionStateEnum;
 use App\Filament\Resources\OperationalObjectiveResource;
-use App\Form\ActionForm;
-use App\Models\Action as ActionPst;
 use App\Models\OperationalObjective;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class OosRelationManager extends RelationManager
@@ -30,15 +23,6 @@ class OosRelationManager extends RelationManager
     public function isReadOnly(): bool
     {
         return false;
-    }
-
-    public static function getBreadcrumb(Model $record = null): string
-    {
-        if ($record && $record->strategicObjective) {
-            return $record->strategicObjective->name.' > '.$record->name;
-        }
-
-        return 'Operational Objectives22';
     }
 
     public function form(Form $form): Form
@@ -94,45 +78,4 @@ class OosRelationManager extends RelationManager
                 ]),
             ]);
     }
-
-    private function saveAction(array $data, OperationalObjective $record): void
-    {
-        ActionPst::create([
-            "operational_objective_id" => $data['operational_objective_id'],
-            "name" => $data['name'],
-            "progress_indicator" => $record->id,
-            "due_date" => $data['due_date'],
-            "description" => $data['description'],
-            "evaluation_indicator" => $data['evaluation_indicator'],
-            "work_plan" => $data['work_plan'],
-            "budget_estimate" => $data['budget_estimate'],
-            "financing_mode" => $data['financing_mode'],
-        ]);
-    }
-
-    private function btnAddActionBug(): Action
-    {
-        return Tables\Actions\Action::make('add_action')
-            ->label('Ajouter une action')
-            ->icon('heroicon-s-plus')
-            ->form(function (Form $form): Form {
-                return ActionForm::createForm($form, $this->getOwnerRecord());
-            })
-            ->action(
-                (function (array $data, OperationalObjective $record): void {
-
-                    dd($data);
-                    //j'ai pas acces a services,users,...
-                    $this->saveAction($data, $record);
-
-                    Notification::make()
-                        ->success()
-                        ->title(__('messages.form.registration.notification.finish.title'))
-                        ->body(__('messages.form.registration.notification.finish.body'))
-                        ->send();
-                })
-            );
-    }
-
-
 }

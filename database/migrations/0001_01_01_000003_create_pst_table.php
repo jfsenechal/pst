@@ -36,7 +36,7 @@ return new class extends Migration {
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
-            $table->enum('progress_indicator', ActionStateEnum::toArray())->default(ActionStateEnum::NEW->value);
+            $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::NEW->value);
             $table->text('work_plan')->nullable();
             $table->text('evaluation_indicator')->nullable();
             $table->timestamps();

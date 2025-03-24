@@ -15,7 +15,7 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ActionForm
 {
-    public static function createForm(Form $form, Model|OperationalObjective $record = null): Form
+    public static function createForm(Form $form, Model|OperationalObjective|null $record): Form
     {
         return $form
             ->columns(1)
@@ -24,7 +24,7 @@ class ActionForm
                     Wizard\Step::make('necessary_data')
                         ->label('Projet')
                         ->schema(
-                            self::fieldsProject(),
+                            self::fieldsProject($record),
                         ),
                     Wizard\Step::make('team')
                         ->label('Equipes')
@@ -78,16 +78,23 @@ class ActionForm
             ]);
     }
 
-    private static function fieldsProject(): array
+    private static function fieldsProject(Model|OperationalObjective|null $record): array
     {
         return [
+            Forms\Components\Select::make('operational_objective_id')
+                ->label('Objectif opérationel')
+                ->relationship(name: 'operationalObjective', titleAttribute: 'name')
+                ->searchable(['name'])
+                ->preload()
+                ->suffixIcon('tabler-ladder')
+                ->visible(fn() => $record === null),
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
                 ->required()
                 ->maxLength(150),
             Forms\Components\Grid::make(2)
                 ->schema([
-                    Forms\Components\Select::make('progress_indicator')
+                    Forms\Components\Select::make('state')
                         ->label('Indicateur d\'avancement')
                         ->default(ActionStateEnum::NEW->value)
                         ->options(ActionStateEnum::class)

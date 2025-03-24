@@ -26,27 +26,17 @@ class ActionsRelationManager extends RelationManager
         return false;
     }
 
-    public function form22(Form $form): Form
-    {
-        return $form
-            ->columns(1)
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->label('Intitulé')
-                    ->maxLength(255),
-                Forms\Components\RichEditor::make('description')
-                    ->label('Description'),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
             ->defaultPaginationPageOption(50)
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Intitulé')
+                    ->limit(120)
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -55,7 +45,7 @@ class ActionsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()
                     ->label('Ajouter une action')
                     ->icon('tabler-plus')
-                    ->form(fn(Form $form): Form => ActionForm::createForm($form)),
+                    ->form(fn(Form $form): Form => ActionForm::createForm($form, $this->ownerRecord)),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
