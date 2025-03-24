@@ -80,18 +80,4 @@ class Action extends Model
         return $this->hasMany(Comment::class);
     }
 
-    /**
-     *
-     */
-    public static function findByUser(int $userId): Builder
-    {
-        return  Action::query()->whereHas('users', function ($query) use ($userId) {
-            $query->where('users.id', $userId);
-        })->orWhereHas('services', function ($query) use ($userId) {
-            $query->whereHas('users', function ($query) use ($userId) {
-                $query->where('users.id', $userId);
-            });
-        });
-    }
-
 }
