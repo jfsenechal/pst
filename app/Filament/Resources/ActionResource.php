@@ -21,7 +21,7 @@ class ActionResource extends Resource
     protected static ?string $model = Action::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $recordTitleAttribute = 'name';
     protected static ?int $navigationSort = 2;
 
     public static function shouldRegisterNavigation(): bool
@@ -128,4 +128,8 @@ class ActionResource extends Resource
         return $record->name;
     }
 
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return ActionResource::getUrl('view', ['record' => $record]);
+    }
 }
