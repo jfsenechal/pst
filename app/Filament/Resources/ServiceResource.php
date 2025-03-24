@@ -39,6 +39,9 @@ class ServiceResource extends Resource
                 Tables\Columns\TextColumn::make('initials')
                     ->label('Initiales')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('users_count')
+                    ->label('Agents')
+                    ->counts('users'),
             ])
             ->filters([
                 //

@@ -23,6 +23,11 @@ class ServiceForm
                     ->label('Synergie')
                     ->default(SynergyEnum::COMMON->value)
                     ->options(SynergyEnum::class),
+                Forms\Components\Select::make('users')
+                    ->label('Agents')
+                    ->relationship('users', 'first_name')
+                    ->multiple()
+                    ->columnSpanFull(),
             ]);
     }
 }
