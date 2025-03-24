@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Constant\ActionStateEnum;
-use App\Models\Action as ActionPst;
-use App\Models\Media;
 use App\Models\OperationalObjective;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -13,6 +11,7 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ActionForm
 {
@@ -42,9 +41,6 @@ class ActionForm
                         ->schema(
                             self::fieldsFinancing(),
                         ),
-                    Wizard\Step::make('attachments')
-                        ->label('Médias')
-                        ->schema(self::fieldsAttachment()),
                 ])
                     ->skippable()
                     ->nextAction(
@@ -150,28 +146,30 @@ class ActionForm
         ];
     }
 
-    private static function fieldsAttachment(): array
+    public static function fieldsAttachment(): array
     {
         return
             [
-                FileUpload::make('medias')
-                    ->label('Pièces jointes')
-                    ->multiple()
-                    ->disk('public') // Set storage disk
-                    ->directory('uploads') // Define upload directory
-                    //  ->preserveFilenames()
-                    ->storeFileNamesIn('file_name')
+                Forms\Components\Hidden::make('file_mime'),
+                Forms\Components\Hidden::make('file_size'),
+                Forms\Components\TextInput::make('file_name')
+                    ->label('Nom du média')
+                    ->required()
+                    ->maxLength(150),
+                FileUpload::make('media')
+                    ->label('Pièce jointe')
+                    ->required()
+                    ->maxFiles(1)
+                    ->disk('public')
+                    ->directory('uploads')
+                    //->acceptedFileTypes(['image/jpeg', 'image/png', 'application/pdf'])
+                    //->preserveFilenames()
                     ->downloadable()
                     ->maxSize(10240)
-                    ->saveRelationshipsUsing(function (FileUpload $component, array $state, ActionPst $record) {
-                        foreach ($state as $filePath) {
-                            Media::create([
-                                'action_id' => $record->id,
-                                'file_name' => $filePath,
-                                'mime_type' => "image/jpeg",
-                                'disk' => 'public',
-                                'size' => 1024,
-                            ]);
+                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                        if ($state instanceof TemporaryUploadedFile) {
+                            $set('file_mime', $state->getMimeType());
+                            $set('file_size', $state->getSize());
                         }
                     }),
             ];

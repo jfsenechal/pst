@@ -6,10 +6,15 @@ use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
+use App\Form\ActionForm;
+use App\Models\Media;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
 use Filament\Actions;
+use Filament\Actions\Action as ActionAction;
+use Filament\Actions\ActionGroup;
+use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
@@ -17,7 +22,10 @@ use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Support\Enums\ActionSize;
+use Illuminate\Database\Eloquent\Model;
 
 class ViewAction extends ViewRecord
 {
@@ -31,6 +39,32 @@ class ViewAction extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            ActionGroup::make([
+                ActionAction::make('add_media')
+                    ->label('Add Media')
+                    ->icon('tabler-plus')
+                    ->form(
+                        ActionForm::fieldsAttachment()
+                    )
+                    ->action(function (array $data) {
+                        Media::create([
+                            'action_id' => $this->record->id,
+                            'name' => $data['file_name'],
+                            'file_name' => $data['media'],
+                            'mime_type' => $data['file_mime'],
+                            'disk' => 'public',
+                            'size' => $data['file_size'],
+                        ]);
+                        Notification::make()
+                            ->title('Media added successfully')
+                            ->success()
+                            ->send();
+                    }),
+            ])
+                ->label('More actions')
+                ->button()
+                ->size(ActionSize::Large)
+                ->color('secondary'),
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
             Actions\DeleteAction::make()
@@ -52,77 +86,99 @@ class ViewAction extends ViewRecord
         ];
     }
 
-
     public function infolist(Infolist $infolist): Infolist
     {
-        return $infolist->schema([
-            Split::make([
-                Section::make([
-                    TextEntry::make('description')
-                        ->label(false)
-                        ->html()
-                        ->prose(),
-                    TextEntry::make('work_plan')
-                        ->label('Plan de travail')
-                        ->html()
-                        ->prose(),
-                    TextEntry::make('evaluation_indicator')
-                        ->label('Indicateur d\'évaluation')
-                        ->html()
-                        ->prose(),
-                ]),
-                Section::make([
-                    TextEntry::make('progress_indicator')
-                        ->label('Statut')
-                        ->label('Indicateur d\'avancement')
-                        ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
-                        ->icon(
-                            fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
-                            ) ?? 'heroicon-m-question-mark-circle'
-                        )
-                        ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
-                    TextEntry::make('created_at')
-                        ->label('Créé le')
-                        ->dateTime(),
-                    TextEntry::make('due_date')
-                        ->label('Date d\'échéance')
-                        ->dateTime(),
-                ])->grow(false),
-            ])
-                ->columnSpanFull()
-                ->from('md'),
-            Fieldset::make('team')
-                ->label('Team')
-                ->schema([
-                    TextEntry::make('users')
-                        ->label('Agents')
-                        ->badge()
-                        ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
-                    TextEntry::make('services')
-                        ->label('Services')
-                        ->badge()
-                        ->formatStateUsing(fn(Service $state): string => $state->name),
-                    TextEntry::make('partners')
-                        ->label('Partenaires')
-                        ->badge()
-                        ->formatStateUsing(fn(Partner $state): string => $state->name),
-                ]),
-            Fieldset::make('budget')
-                ->label('Financement')
-                ->schema([
-                    TextEntry::make('budget_estimate')
-                        ->markdown()->label('Budget estimé')
-                        ->prose(),
-                    TextEntry::make('financing_mode')
-                        ->markdown()->label('Mode de financement')
-                        ->prose(),
-                ]),
-            Fieldset::make('medias')
-                ->label('Médias')
-                ->schema([
-
-                ]),
-        ]);
+        return $infolist
+            ->schema([
+                Split::make([
+                    Section::make([
+                        TextEntry::make('description')
+                            ->label(false)
+                            ->html()
+                            ->prose(),
+                        TextEntry::make('work_plan')
+                            ->label('Plan de travail')
+                            ->html()
+                            ->prose(),
+                        TextEntry::make('evaluation_indicator')
+                            ->label('Indicateur d\'évaluation')
+                            ->html()
+                            ->prose(),
+                    ]),
+                    Section::make([
+                        TextEntry::make('progress_indicator')
+                            ->label('Statut')
+                            ->label('Indicateur d\'avancement')
+                            ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
+                            ->icon(
+                                fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
+                                ) ?? 'heroicon-m-question-mark-circle'
+                            )
+                            ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
+                        TextEntry::make('created_at')
+                            ->label('Créé le')
+                            ->dateTime(),
+                        TextEntry::make('due_date')
+                            ->label('Date d\'échéance')
+                            ->dateTime(),
+                    ])->grow(false),
+                ])
+                    ->columnSpanFull()
+                    ->from('md'),
+                Fieldset::make('team')
+                    ->label('Team')
+                    ->schema([
+                        TextEntry::make('users')
+                            ->label('Agents')
+                            ->badge()
+                            ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
+                        TextEntry::make('services')
+                            ->label('Services')
+                            ->badge()
+                            ->formatStateUsing(fn(Service $state): string => $state->name),
+                        TextEntry::make('partners')
+                            ->label('Partenaires')
+                            ->badge()
+                            ->formatStateUsing(fn(Partner $state): string => $state->name),
+                    ]),
+                Fieldset::make('budget')
+                    ->label('Financement')
+                    ->schema([
+                        TextEntry::make('budget_estimate')
+                            ->markdown()
+                            ->label('Budget estimé')
+                            ->prose(),
+                        TextEntry::make('financing_mode')
+                            ->markdown()
+                            ->label('Mode de financement')
+                            ->prose(),
+                    ]),
+                Fieldset::make('medias_tab')
+                    ->relationship('medias')
+                    ->label('Médias')
+                    ->schema([
+                        TextEntry::make('name')
+                            ->label('Nom')
+                            ->formatStateUsing(
+                                fn($state) => "<a href='/storage/uploads/{$state}' target='_blank'>Download</a>"
+                            )
+                            ->hint('Documentation? What documentation?!')
+                            ->suffixAction(
+                                Action::make('download')
+                                    ->icon('tabler-download')
+                                    ->action(function (Media|Model $record) {
+                                        dd($record);
+                                    }),
+                            ),
+                        TextEntry::make('mime_type')
+                            ->label('Type'),
+                        TextEntry::make('file_size')
+                            ->label('Size')->formatStateUsing(
+                                fn($state) => number_format($state / 1024, 2).' KB'
+                            )
+                        ,
+                    ]),
+            ]);
     }
 
     private function tableft(): array

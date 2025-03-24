@@ -6,6 +6,7 @@ use App\Models\Action;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
+//https://laravel.com/docs/12.x/authorization#creating-policies
 class ActionPolicy
 {
     /**
