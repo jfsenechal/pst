@@ -16,6 +16,7 @@ use Filament\Actions\Action as ActionAction;
 use Filament\Actions\ActionGroup;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
@@ -173,25 +174,25 @@ class ViewAction extends ViewRecord
                     ->relationship('medias')
                     ->label('Médias')
                     ->schema([
-                        TextEntry::make('name')
-                            ->label('Nom')
-                            ->formatStateUsing(
-                                fn($state) => "<a href='/storage/uploads/{$state}' target='_blank'>Download</a>"
-                            )
-                            ->suffixAction(
-                                Action::make('download')
-                                    ->icon('tabler-download')
-                                    ->action(function (Media|Model $record) {
-                                        dd($record);
-                                    }),
-                            ),
-                        TextEntry::make('mime_type')
-                            ->label('Type'),
-                        TextEntry::make('file_size')
-                            ->label('Size')->formatStateUsing(
-                                fn($state) => number_format($state / 1024, 2).' KB'
-                            )
-                        ,
+                        Grid::make(3)
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('Nom')
+                                    ->suffixAction(
+                                        Action::make('download')
+                                            ->icon('tabler-download')
+                                            ->tooltip('Télécharger')
+                                            ->action(function (Media|Model $record) {
+                                                dd($record);
+                                            }),
+                                    ),
+                                TextEntry::make('mime_type')
+                                    ->label('Type'),
+                                TextEntry::make('size')
+                                    ->label('Size')->formatStateUsing(
+                                        fn($state) => number_format($state / 1024, 2).' KB'
+                                    ),
+                            ]),
                     ]),
             ]);
     }
