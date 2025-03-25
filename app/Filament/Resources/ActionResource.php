@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource\Pages;
 use App\Form\ActionForm;
@@ -59,7 +60,21 @@ class ActionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('state')
-                    ->badge(),
+                    ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
+                    ->icon(
+                        fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
+                        ) ?? 'heroicon-m-question-mark-circle'
+                    )
+                    ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
+                Tables\Columns\TextColumn::make('priority')
+                    ->formatStateUsing(fn($state) => ActionPriorityEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
+                    ->sortable()
+                    ->badge()
+                    ->icon(
+                        fn($state) => ActionPriorityEnum::tryFrom($state)?->getIcon(
+                        ) ?? 'heroicon-m-question-mark-circle'
+                    )
+                    ->color(fn($state) => ActionPriorityEnum::tryFrom($state)?->getColor() ?? 'gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -81,6 +96,13 @@ class ActionResource extends Resource
                             ->mapWithKeys(fn(ActionStateEnum $action) => [$action->value => $action->getLabel()])
                             ->toArray()
                     ),
+                SelectFilter::make('priority')
+                    ->label('Priorité')
+                    ->options(
+                        collect(ActionPriorityEnum::cases())
+                            ->mapWithKeys(fn(ActionPriorityEnum $action) => [$action->value => $action->getLabel()])
+                            ->toArray()
+                    ),
                 SelectFilter::make('users')
                     ->label('Agents')
                     ->relationship('users', 'first_name'),
@@ -89,9 +111,6 @@ class ActionResource extends Resource
             ])
             ->filtersFormWidth(MaxWidth::ThreeExtraLarge)
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make()
-                    ->icon('tabler-trash'),
                 Tables\Actions\EditAction::make()
                     ->icon('tabler-edit'),
             ])

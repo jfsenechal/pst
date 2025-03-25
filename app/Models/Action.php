@@ -17,6 +17,7 @@ class Action extends Model
     protected $fillable = [
         'name',
         'state',
+        'priority',
         'due_date',
         'description',
         'evaluation_indicator',

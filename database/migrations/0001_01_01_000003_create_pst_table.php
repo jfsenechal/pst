@@ -1,5 +1,6 @@
 <?php
 
+use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Constant\SynergyEnum;
 use App\Models\Action;
@@ -37,6 +38,7 @@ return new class extends Migration {
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
             $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::NEW->value);
+            $table->enum('priority', ActionPriorityEnum::toArray())->default(ActionPriorityEnum::UNDETERMINED->value);
             $table->text('work_plan')->nullable();
             $table->text('evaluation_indicator')->nullable();
             $table->timestamps();

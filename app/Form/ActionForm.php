@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Models\OperationalObjective;
 use Filament\Forms;
@@ -95,9 +96,14 @@ class ActionForm
             Forms\Components\Grid::make(2)
                 ->schema([
                     Forms\Components\Select::make('state')
-                        ->label('Indicateur d\'avancement')
+                        ->label('Etat d\'avancement')
                         ->default(ActionStateEnum::NEW->value)
                         ->options(ActionStateEnum::class)
+                        ->suffixIcon('tabler-ladder'),
+                    Forms\Components\Select::make('priority')
+                        ->label('Priorité')
+                        ->default(ActionPriorityEnum::UNDETERMINED->value)
+                        ->options(ActionPriorityEnum::class)
                         ->suffixIcon('tabler-ladder'),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')

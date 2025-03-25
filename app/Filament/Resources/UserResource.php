@@ -51,6 +51,12 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Téléphone')
+                    ->icon('tabler-phone'),
+                Tables\Columns\TextColumn::make('extension')
+                    ->label('Extension')
+                    ->icon('tabler-device-landline-phone'),
                 Tables\Columns\TextColumn::make('roles.name'),
                 Tables\Columns\TextColumn::make('username')
                     ->label('Nom d\'utilisateur')
