@@ -178,7 +178,6 @@ class ViewAction extends ViewRecord
                             ->formatStateUsing(
                                 fn($state) => "<a href='/storage/uploads/{$state}' target='_blank'>Download</a>"
                             )
-                            ->hint('Documentation? What documentation?!')
                             ->suffixAction(
                                 Action::make('download')
                                     ->icon('tabler-download')

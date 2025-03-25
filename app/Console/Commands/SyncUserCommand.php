@@ -49,7 +49,7 @@ class SyncUserCommand extends Command
             }
         }
 
-        $this->removeOldUsers();
+      //  $this->removeOldUsers();
 
         return SfCommand::SUCCESS;
     }
