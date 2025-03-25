@@ -46,7 +46,8 @@ class PartnerResource extends Resource
             ->defaultPaginationPageOption(50)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('initials')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
