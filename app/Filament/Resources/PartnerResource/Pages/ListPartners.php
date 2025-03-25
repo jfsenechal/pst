@@ -13,7 +13,9 @@ class ListPartners extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Ajouter un partenaire')
+                ->icon('tabler-plus'),
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Filament\Resources\PartnerResource;
 use App\Models\Action;
 use Filament\Actions;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
@@ -44,18 +45,22 @@ class ViewPartner extends ViewRecord
                     ->columnSpanFull()
                     ->prose(),
                 Fieldset::make('actions')
-                    ->relationship('actions')
-                    ->label('Actions')
+                    ->label('Actions liés')
                     ->schema([
-                        TextEntry::make('name')
-                            ->label('Nom')
+                        RepeatableEntry::make('actions')
+                            ->label(false)
                             ->columnSpanFull()
-                            ->url(
-                                fn(Action $action) => ActionResource::getUrl(
-                                    'view',
-                                    parameters: ['record' => $action->id]
-                                )
-                            ),
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('Nom')
+                                    ->columnSpanFull()
+                                    ->url(
+                                        fn(Action $record): string => ActionResource::getUrl(
+                                            'view',
+                                            ['record' => $record]
+                                        )
+                                    ),
+                            ]),
                     ]),
             ]);
     }

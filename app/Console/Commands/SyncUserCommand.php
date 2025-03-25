@@ -49,32 +49,37 @@ class SyncUserCommand extends Command
             }
         }
 
-      //  $this->removeOldUsers();
+        //  $this->removeOldUsers();
 
         return SfCommand::SUCCESS;
     }
 
     private function addUser(string $username, UserLdap $userLdap): void
     {
-        $user = User::create([
-            'first_name' => $userLdap->getAttributeValue('givenname')[0],
-            'last_name' => $userLdap->getAttributeValue('sn')[0],
-            'email' => $userLdap->getAttributeValue('mail')[0],
-            'username' => $username,
-            'password' => \Str::password(),
-        ]);
+        $data = $this->data($userLdap);
+        $data['username'] = $username;
+        $data['password'] = \Str::password();
+        $user = User::create($data);
         $user->addRole($this->agentRole);
         $this->info('Add '.$user->first_name.' '.$user->last_name);
     }
 
     private function updateUser(User $user, mixed $userLdap): void
     {
-        $user->update([
-                'first_name' => $userLdap->getAttributeValue('givenname')[0],
-                'last_name' => $userLdap->getAttributeValue('sn')[0],
-                'email' => $userLdap->getAttributeValue('mail')[0],
-            ]
-        );
+        $user->update($this->data($userLdap));
+        $this->info('Update '.$user->first_name.' '.$user->last_name);
+    }
+
+    private function data(UserLdap $userLdap): array
+    {
+        return [
+            'first_name' => $userLdap->getAttributeValue('givenname')[0],
+            'last_name' => $userLdap->getAttributeValue('sn')[0],
+            'email' => $userLdap->getAttributeValue('mail')[0],
+            'mobile' => $userLdap->getAttributeValue('mobile')[0] ?? null,
+            'phone' => $userLdap->getAttributeValue('telephoneNumber')[0] ?? null,
+            'extension' => $userLdap->getAttributeValue('ipPhone')[0] ?? null,
+        ];
     }
 
     private function removeOldUsers(): void

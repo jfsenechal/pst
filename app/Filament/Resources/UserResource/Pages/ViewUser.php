@@ -2,8 +2,14 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\UserResource;
+use App\Models\Action;
 use Filament\Actions;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Form;
 
@@ -16,13 +22,44 @@ class ViewUser extends ViewRecord
         return $this->record->name() ?? 'Empty name';
     }
 
-    /**
-     * no form in view
-     */
-    public function form(Form $form): Form
+    public function infolist(Infolist $infolist): Infolist
     {
-        return $form
-            ->schema([]);
+        return $infolist->schema([
+            TextEntry::make('first_name')
+                ->label('Prénom'),
+            TextEntry::make('last_name')
+                ->label('Nom'),
+            TextEntry::make('email')
+                ->label('Email')
+                ->icon('tabler-mail'),
+            TextEntry::make('phone')
+                ->label('Téléphone')
+                ->icon('tabler-phone'),
+            TextEntry::make('mobile')
+                ->label('Mobile')
+                ->icon('tabler-device-mobile'),
+            TextEntry::make('extension')
+                ->label('Extension')
+                ->icon('tabler-device-landline-phone'),
+            Fieldset::make('actions')
+                ->label('Actions liés')
+                ->schema([
+                    RepeatableEntry::make('actions')
+                        ->label(false)
+                        ->columnSpanFull()
+                        ->schema([
+                            TextEntry::make('name')
+                                ->label('Nom')
+                                ->columnSpanFull()
+                                ->url(
+                                    fn(Action $record): string => ActionResource::getUrl(
+                                        'view',
+                                        ['record' => $record]
+                                    )
+                                ),
+                        ]),
+                ]),
+        ]);
     }
 
     protected function getHeaderActions(): array
