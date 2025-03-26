@@ -14,6 +14,8 @@ class OperationalObjective extends Model
 
     protected $fillable = [
         'name',
+        'position',
+        'strategic_objective_id',
         'idImport',
     ];
 

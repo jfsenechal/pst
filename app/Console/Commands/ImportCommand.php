@@ -3,7 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Constant\SynergyEnum;
+use App\Models\Action;
 use App\Models\Odd;
+use App\Models\OperationalObjective;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\StrategicObjective;
@@ -29,16 +31,16 @@ class ImportCommand extends Command
      */
     protected $description = 'Test command';
 
-    protected $dir = __DIR__.'/../../../output/';
+    protected string $dir = __DIR__.'/../../../output/';
 
     public function handle(): int
     {
-       // $this->importPartners();
-       // $this->importServices();
-       // $this->importOdd();
+        $this->importPartners();
+        $this->importServices();
+        $this->importOdd();
         $this->importOs();
-        //$this->importOo();
-        //$this->importActions();
+        $this->importOo();
+        $this->importActions();
         $this->info('Update');
 
         return SfCommand::SUCCESS;
@@ -121,9 +123,28 @@ class ImportCommand extends Command
     {
         $json = File::get($this->dir.'Objectifs opérationnels (OO) - Liste.json');
         $data = json_decode($json, true);
-        foreach ($data['Partenaires_externes_Liste'] as $row) {
-            Partner::create([
-                'name' => $row["D_nomination"],
+        foreach ($data['Objectifs_op_rationnels_OO_Liste'] as $row) {
+
+            $cleanedString = preg_replace('/^\d\s-\s/', '', $row["Objectifs_strat_giques_tre"]);
+
+            $strategicObjective = StrategicObjective::query()->where(
+                'name',
+                '=',
+                $cleanedString
+            )->first();
+            if (!$strategicObjective) {
+                $this->warn('not found'.$cleanedString);
+
+                continue;
+            }
+
+            $synergy = $this->findSynergy($row["Synergies"]);
+
+            OperationalObjective::create([
+                'strategic_objective_id' => $strategicObjective->id,
+                'name' => $row["Enjeu_strat_gique1"],
+                'position' => $row["Ordre"],
+                'synergy' => $synergy,
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
                 'idImport' => $row["ID"],
             ]);
@@ -134,10 +155,24 @@ class ImportCommand extends Command
     {
         $json = File::get($this->dir.'Projets - Liste.json');
         $data = json_decode($json, true);
-        foreach ($data['Partenaires_externes_Liste'] as $row) {
-            Partner::create([
-                'name' => $row["D_nomination"],
-                'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
+        foreach ($data['Projets1'] as $row) {
+
+            $cleanedString = preg_replace('/^\d{1,3}\s-\s/', '', $row["Objectifs_op_rationnels_OO"]);
+
+            $operationalObjective = OperationalObjective::query()->where(
+                'name',
+                '=',
+                $cleanedString
+            )->first();
+            if (!$operationalObjective) {
+                $this->warn('not found'.$cleanedString);
+
+                continue;
+            }
+
+            Action::create([
+                'name' => $row["Nom_du_projet"],
+                'operational_objective_id' => $operationalObjective->id,
                 'idImport' => $row["ID"],
             ]);
         }

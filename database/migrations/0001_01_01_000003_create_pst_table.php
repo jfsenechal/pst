@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(StrategicObjective::class)->constrained('strategic_objectives')->cascadeOnDelete();
             $table->string('name');
+            $table->integer('position')->default(0);
             $table->string('idImport')->nullable();
             $table->timestamps();
         });
