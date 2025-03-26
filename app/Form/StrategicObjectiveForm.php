@@ -16,6 +16,9 @@ class StrategicObjectiveForm
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('position')
+                    ->required()
+                    ->numeric()                ,
             ]);
     }
 }

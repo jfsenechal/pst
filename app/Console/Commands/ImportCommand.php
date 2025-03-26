@@ -33,14 +33,15 @@ class ImportCommand extends Command
 
     public function handle(): int
     {
-        $this->importPartners();
-        $this->importServices();
-        $this->importOdd();
-        //$this->importOs();
+       // $this->importPartners();
+       // $this->importServices();
+       // $this->importOdd();
+        $this->importOs();
+        //$this->importOo();
+        //$this->importActions();
         $this->info('Update');
 
         return SfCommand::SUCCESS;
-
     }
 
     private function importPartners(): void
@@ -110,6 +111,32 @@ class ImportCommand extends Command
                 'name' => $row["Enjeu_strat_gique1"],
                 'position' => $row["Ordre"],
                 'synergy' => $synergy,
+                'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
+                'idImport' => $row["ID"],
+            ]);
+        }
+    }
+
+    private function importOo(): void
+    {
+        $json = File::get($this->dir.'Objectifs opérationnels (OO) - Liste.json');
+        $data = json_decode($json, true);
+        foreach ($data['Partenaires_externes_Liste'] as $row) {
+            Partner::create([
+                'name' => $row["D_nomination"],
+                'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
+                'idImport' => $row["ID"],
+            ]);
+        }
+    }
+
+    private function importActions(): void
+    {
+        $json = File::get($this->dir.'Projets - Liste.json');
+        $data = json_decode($json, true);
+        foreach ($data['Partenaires_externes_Liste'] as $row) {
+            Partner::create([
+                'name' => $row["D_nomination"],
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
                 'idImport' => $row["ID"],
             ]);

@@ -9,6 +9,7 @@ use App\Models\StrategicObjective;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -41,10 +42,24 @@ class StrategicObjectiveResource extends Resource
         return $table
             ->defaultPaginationPageOption(50)
             ->recordTitleAttribute('name')
-            ->defaultSort('name')
+            ->defaultSort('position')
             ->columns([
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Ordre')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')
+                    ->limit(90)
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        // Only render the tooltip if the column content exceeds the length limit.
+                        return $state;
+                    })
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('oos_count')
@@ -60,7 +75,6 @@ class StrategicObjectiveResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
