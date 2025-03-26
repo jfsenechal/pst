@@ -10,7 +10,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Pages\Auth\Login as BasePage;
-use Illuminate\Support\Facades\Log;
 
 class Login extends BasePage
 {
@@ -38,7 +37,6 @@ class Login extends BasePage
         }
 
         $data = $this->form->getState();
-        Log::warning("Try log ".$data['email']);
 
         if (!$user = LdapAuthService::checkPassword($data['email'], $data['password'])) {
             $this->throwFailureValidationException();
@@ -47,7 +45,6 @@ class Login extends BasePage
             $user = Filament::auth()->user();
         }
 
-        Log::warning("success ".$data['email']);
         /*
         if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
             $this->throwFailureValidationException();

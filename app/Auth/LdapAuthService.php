@@ -4,7 +4,6 @@ namespace App\Auth;
 
 use App\Ldap\User as UserLdap;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use LdapRecord\Container;
 
 class LdapAuthService
@@ -13,15 +12,12 @@ class LdapAuthService
     {
         $user = User::where('username', '=', $username)->first();
         if (app()->environment('local')) {
-            Log::warning("local ".$username);
 
             return $user;
         }
         if ($user) {
-            Log::warning("user found ".$username);
             $userLdap = UserLdap::where('sAMAccountName', '=', $user->username)->first();
             if (!$userLdap) {
-                Log::warning("user ldap not found ".$username);
 
                 return null;
             }
@@ -32,7 +28,6 @@ class LdapAuthService
             } else {
                 $message = $connection->getLdapConnection()->getDiagnosticMessage();
 
-                Log::warning("failed log ".$message);
                 if (strpos($message, '532') !== false) {
                     //"Your password has expired.";
                     return null;
