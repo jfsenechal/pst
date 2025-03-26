@@ -30,6 +30,7 @@ class ApiLoginController
 
             $guard->login($user, true);
 
+            session()->regenerate();
             Log::warning("user success ".$user->first_name);
             Log::warning("user id ".$guard->id());
 
