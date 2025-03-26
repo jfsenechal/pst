@@ -33,7 +33,8 @@ class ApiLoginController
 
             Filament::auth()->login($user, true);
 
-            Log::warning("user success ".$username);
+            Log::warning("user success ".$user->first_name);
+            Log::warning("user id ".Filament::auth()?->id());
 
             return response()->json(['status' => 'success', 'message' => 'Authenticated'.$user->first_name]);
         } catch (Exception $e) {
