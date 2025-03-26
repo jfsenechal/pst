@@ -4,6 +4,8 @@ namespace App\Filament\Resources\OddResource\Pages;
 
 use App\Filament\Resources\OddResource;
 use Filament\Actions;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -16,15 +18,6 @@ class ViewOdd extends ViewRecord
         return $this->record->name ?? 'Empty name';
     }
 
-    /**
-     * no form in view
-     */
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([]);
-    }
-
     protected function getHeaderActions(): array
     {
         return [
@@ -33,5 +26,21 @@ class ViewOdd extends ViewRecord
             Actions\DeleteAction::make()
                 ->icon('tabler-trash'),
         ];
+    }
+
+    public function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('name')
+                    ->label('Nom')
+                    ->columnSpanFull(),
+                TextEntry::make('descripton')
+                    ->label('Description')
+                    ->columnSpanFull(),
+                TextEntry::make('justification')
+                    ->label('Justification')
+                    ->columnSpanFull(),
+            ]);
     }
 }

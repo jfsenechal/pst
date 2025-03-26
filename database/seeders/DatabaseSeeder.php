@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
                 'password' => static::$password ??= Hash::make('marge'),
             ]);
 
-        $services = ['Tiers-lieu e-Square', 'Population', 'Service Juridique', 'Educateurs de rue'];
+  /*      $services = ['Tiers-lieu e-Square', 'Population', 'Service Juridique', 'Educateurs de rue'];
         foreach ($services as $service) {
             Service::factory()->create(['name' => $service]);
         }
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                         'name' => $action,
                     ]);
             }
-        }
+        }*/
     }
 
     public function getSos(): array

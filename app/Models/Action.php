@@ -25,6 +25,7 @@ class Action extends Model
         'budget_estimate',
         'financing_mode',
         'operational_objective_id',
+        'idImport',
     ];
 
     protected $casts = [

@@ -15,6 +15,7 @@ class Service extends Model
     protected $fillable = [
         'name',
         'initials',
+        'idImport',
     ];
 
     public function users(): BelongsToMany

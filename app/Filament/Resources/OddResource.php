@@ -8,6 +8,7 @@ use App\Models\Odd;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Tables;
@@ -36,9 +37,22 @@ class OddResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('name')
+            ->defaultPaginationPageOption(50)
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->limit(120)
+                    ->searchable()
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        // Only render the tooltip if the column content exceeds the length limit.
+                        return $state;
+                    }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

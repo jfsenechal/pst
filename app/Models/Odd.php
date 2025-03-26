@@ -11,7 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Odd extends Model
 {
     protected $fillable = [
+        'action_id',
         'name',
+        'justification',
+        'description',
+        'idImport',
     ];
 
     /**

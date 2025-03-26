@@ -4,7 +4,9 @@ namespace App\Filament\Resources\ServiceResource\Pages;
 
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\ServiceResource;
+use App\Filament\Resources\UserResource;
 use App\Models\Action;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -34,8 +36,14 @@ class ViewService extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            TextEntry::make('name')
-                ->label('Nom'),
+            Fieldset::make('users_tab')
+                ->label('Agents')
+                ->schema([
+                    TextEntry::make('users')
+                        ->label(false)
+                        ->badge()
+                        ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name)
+                ]),
             Fieldset::make('actions')
                 ->label('Actions liés')
                 ->schema([

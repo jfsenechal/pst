@@ -13,6 +13,7 @@ class StrategicObjective extends Model
 
     protected $fillable = [
         'name',
+        'idImport',
     ];
 
     /**
