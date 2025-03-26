@@ -35,7 +35,7 @@ class ApiLoginController
 
             Log::warning("user success ".$username);
 
-            return response()->json(['status' => 'success', 'message' => 'Authenticated'.$user->name]);
+            return response()->json(['status' => 'success', 'message' => 'Authenticated'.$user->first_name]);
         } catch (Exception $e) {
             Log::warning("user fail ".$username." ".$e->getMessage());
 
