@@ -14,7 +14,7 @@ class ApiLoginController
 {
     public function __invoke(Request $request)
     {
-        $username = $request->username;
+        $username = $request->get('username');
         Log::warning("Try log ".$username);
 
         if (Auth::check()) {
