@@ -8,13 +8,13 @@ use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class ApiLoginController
 {
     public function __invoke(Request $request)
     {
-        $username = $request->get('username');
+        $username = $request->input('username');
         Log::warning("Try log ".$username);
 
         if (Auth::check()) {
