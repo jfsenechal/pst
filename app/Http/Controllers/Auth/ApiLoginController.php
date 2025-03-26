@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Auth;
 use Exception;
 use Filament\Facades\Filament;
 use Filament\Models\Contracts\FilamentUser;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApiLoginController
 {
@@ -16,13 +15,11 @@ class ApiLoginController
     {
         $username = $request->input('username');
         Log::warning("Try log ".$username);
-
-        if (Auth::check()) {
+        $guard = Filament::auth();
+        if ($guard->check()) {
             return response()->json(['status' => 'success', 'message' => 'Already Authenticated']);
         }
         try {
-            //$user = User::query()->where('id', '=', $request->bearerToken())->firstOrFail();
-
             $user = User::query()->where('username', $username)->first();
             if (!$user instanceof FilamentUser) {
 
@@ -31,13 +28,7 @@ class ApiLoginController
                 return response()->json(['status' => 'error', 'message' => 'Invalid token'], 401);
             }
 
-            Filament::auth()->login($user, true);
-
-            $guard = Filament::auth();
-            if (!$guard->check()) {
-
-                Log::warning("user not ".$user->first_name);
-            }
+            $guard->login($user, true);
 
             Log::warning("user success ".$user->first_name);
             Log::warning("user id ".$guard->id());
