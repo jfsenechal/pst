@@ -35,7 +35,7 @@ class ApiLoginController
 
             Log::warning("user success ".$user->first_name);
             Log::warning("user id ".Filament::auth()?->id());
-            Log::warning("user id ".Filament::auth()?->user()->getAuthIdentifier());
+            Log::warning("user check ".Filament::auth()?->check());
 
             return response()->json(['status' => 'success', 'message' => 'Authenticated'.$user->first_name]);
         } catch (Exception $e) {
