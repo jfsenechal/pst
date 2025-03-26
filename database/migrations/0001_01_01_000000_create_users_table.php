@@ -30,6 +30,8 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->tinyInteger('mandatory')->default(0);
+            $table->string('color_primary')->nullable();
+            $table->string('color_secondary')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

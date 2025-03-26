@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Widgets\ActionsWidget;
 use Filament\Http\Middleware\Authenticate;
@@ -28,10 +29,11 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->login(Login::class)
+            ->profile(EditProfile::class)
             ->path('admin')
             ->colors([
-                'primary' => Color::Slate,
-                'secondary' => Color::Pink,
+                'primary' => Color::Pink,
+                'secondary' => Color::Purple,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

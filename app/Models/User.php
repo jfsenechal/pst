@@ -32,6 +32,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'mobile',
         'username',
         'mandatory',
+        'color_primary',
+        'color_secondary',
         'email',
         'password',
         'plainPassword',
