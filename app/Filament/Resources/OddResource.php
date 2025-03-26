@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Constant\NavigationGroupEnum;
 use App\Filament\Resources\OddResource\Pages;
 use App\Form\OddForm;
 use App\Models\Odd;
@@ -27,6 +28,11 @@ class OddResource extends Resource
     public static function getModelLabel(): string
     {
         return 'Objectif de développement durable (ODD)';
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroupEnum::SETTINGS->getLabel();
     }
 
     public static function form(Form $form): Form

@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Constant\ActionPriorityEnum;
+use App\Constant\ActionStateEnum;
 use App\Constant\SynergyEnum;
 use App\Models\Action;
 use App\Models\Odd;
@@ -10,6 +12,7 @@ use App\Models\Partner;
 use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -40,7 +43,7 @@ class ImportCommand extends Command
         $this->importOdd();
         $this->importOs();
         $this->importOo();
-        $this->importActions();
+      //  $this->importActions();
         $this->info('Update');
 
         return SfCommand::SUCCESS;
@@ -153,9 +156,9 @@ class ImportCommand extends Command
 
     private function importActions(): void
     {
-        $json = File::get($this->dir.'Projets - Liste.json');
+        $json = File::get($this->dir.'Projets - PST public.json');
         $data = json_decode($json, true);
-        foreach ($data['Projets1'] as $row) {
+        foreach ($data['Projets_PST_public'] as $row) {
 
             $cleanedString = preg_replace('/^\d{1,3}\s-\s/', '', $row["Objectifs_op_rationnels_OO"]);
 
@@ -169,12 +172,26 @@ class ImportCommand extends Command
 
                 continue;
             }
+            $users = [];
+         //   "Nature_de_l_ch_ance": "Impérative",
+        //    "Agent_pilote": "BRASSEUR - Jean-Philippe",
+        //    "Justification_tat_d_avancement": "Action/projet terminé.",
+        //   "N_projet": "2",
+        //    "Objectifs_strat_giques_OS": "1 - Etre une commune attractive et rayonnante (Rôle moteur)",
+        //    "Objectifs_op_rationnels_OO": "5 - Développer l\u0027émergence du numérique et l\u0027innovation",
 
             Action::create([
                 'name' => $row["Nom_du_projet"],
+                'description' => $row["Description_compl_te"],
+                'due_date' => $row["Ech_ance1"] ? Carbon::create($row["Ech_ance1"]) : null,
+                'state' => $this->findState($row["Etat_d_avancement"]),
+                'priority' => $this->findState($row["Priorit"]),
                 'operational_objective_id' => $operationalObjective->id,
                 'idImport' => $row["ID"],
             ]);
+            foreach ($users as $user) {
+
+            }
         }
     }
 
@@ -184,6 +201,27 @@ class ImportCommand extends Command
             "Commune" => SynergyEnum::VILLE->value,
             "Cpas" => SynergyEnum::CPAS->value,
             "Commune et CPAS" => SynergyEnum::COMMON->value,
+            default => null,
+        };
+    }
+
+    private function findPriority(string $name): ?string
+    {
+        return match ($name) {
+            "Minimale" => ActionPriorityEnum::MINIMUM->value,
+            "Moyenne" => ActionPriorityEnum::AVERAGE->value,
+            "Maximale" => ActionPriorityEnum::MAXIMUM->value,
+            default => ActionPriorityEnum::UNDETERMINED->value,
+        };
+    }
+
+    private function findState(string $name): ?string
+    {
+        return match ($name) {
+            "Supprimé" => ActionStateEnum::CANCELED->value,
+            "Suspendu" => ActionStateEnum::SUSPENDED->value,
+            "En cours de réalisation" => ActionStateEnum::PENDING->value,
+            "Terminé" => ActionStateEnum::FINISHED->value,
             default => null,
         };
     }

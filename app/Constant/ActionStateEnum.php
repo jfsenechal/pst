@@ -7,11 +7,13 @@ use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
+enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
 {
-    case CANCELED = 0;
-    case NEW = 1;
-    case PENDING = 2;
+    case CANCELED = "CANCELED";
+    case FINISHED = "FINISHED";
+    case NEW = "NEW";
+    case PENDING = "PENDING";
+    case SUSPENDED = "SUSPENDED";
 
     public static function toArray(): array
     {
@@ -29,6 +31,8 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
             self::CANCELED => 'Annulé',
             self::NEW => 'Nouveau',
             self::PENDING => 'En cours',
+            self::SUSPENDED => "Suspendu",
+            self::FINISHED => "Terminé",
         };
     }
 
@@ -37,7 +41,9 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::CANCELED => 'danger',
             self::NEW => 'success',
+            self::FINISHED => 'success',
             self::PENDING => 'warning',
+            self::SUSPENDED => "warning",
         };
     }
 
@@ -46,7 +52,9 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::CANCELED => 'danger',
             self::NEW => 'success',
+            self::FINISHED => "success",
             self::PENDING => 'warning',
+            self::SUSPENDED => "warning",
         };
     }
 
@@ -55,7 +63,9 @@ enum ActionStateEnum: int implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::CANCELED => 'heroicon-m-clock',
             self::NEW => 'heroicon-m-exclamation-circle',
+            self::FINISHED => "heroicon-m-check",
             self::PENDING => 'heroicon-m-check',
+            self::SUSPENDED => "heroicon-m-check",
         };
     }
 }
