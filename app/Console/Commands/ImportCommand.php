@@ -38,12 +38,12 @@ class ImportCommand extends Command
 
     public function handle(): int
     {
-        $this->importPartners();
-        $this->importServices();
-        $this->importOdd();
-        $this->importOs();
-        $this->importOo();
-      //  $this->importActions();
+        /*  $this->importPartners();
+          $this->importServices();
+          $this->importOdd();
+          $this->importOs();
+          $this->importOo();*/
+        $this->importActions();
         $this->info('Update');
 
         return SfCommand::SUCCESS;
@@ -173,19 +173,30 @@ class ImportCommand extends Command
                 continue;
             }
             $users = [];
-         //   "Nature_de_l_ch_ance": "Impérative",
-        //    "Agent_pilote": "BRASSEUR - Jean-Philippe",
-        //    "Justification_tat_d_avancement": "Action/projet terminé.",
-        //   "N_projet": "2",
-        //    "Objectifs_strat_giques_OS": "1 - Etre une commune attractive et rayonnante (Rôle moteur)",
-        //    "Objectifs_op_rationnels_OO": "5 - Développer l\u0027émergence du numérique et l\u0027innovation",
+            //   "Nature_de_l_ch_ance": "Impérative",
+            //    "Agent_pilote": "BRASSEUR - Jean-Philippe",
+            //    "Justification_tat_d_avancement": "Action/projet terminé.",
+            //   "N_projet": "2",
+            //    "Objectifs_strat_giques_OS": "1 - Etre une commune attractive et rayonnante (Rôle moteur)",
+            //    "Objectifs_op_rationnels_OO": "5 - Développer l\u0027émergence du numérique et l\u0027innovation",
 
+            $state = $this->findState($row["Etat_d_avancement"]);
+            $priority = $this->findPriority($row["Priorit"]);
+
+            if (!$priority) {
+                $this->warn('priority not found'.$row["Priorit"]);
+                continue;
+            }
+            if (!$state) {
+                $this->warn('state not found'.$row["Etat_d_avancement"]);
+                continue;
+            }
             Action::create([
                 'name' => $row["Nom_du_projet"],
                 'description' => $row["Description_compl_te"],
                 'due_date' => $row["Ech_ance1"] ? Carbon::create($row["Ech_ance1"]) : null,
-                'state' => $this->findState($row["Etat_d_avancement"]),
-                'priority' => $this->findState($row["Priorit"]),
+                'state' => $state,
+                'priority' => $priority,
                 'operational_objective_id' => $operationalObjective->id,
                 'idImport' => $row["ID"],
             ]);
@@ -222,7 +233,7 @@ class ImportCommand extends Command
             "Suspendu" => ActionStateEnum::SUSPENDED->value,
             "En cours de réalisation" => ActionStateEnum::PENDING->value,
             "Terminé" => ActionStateEnum::FINISHED->value,
-            default => null,
+            default => ActionStateEnum::NEW->value,
         };
     }
 }

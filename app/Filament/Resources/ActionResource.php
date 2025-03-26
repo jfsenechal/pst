@@ -46,6 +46,7 @@ class ActionResource extends Resource
                     ->searchable()
                     ->label('Intitulé')
                     ->limit(120)
+                    ->url(fn(Action $record) => ActionResource::getUrl('view', ['record' => $record->id]))
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
 
