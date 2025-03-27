@@ -38,11 +38,11 @@ class ImportCommand extends Command
 
     public function handle(): int
     {
-        /*  $this->importPartners();
-          $this->importServices();
-          $this->importOdd();
-          $this->importOs();
-          $this->importOo();*/
+        $this->importPartners();
+        $this->importServices();
+        $this->importOdd();
+        $this->importOs();
+        $this->importOo();
         $this->importActions();
         $this->info('Update');
 
