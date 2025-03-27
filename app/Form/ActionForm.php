@@ -156,6 +156,11 @@ class ActionForm
                 ->label('Indicateur d\'évaluation'),
             Forms\Components\Textarea::make('work_plan')
                 ->label('Plan de travail'),
+            Forms\Components\Select::make('odds')
+                ->label('Odds')
+                ->relationship(name: 'odds', titleAttribute: 'name')
+                ->multiple()
+            ->preload(),
         ];
     }
 

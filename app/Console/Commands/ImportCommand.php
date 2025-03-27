@@ -57,7 +57,6 @@ class ImportCommand extends Command
             Partner::create([
                 'name' => $row["D_nomination"],
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
-                'idImport' => $row["ID"],
             ]);
         }
     }
@@ -76,7 +75,6 @@ class ImportCommand extends Command
             $service = Service::create([
                 'name' => $row["Service_interne"],
                 'synergy' => $synergy,
-                'idImport' => $row["ID"],
             ]);
             foreach ($emails as $email) {
                 if ($user = User::where('email', $email)->first()) {
@@ -99,7 +97,6 @@ class ImportCommand extends Command
                 'position' => $row["Ordre"],
                 'justification' => $row["Justifications_commentaires"],
                 'description' => $row["Fiche_projet_compl_te_Nom_du_projet"],
-                'idImport' => $row["ID"],
             ]);
         }
     }
@@ -117,7 +114,6 @@ class ImportCommand extends Command
                 'position' => $row["Ordre"],
                 'synergy' => $synergy,
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
-                'idImport' => $row["ID"],
             ]);
         }
     }
@@ -149,7 +145,6 @@ class ImportCommand extends Command
                 'position' => $row["Ordre"],
                 'synergy' => $synergy,
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
-                'idImport' => $row["ID"],
             ]);
         }
     }
@@ -198,11 +193,7 @@ class ImportCommand extends Command
                 'state' => $state,
                 'priority' => $priority,
                 'operational_objective_id' => $operationalObjective->id,
-                'idImport' => $row["ID"],
             ]);
-            foreach ($users as $user) {
-
-            }
         }
     }
 

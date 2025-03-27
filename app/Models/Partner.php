@@ -18,7 +18,6 @@ class Partner extends Model
         'email',
         'initials',
         'description',
-        'idImport',
     ];
 
     /**

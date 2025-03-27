@@ -5,10 +5,12 @@ namespace App\Filament\Resources\ActionResource\Pages;
 use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
+use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
 use App\Models\Media;
+use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
@@ -167,6 +169,26 @@ class ViewAction extends ViewRecord
                             ->label('Partenaires')
                             ->badge()
                             ->formatStateUsing(fn(Partner $state): string => $state->name),
+                    ]),
+
+                Fieldset::make('odd_tab')
+                    ->label('Objectifs de développement durable')
+                    ->schema([
+                        RepeatableEntry::make('odds')
+                            ->label(false)
+                            ->columnSpanFull()
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('Nom')
+                                    ->color('secondary')
+                                    ->columnSpanFull()
+                                    ->url(
+                                        fn(Odd $record): string => OddResource::getUrl(
+                                            'view',
+                                            ['record' => $record]
+                                        )
+                                    ),
+                            ]),
                     ]),
                 Fieldset::make('budget')
                     ->label('Financement')

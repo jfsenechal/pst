@@ -4,6 +4,7 @@ use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Constant\SynergyEnum;
 use App\Models\Action;
+use App\Models\Odd;
 use App\Models\OperationalObjective;
 use App\Models\Partner;
 use App\Models\Service;
@@ -20,7 +21,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->integer('position')->default(0);
-            $table->string('idImport')->nullable();
             $table->timestamps();
         });
 
@@ -29,7 +29,6 @@ return new class extends Migration {
             $table->foreignIdFor(StrategicObjective::class)->constrained('strategic_objectives')->cascadeOnDelete();
             $table->string('name');
             $table->integer('position')->default(0);
-            $table->string('idImport')->nullable();
             $table->timestamps();
         });
 
@@ -37,7 +36,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
             $table->string('name');
-            $table->string('idImport')->nullable();
             $table->text('description')->nullable();
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
@@ -52,7 +50,6 @@ return new class extends Migration {
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->string('idImport')->nullable();
             $table->string('initials')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
@@ -70,7 +67,6 @@ return new class extends Migration {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('idImport')->nullable();
             $table->string('initials')->nullable();
             $table->enum('synergy', SynergyEnum::toArray())->default(SynergyEnum::COMMON->value);
             $table->timestamps();
@@ -82,9 +78,6 @@ return new class extends Migration {
             $table->integer('position')->default(0);
             $table->text('description')->nullable();
             $table->text('justification')->nullable();
-            $table->string('idImport')->nullable();
-            $table->string('action_id')->nullable();
-           // $table->foreignIdFor(Action::class)->constrained('actions')->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -121,6 +114,13 @@ return new class extends Migration {
             $table->unique(['action_id', 'service_id']);
         });
 
+        Schema::create('action_odd', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Odd::class)->constrained()->cascadeOnDelete();
+            $table->unique(['action_id', 'odd_id']);
+        });
+
         Schema::create('service_user', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
@@ -140,6 +140,7 @@ return new class extends Migration {
         Schema::dropIfExists('action_service');
         Schema::dropIfExists('action_partner');
         Schema::dropIfExists('action_user');
+        Schema::dropIfExists('action_odd');
         Schema::dropIfExists('service_user');
         Schema::dropIfExists('operational_objectives');
         Schema::dropIfExists('strategic_objectives');

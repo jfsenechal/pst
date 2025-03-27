@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * objectif de développement durable
@@ -15,14 +15,13 @@ class Odd extends Model
         'name',
         'justification',
         'description',
-        'idImport',
     ];
 
     /**
-     * Get the action that owns the comment.
+     * @return BelongsToMany<Action>
      */
-    public function action(): BelongsTo
+    public function actions(): BelongsToMany
     {
-        return $this->belongsTo(Action::class);
+        return $this->belongsToMany(Action::class);
     }
 }
