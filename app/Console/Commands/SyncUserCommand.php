@@ -7,6 +7,7 @@ use App\Ldap\User as UserLdap;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
 class SyncUserCommand extends Command
@@ -45,7 +46,7 @@ class SyncUserCommand extends Command
             if (!$user = User::where('username', $username)->first()) {
                 $this->addUser($username, $userLdap);
             } else {
-                $this->updateUser($user, $userLdap);
+                $this->updateUser($user, $userLdap, $username);
             }
         }
 
@@ -56,7 +57,7 @@ class SyncUserCommand extends Command
 
     private function addUser(string $username, UserLdap $userLdap): void
     {
-        $data = $this->data($userLdap);
+        $data = $this->data($userLdap, $username);
         $data['username'] = $username;
         $data['password'] = \Str::password();
         $user = User::create($data);
@@ -66,11 +67,11 @@ class SyncUserCommand extends Command
 
     private function updateUser(User $user, mixed $userLdap): void
     {
-        $user->update($this->data($userLdap));
+        $user->update($this->data($userLdap, $user->username));
         $this->info('Update '.$user->first_name.' '.$user->last_name);
     }
 
-    private function data(UserLdap $userLdap): array
+    private function data(UserLdap $userLdap, string $username): array
     {
         return [
             'first_name' => $userLdap->getAttributeValue('givenname')[0],
@@ -79,7 +80,19 @@ class SyncUserCommand extends Command
             'mobile' => $userLdap->getAttributeValue('mobile')[0] ?? null,
             'phone' => $userLdap->getAttributeValue('telephoneNumber')[0] ?? null,
             'extension' => $userLdap->getAttributeValue('ipPhone')[0] ?? null,
+            'uuid' => $this->getUuid($username),
         ];
+    }
+
+    private function getUuid(string $username): ?string
+    {
+        $connection = DB::connection('intranet');
+        $users = $connection->select("SELECT * FROM users WHERE `username` = '$username'");
+        if (count($users) > 0) {
+            return $users[0]->uuid;
+        }
+
+        return null;
     }
 
     private function removeOldUsers(): void

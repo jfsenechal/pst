@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->tinyInteger('mandatory')->default(0);
             $table->string('color_primary')->nullable();
             $table->string('color_secondary')->nullable();
+            $table->string('uuid')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -13,22 +13,22 @@ use Illuminate\Support\Facades\Log;
 
 class LoginLinkController extends Controller
 {
-    public function __invoke(Request $request, string $username): RedirectResponse
+    public function __invoke(Request $request, string $uuid): RedirectResponse
     {
         $guard = Filament::auth();
         if ($guard->check()) {
             return redirect()->intended('admin');
         }
         try {
-            $user = User::query()->where('username', $username)->first();
+            $user = User::query()->where('uuid', $uuid)->first();
             if (!$user instanceof FilamentUser) {
-                Log::warning("user not found ".$username);
+                Log::warning("user not found ".$uuid);
 
                 return redirect('admin/login');
             }
             $guard->login($user, true);
         } catch (Exception $e) {
-            Log::warning("user fail ".$username." ".$e->getMessage());
+            Log::warning("user fail ".$uuid." ".$e->getMessage());
 
             return redirect('login');
         }
