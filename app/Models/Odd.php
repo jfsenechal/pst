@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Odd extends Model
 {
     protected $fillable = [
-        'action_id',
         'name',
         'justification',
         'description',

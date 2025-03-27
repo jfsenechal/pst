@@ -92,7 +92,6 @@ class ImportCommand extends Command
         $data = json_decode($json, true);
         foreach ($data['Objectifs_D_veloppement_Durable_ODD_Liste'] as $row) {
             Odd::create([
-                'action_id' => null,
                 'name' => $row["Objectif_de_D_veloppement_Durable_ODD"],
                 'position' => $row["Ordre"],
                 'justification' => $row["Justifications_commentaires"],
