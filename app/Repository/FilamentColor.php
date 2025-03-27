@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Repository;
 
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Auth;
 
-class SetFilamentColor
+class FilamentColor
 {
     public static function userColor(): array
     {
@@ -14,16 +14,13 @@ class SetFilamentColor
             'secondary' => Color::Pink,
         ];
         if ($user = Auth::user()) {
-            dump(123);
             if ($colorSelected = $user->color_primary) {
                 $color = self::findConstantByValue($colorSelected);
-                dump($color);
                 if ($color) {
-                    dump($colorSelected, $colors['primary']);
                     $colors['primary'] = $color;
                 }
             }
-            if ($colorSelected = $user->color_seconday) {
+            if ($colorSelected = $user->color_secondary) {
                 $color = self::findConstantByValue($colorSelected);
                 if ($color) {
                     $colors['secondary'] = $color;
