@@ -88,7 +88,9 @@ class SyncUserCommand extends Command
     {
         $connection = DB::connection('intranet');
         $users = $connection->select("SELECT * FROM users WHERE `username` = '$username'");
+        $this->info('uuid '.$username.' '.count($users).' found users');
         if (count($users) > 0) {
+        $this->info('uuid2 '.$users[0]->uuid);
             return $users[0]->uuid;
         }
 
