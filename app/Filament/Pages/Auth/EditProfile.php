@@ -2,7 +2,7 @@
 
 namespace App\Filament\Pages\Auth;
 
-use App\Repository\FilamentColor;
+use App\Repository\FilamentColorRepository;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -25,10 +25,10 @@ class EditProfile extends BaseEditProfile
             ->schema([
                 $this->getEmailFormComponent(),
                 Select::make('color_primary')
-                    ->options(FilamentColor::colors())
+                    ->options(FilamentColorRepository::colors())
                     ->label('Couleur principale'),
                 Select::make('color_secondary')
-                    ->options(FilamentColor::colors())
+                    ->options(FilamentColorRepository::colors())
                     ->allowHtml()
                     ->label('Couleur secondaire'),
             ])
@@ -45,5 +45,10 @@ class EditProfile extends BaseEditProfile
             ->maxLength(255)
             ->unique(ignoreRecord: true)
             ->columnSpanFull();
+    }
+
+    protected function afterSave(): void
+    {
+        $this->redirect(request()->header('referer'));
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Repository\FilamentColor;
+use App\Repository\FilamentColorRepository;
 use Closure;
 use Filament\Facades\Filament;
+use Filament\Support\Facades\FilamentColor;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,9 +18,9 @@ class FilamentPanelColorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $panel = Filament::getCurrentPanel();
-        $colors = FilamentColor::userColor();
-        $panel->colors($colors);
+        $colors = FilamentColorRepository::userColor();
+        FilamentColor::register($colors);
+
         return $next($request);
     }
 }

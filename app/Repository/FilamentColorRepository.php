@@ -5,7 +5,7 @@ namespace App\Repository;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\Auth;
 
-class FilamentColor
+class FilamentColorRepository
 {
     public static function userColor(): array
     {
