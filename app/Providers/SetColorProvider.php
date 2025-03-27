@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Http\Middleware\SetFilamentColor;
+use App\Repository\FilamentColor;
 use Filament\Facades\Filament;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class SetColorProvider extends ServiceProvider
@@ -14,8 +13,7 @@ class SetColorProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $panel = Filament::getPanel('admin');
-        $panel->colors(fn() => SetFilamentColor::userColor());
+
     }
 
     /**
@@ -23,6 +21,8 @@ class SetColorProvider extends ServiceProvider
      */
     public function boot(): void
     {
-       // dump(Auth::user());
+        $panel = Filament::getPanel('admin');
+        $colors = FilamentColor::userColor();
+        $panel->colors($colors);
     }
 }

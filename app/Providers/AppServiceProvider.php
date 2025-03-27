@@ -2,12 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\ServiceProvider;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
-use Illuminate\Support\Facades\Blade;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,9 +26,8 @@ class AppServiceProvider extends ServiceProvider
         if (!app()->environment('production')) {
             Mail::alwaysTo('jf@marche.be');
             // Add following lines to force laravel to use APP_URL as root url for the app.
-          //  $strBaseURL = $this->app['url'];
-          //  $strBaseURL->useOrigin(config('app.url'));
-
+            //  $strBaseURL = $this->app['url'];
+            //  $strBaseURL->useOrigin(config('app.url'));
         }
         /*    FilamentView::registerRenderHook(
                 PanelsRenderHook::SIDEBAR_NAV_START,
@@ -39,6 +37,5 @@ class AppServiceProvider extends ServiceProvider
             PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE,
             fn(): View => view('filament.login_form'),
         );
-
     }
 }
