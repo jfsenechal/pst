@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Exception;
+use Filament\Facades\Filament;
+use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+class LoginLinkController extends Controller
+{
+    public function __invoke(Request $request, string $username): RedirectResponse
+    {
+        $guard = Filament::auth();
+        if ($guard->check()) {
+            return redirect()->intended('admin');
+        }
+        try {
+            $user = User::query()->where('username', $username)->first();
+            if (!$user instanceof FilamentUser) {
+                Log::warning("user not found ".$username);
+
+                return redirect('admin/login');
+            }
+            $guard->login($user, true);
+        } catch (Exception $e) {
+            Log::warning("user fail ".$username." ".$e->getMessage());
+
+            return redirect('login');
+        }
+
+        return redirect()->intended('admin');
+    }
+}
