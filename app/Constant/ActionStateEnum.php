@@ -12,6 +12,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     case CANCELED = "CANCELED";
     case FINISHED = "FINISHED";
     case NEW = "NEW";
+    case START = "START";
     case PENDING = "PENDING";
     case SUSPENDED = "SUSPENDED";
 
@@ -30,6 +31,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
         return match ($this) {
             self::CANCELED => 'Annulé',
             self::NEW => 'Nouveau',
+            self::START => 'Démarré',
             self::PENDING => 'En cours',
             self::SUSPENDED => "Suspendu",
             self::FINISHED => "Terminé",
@@ -41,6 +43,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
         return match ($this) {
             self::CANCELED => 'danger',
             self::NEW => 'success',
+            self::START => 'success',
             self::FINISHED => 'success',
             self::PENDING => 'warning',
             self::SUSPENDED => "warning",
@@ -52,6 +55,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
         return match ($this) {
             self::CANCELED => 'danger',
             self::NEW => 'success',
+            self::START => 'success',
             self::FINISHED => "success",
             self::PENDING => 'warning',
             self::SUSPENDED => "warning",
@@ -62,6 +66,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     {
         return match ($this) {
             self::CANCELED => 'heroicon-m-clock',
+            self::START => 'success',
             self::NEW => 'heroicon-m-exclamation-circle',
             self::FINISHED => "heroicon-m-check",
             self::PENDING => 'heroicon-m-check',

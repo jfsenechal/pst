@@ -13,7 +13,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     case ADMIN = "ROLE_ADMIN";
     case AGENT = "ROLE_AGENT";
     case CHEF = "ROLE_CHEF";
-    case CONSULTATION = "ROLE_CONSULTATION";
+    case MANDATAIRE = "ROLE_MANDATAIRE";
 
     public static function toArray(): array
     {
@@ -30,7 +30,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::ADMIN => 'Administrateur',
             self::AGENT => 'Agent',
-            self::CONSULTATION => 'Consultation',
+            self::MANDATAIRE => 'Mandataire',
             self::CHEF => 'Chef de projet',
         };
     }
@@ -40,7 +40,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::ADMIN => 'success',
             self::AGENT => 'warning',
-            self::CONSULTATION => 'primary',
+            self::MANDATAIRE => 'primary',
             self::CHEF => 'secondary',
         };
     }
@@ -50,7 +50,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::ADMIN => 'Accès à tout et peut paramètrer l\'application',
             self::AGENT => 'Role standard',
-            self::CONSULTATION => 'Ne peux que lire',
+            self::MANDATAIRE => 'Ne peux que lire',
             self::CHEF => 'Chef de projet',
         };
     }
@@ -60,7 +60,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::ADMIN => 'Administrateur',
             self::AGENT => 'Agent',
-            self::CONSULTATION => 'Consultation',
+            self::MANDATAIRE => 'Consultation',
             self::CHEF => 'Chef de projet',
         };
     }

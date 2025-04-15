@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Models\OperationalObjective;
 use Filament\Forms;
@@ -22,7 +21,7 @@ class ActionForm
             ->columns(1)
             ->schema([
                 Wizard::make([
-                    Wizard\Step::make('necessary_data')
+                    Wizard\Step::make('project')
                         ->label('Projet')
                         ->schema(
                             self::fieldsProject($record),
@@ -36,6 +35,11 @@ class ActionForm
                         ->label('Informations')
                         ->schema(
                             self::fieldsDescription(),
+                        ),
+                    Wizard\Step::make('odd')
+                        ->label('Odds')
+                        ->schema(
+                            self::fieldsOdd(),
                         ),
                     Wizard\Step::make('financing')
                         ->label('Financement')
@@ -100,11 +104,6 @@ class ActionForm
                         ->default(ActionStateEnum::NEW->value)
                         ->options(ActionStateEnum::class)
                         ->suffixIcon('tabler-ladder'),
-                    Forms\Components\Select::make('priority')
-                        ->label('Priorité')
-                        ->default(ActionPriorityEnum::UNDETERMINED->value)
-                        ->options(ActionPriorityEnum::class)
-                        ->suffixIcon('tabler-ladder'),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')
                         ->suffixIcon('tabler-calendar-stats'),
@@ -156,11 +155,17 @@ class ActionForm
                 ->label('Indicateur d\'évaluation'),
             Forms\Components\Textarea::make('work_plan')
                 ->label('Plan de travail'),
+        ];
+    }
+
+    private static function fieldsOdd(): array
+    {
+        return [
             Forms\Components\Select::make('odds')
                 ->label('Odds')
                 ->relationship(name: 'odds', titleAttribute: 'name')
                 ->multiple()
-            ->preload(),
+                ->preload(),
         ];
     }
 

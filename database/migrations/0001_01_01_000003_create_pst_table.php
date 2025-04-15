@@ -1,6 +1,5 @@
 <?php
 
-use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Constant\SynergyEnum;
 use App\Models\Action;
@@ -37,13 +36,14 @@ return new class extends Migration {
             $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->text('note')->nullable();
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
             $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::NEW->value);
-            $table->enum('priority', ActionPriorityEnum::toArray())->default(ActionPriorityEnum::UNDETERMINED->value);
             $table->text('work_plan')->nullable();
             $table->text('evaluation_indicator')->nullable();
+            $table->string('user_add');
             $table->timestamps();
         });
 
@@ -54,13 +54,6 @@ return new class extends Migration {
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('description')->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('comments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
-            $table->text('content');
             $table->timestamps();
         });
 
@@ -75,9 +68,29 @@ return new class extends Migration {
         Schema::create('odds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('icone')->nullable();
             $table->integer('position')->default(0);
             $table->text('description')->nullable();
             $table->text('justification')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('followups', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
+            $table->string('content');
+            $table->integer('pourcent')->nullable();
+            $table->string('user_add');
+            $table->timestamps();
+        });
+
+        Schema::create('histories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
+            $table->string('property');
+            $table->string('old_value');
+            $table->integer('new_value')->nullable();
+            $table->string('user_add');
             $table->timestamps();
         });
 
@@ -137,6 +150,7 @@ return new class extends Migration {
         Schema::dropIfExists('comments');
         Schema::dropIfExists('partners');
         Schema::dropIfExists('actions');
+        Schema::dropIfExists('followups');
         Schema::dropIfExists('action_service');
         Schema::dropIfExists('action_partner');
         Schema::dropIfExists('action_user');

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource\Pages;
 use App\Form\ActionForm;
@@ -23,7 +22,7 @@ class ActionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
     protected static ?string $navigationLabel = 'Liste des actions';
 
     public static function shouldRegisterNavigation(): bool
@@ -68,15 +67,6 @@ class ActionResource extends Resource
                         ) ?? 'heroicon-m-question-mark-circle'
                     )
                     ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
-                Tables\Columns\TextColumn::make('priority')
-                    ->formatStateUsing(fn($state) => ActionPriorityEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
-                    ->sortable()
-                    ->badge()
-                    ->icon(
-                        fn($state) => ActionPriorityEnum::tryFrom($state)?->getIcon(
-                        ) ?? 'heroicon-m-question-mark-circle'
-                    )
-                    ->color(fn($state) => ActionPriorityEnum::tryFrom($state)?->getColor() ?? 'gray'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -96,13 +86,6 @@ class ActionResource extends Resource
                     ->options(
                         collect(ActionStateEnum::cases())
                             ->mapWithKeys(fn(ActionStateEnum $action) => [$action->value => $action->getLabel()])
-                            ->toArray()
-                    ),
-                SelectFilter::make('priority')
-                    ->label('Priorité')
-                    ->options(
-                        collect(ActionPriorityEnum::cases())
-                            ->mapWithKeys(fn(ActionPriorityEnum $action) => [$action->value => $action->getLabel()])
                             ->toArray()
                     ),
                 SelectFilter::make('users')

@@ -14,6 +14,7 @@ class OperationalObjectiveForm
         return $form
             ->schema([
                 Forms\Components\Select::make('strategic_objective_id')
+                    ->label('Objectif Stratégique (OS)')
                     ->relationship('strategicObjective', 'name')
                     ->required(),
                 Forms\Components\TextInput::make('name')

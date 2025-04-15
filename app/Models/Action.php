@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Constant\ActionStateEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class Action extends Model
 {
@@ -17,7 +18,7 @@ class Action extends Model
     protected $fillable = [
         'name',
         'state',
-        'priority',
+        'note',
         'due_date',
         'description',
         'evaluation_indicator',
@@ -25,11 +26,22 @@ class Action extends Model
         'budget_estimate',
         'financing_mode',
         'operational_objective_id',
+        'user_add',
     ];
 
     protected $casts = [
         'medias' => 'array',
+        'state' => ActionStateEnum::class,
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $model) {
+            if (Auth::check()) {
+                $model->user_add = Auth::user()->username;
+            }
+        });
+    }
 
     /**
      * Get the operational objective that owns the action.
@@ -80,12 +92,21 @@ class Action extends Model
     }
 
     /**
-     * Get the comments for the action.
-     * @return HasMany<Comment>
+     * Get the followups for the action.
+     * @return HasMany<FollowUp>
      */
-    public function comments(): HasMany
+    public function followUps(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(FollowUp::class);
+    }
+
+    /**
+     * Get the followups for the action.
+     * @return HasMany<History>
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(History::class);
     }
 
 }

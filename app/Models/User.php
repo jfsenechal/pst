@@ -141,6 +141,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 
     public function getFilamentAvatarUrl(): ?string
     {
+        return null;
         return $this->avatar_url;//Filament will fall back to ui-avatars.com.
     }
 }

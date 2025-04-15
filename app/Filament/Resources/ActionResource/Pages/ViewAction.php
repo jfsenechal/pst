@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\ActionResource\Pages;
 
-use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource;
@@ -134,16 +133,6 @@ class ViewAction extends ViewRecord
                                 ) ?? 'heroicon-m-question-mark-circle'
                             )
                             ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
-                        TextEntry::make('priority')
-                            ->label('Priorité')
-                            ->formatStateUsing(
-                                fn($state) => ActionPriorityEnum::tryFrom($state)?->getLabel() ?? 'Unknown'
-                            )
-                            ->icon(
-                                fn($state) => ActionPriorityEnum::tryFrom($state)?->getIcon(
-                                ) ?? 'heroicon-m-question-mark-circle'
-                            )
-                            ->color(fn($state) => ActionPriorityEnum::tryFrom($state)?->getColor() ?? 'gray'),
                         TextEntry::make('created_at')
                             ->label('Créé le')
                             ->dateTime(),

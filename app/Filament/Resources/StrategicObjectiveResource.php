@@ -22,9 +22,19 @@ class StrategicObjectiveResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function getNavigationBadgeColor22(): ?string
+    public static function canCreate(): bool
     {
-        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return false;
     }
 
     public static function getModelLabel(): string
