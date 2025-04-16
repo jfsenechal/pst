@@ -133,13 +133,15 @@ class ViewAction extends ViewRecord
                             ->color(fn(ActionStateEnum $state) => $state->getColor()),
                         ProgressEntry::make('state_percentage')
                             ->label('Pourcentage d\'avancement'),
-                        TextEntry::make('created_at')
-                            ->label('Créé le')
-                            ->dateTime(),
                         TextEntry::make('due_date')
                             ->label('Date d\'échéance')
                             ->visible(fn(?\DateTime $date) => $date instanceof \DateTime)
                             ->dateTime(),
+                        TextEntry::make('created_at')
+                            ->label('Créé le')
+                            ->dateTime(),
+                        TextEntry::make('user_add')
+                            ->label('Créé par'),
                     ])->grow(false),
                 ])
                     ->columnSpanFull()
