@@ -6,14 +6,13 @@ use App\Constant\NavigationGroupEnum;
 use App\Filament\Resources\OddResource\Pages;
 use App\Form\OddForm;
 use App\Models\Odd;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
-use Filament\Tables;
-use Filament\Tables\Table;
 
 class OddResource extends Resource
 {
@@ -49,16 +48,17 @@ class OddResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->limit(120)
                     ->searchable()
+                    ->color(fn(Odd $odd) => $odd->color)
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();
-
                         if (strlen($state) <= $column->getCharacterLimit()) {
                             return null;
                         }
-
                         // Only render the tooltip if the column content exceeds the length limit.
                         return $state;
                     }),
+                Tables\Columns\ColorColumn::make('color')
+                    ->label('Couleur'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

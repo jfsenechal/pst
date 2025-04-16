@@ -3,11 +3,10 @@
 namespace App\Constant;
 
 use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasDescription;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
+enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
 {
     case TO_VALIDATE = "TO_VALIDATE";
     case START = "START";
@@ -40,28 +39,17 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     {
         return match ($this) {
             self::TO_VALIDATE => 'danger',
-            self::START => 'success',
-            self::FINISHED => 'success',
-            self::PENDING => 'warning',
-            self::SUSPENDED => "danger",
+            self::START => 'warning',
+            self::FINISHED => 'primary',
+            self::PENDING => 'success',
+            self::SUSPENDED => "secondary",
         };
     }
 
-    public function getDescription(): ?string
+    public function getIcon(): string
     {
         return match ($this) {
-            self::TO_VALIDATE => 'success',
-            self::START => 'success',
-            self::FINISHED => "success",
-            self::PENDING => 'warning',
-            self::SUSPENDED => "warning",
-        };
-    }
-
-    public function getIcon(): ?string
-    {
-        return match ($this) {
-            self::START => 'success',
+            self::START => 'heroicon-m-check',
             self::TO_VALIDATE => 'heroicon-m-exclamation-circle',
             self::FINISHED => "heroicon-m-check",
             self::PENDING => 'heroicon-m-check',

@@ -11,6 +11,13 @@ class EditAction extends EditRecord
 {
     protected static string $resource = ActionResource::class;
 
+    protected function getRedirectUrl(): ?string
+    {
+        $resource = static::getResource();
+
+        return $resource::getUrl('view', ['record' => $this->getRecord()]);
+    }
+
     protected function getHeaderActions(): array
     {
         return [

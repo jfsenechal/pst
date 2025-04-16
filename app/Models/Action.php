@@ -40,6 +40,7 @@ class Action extends Model
 
     protected $casts = [
         'medias' => 'array',
+        'due_date' => 'datetime',
         'state' => ActionStateEnum::class,
     ];
 

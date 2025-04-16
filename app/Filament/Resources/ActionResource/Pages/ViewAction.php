@@ -8,6 +8,7 @@ use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
+use App\Infolists\Components\ProgressEntry;
 use App\Models\Media;
 use App\Models\Odd;
 use App\Models\Partner;
@@ -44,29 +45,27 @@ class ViewAction extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
-            Actions\DeleteAction::make()
-                ->icon('tabler-trash'),
+            ActionAction::make('add_media')
+                ->label('Ajouter un média')
+                ->icon('tabler-plus')
+                ->form(
+                    ActionForm::fieldsAttachment()
+                )
+                ->action(function (array $data) {
+                    Media::create([
+                        'action_id' => $this->record->id,
+                        'name' => $data['file_name'],
+                        'file_name' => $data['media'],
+                        'mime_type' => $data['file_mime'],
+                        'disk' => 'public',
+                        'size' => $data['file_size'],
+                    ]);
+                    Notification::make()
+                        ->title('Media added successfully')
+                        ->success()
+                        ->send();
+                }),
             ActionGroup::make([
-                    ActionAction::make('add_media')
-                        ->label('Ajouter un média')
-                        ->icon('tabler-plus')
-                        ->form(
-                            ActionForm::fieldsAttachment()
-                        )
-                        ->action(function (array $data) {
-                            Media::create([
-                                'action_id' => $this->record->id,
-                                'name' => $data['file_name'],
-                                'file_name' => $data['media'],
-                                'mime_type' => $data['file_mime'],
-                                'disk' => 'public',
-                                'size' => $data['file_size'],
-                            ]);
-                            Notification::make()
-                                ->title('Media added successfully')
-                                ->success()
-                                ->send();
-                        }),
                     ActionAction::make('rapport')
                         ->label('Rapport')
                         ->icon('tabler-pdf')
@@ -82,6 +81,8 @@ class ViewAction extends ViewRecord
                         ->form(
                             ActionForm::fieldsReminder()
                         ),
+                    Actions\DeleteAction::make()
+                        ->icon('tabler-trash'),
                 ]
             )
                 ->label('Autres actions')
@@ -127,17 +128,17 @@ class ViewAction extends ViewRecord
                     Section::make([
                         TextEntry::make('state')
                             ->label('Etat d\'avancement')
-                            ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
-                            ->icon(
-                                fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
-                                ) ?? 'heroicon-m-question-mark-circle'
-                            )
-                            ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
+                            ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')
+                            ->icon(fn(ActionStateEnum $state) => $state->getIcon())
+                            ->color(fn(ActionStateEnum $state) => $state->getColor()),
+                        ProgressEntry::make('state_percentage')
+                            ->label('Pourcentage d\'avancement'),
                         TextEntry::make('created_at')
                             ->label('Créé le')
                             ->dateTime(),
                         TextEntry::make('due_date')
                             ->label('Date d\'échéance')
+                            ->visible(fn(?\DateTime $date) => $date instanceof \DateTime)
                             ->dateTime(),
                     ])->grow(false),
                 ])
@@ -147,11 +148,19 @@ class ViewAction extends ViewRecord
                     ->label('Team')
                     ->schema([
                         TextEntry::make('users')
-                            ->label('Agents')
+                            ->label('Agents pilotes')
                             ->badge()
                             ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
-                        TextEntry::make('services')
-                            ->label('Services')
+                        TextEntry::make('mandataries')
+                            ->label('Mandataires')
+                            ->badge()
+                            ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
+                        TextEntry::make('leaderServices')
+                            ->label('Services porteurs')
+                            ->badge()
+                            ->formatStateUsing(fn(Service $state): string => $state->name),
+                        TextEntry::make('partnerServices')
+                            ->label('Services partenaires')
                             ->badge()
                             ->formatStateUsing(fn(Service $state): string => $state->name),
                         TextEntry::make('partners')

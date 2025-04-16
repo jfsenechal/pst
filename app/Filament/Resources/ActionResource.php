@@ -53,7 +53,6 @@ class ActionResource extends Resource
                             return null;
                         }
 
-                        // Only render the tooltip if the column content exceeds the length limit.
                         return $state;
                     }),
                 Tables\Columns\TextColumn::make('due_date')
@@ -61,12 +60,9 @@ class ActionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('state')
-                    ->formatStateUsing(fn($state) => ActionStateEnum::tryFrom($state)?->getLabel() ?? 'Unknown')
-                    ->icon(
-                        fn($state) => ActionStateEnum::tryFrom($state)?->getIcon(
-                        ) ?? 'heroicon-m-question-mark-circle'
-                    )
-                    ->color(fn($state) => ActionStateEnum::tryFrom($state)?->getColor() ?? 'gray'),
+                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')
+                    ->icon(fn(ActionStateEnum $state) => $state->getIcon())
+                    ->color(fn(ActionStateEnum $state) => $state->getColor()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -91,8 +87,7 @@ class ActionResource extends Resource
                 SelectFilter::make('users')
                     ->label('Agents')
                     ->relationship('users', 'first_name'),
-                SelectFilter::make('services')
-                    ->relationship('services', 'name'),
+
             ])
             ->filtersFormWidth(MaxWidth::ThreeExtraLarge)
             ->actions([
