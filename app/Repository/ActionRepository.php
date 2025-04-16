@@ -15,7 +15,7 @@ class ActionRepository
     {
         return  Action::query()->whereHas('users', function ($query) use ($userId) {
             $query->where('users.id', $userId);
-        })->orWhereHas('services', function ($query) use ($userId) {
+        })->orWhereHas('leaderServices', function ($query) use ($userId) {
             $query->whereHas('users', function ($query) use ($userId) {
                 $query->where('users.id', $userId);
             });

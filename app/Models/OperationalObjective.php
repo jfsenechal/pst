@@ -16,6 +16,7 @@ class OperationalObjective extends Model
         'name',
         'position',
         'strategic_objective_id',
+        'department',
     ];
 
     /**

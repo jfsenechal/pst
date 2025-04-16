@@ -12,7 +12,9 @@ class Odd extends Model
 {
     protected $fillable = [
         'name',
-        'justification',
+        'department',
+        'icon',
+        'color',
         'description',
     ];
 

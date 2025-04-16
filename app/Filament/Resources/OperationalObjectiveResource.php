@@ -36,9 +36,16 @@ class OperationalObjectiveResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultSort('name')
+            ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->columns([
+                Tables\Columns\TextColumn::make('position')
+                    ->label('Numéro')
+                    ->state(
+                        fn(OperationalObjective $objective): string => $objective->strategicObjective()->first(
+                            )->position.'.'.' '.$objective->position
+                    )
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -51,7 +58,7 @@ class OperationalObjectiveResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

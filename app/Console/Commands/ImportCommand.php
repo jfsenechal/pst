@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionTypeEnum;
 use App\Constant\DepartmentEnum;
 use App\Models\Action;
 use App\Models\Odd;
@@ -12,7 +12,6 @@ use App\Models\Partner;
 use App\Models\Service;
 use App\Models\StrategicObjective;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -35,18 +34,126 @@ class ImportCommand extends Command
     protected $description = 'Test command';
 
     protected string $dir = __DIR__.'/../../../output/';
+    private int $lastOs = 0;
+    private int $lastOo = 0;
 
     public function handle(): int
     {
-        $this->importPartners();
-        $this->importServices();
-        $this->importOdd();
-        $this->importOs();
-        $this->importOo();
-        $this->importActions();
+        $csvFileName = "test.csv";
+        $csvFile = $this->dir.'pst.csv';
+        $this->readCSV($csvFile);
+
+        //  $this->importPartners();
+        //  $this->importServices();
+        //  $this->importOdd();
         $this->info('Update');
 
         return SfCommand::SUCCESS;
+    }
+
+    public function readCSV($csvFile, $delimiter = ',')
+    {
+        $file_handle = fopen($csvFile, 'r');
+        while ($row = fgetcsv($file_handle, null, $delimiter)) {
+            $osNum = $row[0];
+            $ooNum = $row[1];
+            $actionNum = $row[2];
+            $actionName = $row[3];
+            /**
+             *
+             */
+            if ($actionNum) {
+                $this->addAction($row);
+                continue;
+            }
+            if ($osNum) {
+                $this->addOs($row);
+                continue;
+            }
+            if ($ooNum) {
+                $this->addOo($row);
+            }
+        }
+        fclose($file_handle);
+    }
+
+    private function addOs(array $row)
+    {
+        $number = preg_replace('/\D/', '', $row[0]);
+        $name = $row[3];
+
+        $this->info($name);
+        $os = StrategicObjective::create([
+            'name' => $name,
+            'department' => DepartmentEnum::VILLE->value,
+            'position' => $number,
+            //'synergy' => $synergy,
+            // 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
+        ]);
+        $this->lastOs = $os->id;
+    }
+
+    private function addOo(array $row)
+    {
+        $name = $row[3];
+        preg_match_all('/\d+(\.\d+)?/', $row[1], $matches);
+        $number = end($matches[0]);
+
+        $this->info('-- '.$name);
+
+        $oo = OperationalObjective::create([
+            'strategic_objective_id' => $this->lastOs,
+            'name' => $name,
+            'department' => DepartmentEnum::VILLE->value,
+            'position' => $number,
+            // 'synergy' => $synergy,
+            // 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
+        ]);
+        $this->lastOo = $oo->id;
+    }
+
+    private function addAction(array $row)
+    {
+        $name = $row[3];
+        $actionNum = $row[2];
+        $actionName = $row[3];
+        $typeAction = $row[4];
+        $mandataires = $row[5];
+        $agents = $row[6];
+        $servicesPorteur = $row[7];
+        $servicesPartenaires = $row[8];
+        $etat = $row[9];
+        $odds = $row[10];
+        $road = $row[11];
+        $synergy = $row[12];
+        $cleanedString = "";
+
+        $this->info("---- ".$name);
+        $state = null;
+        if ($etat) {
+            $state = $this->findState($etat);
+            if (!$state) {
+                $this->warn('state not found'.$etat);
+            }
+        }
+
+        if (!$state) {
+            $state = ActionStateEnum::TO_VALIDATE->value;
+        }
+
+        $type = null;
+        if ($typeAction) {
+            $type = ActionTypeEnum::findByName($typeAction);
+        }
+
+        Action::create([
+            'name' => $name,
+            'department' => DepartmentEnum::VILLE->value,
+            'state' => $state,
+            'type' => $type?->value,
+            'user_add' => 'jfsenechal',
+            'operational_objective_id' => $this->lastOo,
+        ]);
     }
 
     private function importPartners(): void
@@ -70,11 +177,14 @@ class ImportCommand extends Command
             $emails = Str::matchAll('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $row["Acteurs"]);
             $emails = $emails->toArray();
 
-            $synergy = $this->findSynergy($row["Synergies"]);
+            $department = $this->findSynergy($row["Synergies"]);
+            if (!$department) {
+                $department = DepartmentEnum::VILLE->value;
+            }
 
             $service = Service::create([
                 'name' => $row["Service_interne"],
-                'synergy' => $synergy,
+                'department' => $department,
             ]);
             foreach ($emails as $email) {
                 if ($user = User::where('email', $email)->first()) {
@@ -88,101 +198,12 @@ class ImportCommand extends Command
 
     private function importOdd(): void
     {
-        $json = File::get($this->dir.'Objectifs Développement Durable (ODD) - Liste.json');
+        $json = File::get($this->dir.'odd.json');
         $data = json_decode($json, true);
-        foreach ($data['Objectifs_D_veloppement_Durable_ODD_Liste'] as $row) {
+        foreach ($data['data'] as $row) {
             Odd::create([
-                'name' => $row["Objectif_de_D_veloppement_Durable_ODD"],
+                'name' => $row["name"],
                 'department' => DepartmentEnum::VILLE->value,
-                'position' => $row["Ordre"],
-                'justification' => $row["Justifications_commentaires"],
-                'description' => $row["Fiche_projet_compl_te_Nom_du_projet"],
-            ]);
-        }
-    }
-
-    private function importOs(): void
-    {
-        $json = File::get($this->dir.'Objectifs stratégiques (OS) - Liste.json');
-        $data = json_decode($json, true);
-        foreach ($data['Objectifs_strat_giques_OS_Liste'] as $row) {
-
-            $synergy = $this->findSynergy($row["Synergies"]);
-
-            StrategicObjective::create([
-                'name' => $row["Enjeu_strat_gique1"],
-                'department' => DepartmentEnum::VILLE->value,
-                'position' => $row["Ordre"],
-                'synergy' => $synergy,
-                'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
-            ]);
-        }
-    }
-
-    private function importOo(): void
-    {
-        $json = File::get($this->dir.'Objectifs opérationnels (OO) - Liste.json');
-        $data = json_decode($json, true);
-        foreach ($data['Objectifs_op_rationnels_OO_Liste'] as $row) {
-
-            $cleanedString = preg_replace('/^\d\s-\s/', '', $row["Objectifs_strat_giques_tre"]);
-
-            $strategicObjective = StrategicObjective::query()->where(
-                'name',
-                '=',
-                $cleanedString
-            )->first();
-            if (!$strategicObjective) {
-                $this->warn('not found'.$cleanedString);
-
-                continue;
-            }
-
-            $synergy = $this->findSynergy($row["Synergies"]);
-
-            OperationalObjective::create([
-                'strategic_objective_id' => $strategicObjective->id,
-                'name' => $row["Enjeu_strat_gique1"],
-                'department' => DepartmentEnum::VILLE->value,
-                'position' => $row["Ordre"],
-                'synergy' => $synergy,
-                'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
-            ]);
-        }
-    }
-
-    private function importActions(): void
-    {
-        $json = File::get($this->dir.'Projets - PST public.json');
-        $data = json_decode($json, true);
-        foreach ($data['Projets_PST_public'] as $row) {
-
-            $cleanedString = preg_replace('/^\d{1,3}\s-\s/', '', $row["Objectifs_op_rationnels_OO"]);
-
-            $operationalObjective = OperationalObjective::query()->where(
-                'name',
-                '=',
-                $cleanedString
-            )->first();
-            if (!$operationalObjective) {
-                $this->warn('not found'.$cleanedString);
-
-                continue;
-            }
-
-            $state = $this->findState($row["Etat_d_avancement"]);
-
-            if (!$state) {
-                $this->warn('state not found'.$row["Etat_d_avancement"]);
-                continue;
-            }
-            Action::create([
-                'name' => $row["Nom_du_projet"],
-                'department' => DepartmentEnum::VILLE->value,
-                'description' => $row["Description_compl_te"],
-                'due_date' => $row["Ech_ance1"] ? Carbon::create($row["Ech_ance1"]) : null,
-                'state' => $state,
-                'operational_objective_id' => $operationalObjective->id,
             ]);
         }
     }
@@ -192,7 +213,6 @@ class ImportCommand extends Command
         return match ($name) {
             "Commune" => DepartmentEnum::VILLE->value,
             "Cpas" => DepartmentEnum::CPAS->value,
-            "Commune et CPAS" => DepartmentEnum::COMMON->value,
             default => null,
         };
     }
@@ -201,9 +221,10 @@ class ImportCommand extends Command
     {
         return match ($name) {
             "Suspendu" => ActionStateEnum::SUSPENDED->value,
-            "En cours de réalisation" => ActionStateEnum::PENDING->value,
+            "En cours" => ActionStateEnum::PENDING->value,
             "Terminé" => ActionStateEnum::FINISHED->value,
-            default => ActionStateEnum::TO_VALIDATE->value,
+            "A démarrer" => ActionStateEnum::START->value,
+            default => null,
         };
     }
 }

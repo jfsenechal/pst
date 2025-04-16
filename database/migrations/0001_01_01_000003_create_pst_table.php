@@ -46,7 +46,7 @@ return new class extends Migration {
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
             $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::TO_VALIDATE->value);
-            $table->enum('type', ActionTypeEnum::toArray())->default(ActionTypeEnum::PST->value);
+            $table->enum('type', ActionTypeEnum::toArray())->nullable();
             $table->enum('odd_roadmap', ActionOddRoadmapEnum::toArray())->nullable();
             $table->integer('state_percentage')->nullable();
             $table->text('work_plan')->nullable();
@@ -69,18 +69,17 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('initials')->nullable();
-            $table->enum('synergy', DepartmentEnum::toArray())->default(DepartmentEnum::COMMON->value);
+            $table->enum('department', DepartmentEnum::toArray())->default(DepartmentEnum::VILLE->value)->nullable();
             $table->timestamps();
         });
 
         Schema::create('odds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('department')->nullable(false);
-            $table->string('icone')->nullable();
-            $table->integer('position')->default(0);
+            $table->enum('department', DepartmentEnum::toArray())->default(DepartmentEnum::VILLE->value)->nullable();
+            $table->string('icon')->nullable();
+            $table->string('color')->nullable();
             $table->text('description')->nullable();
-            $table->text('justification')->nullable();
             $table->timestamps();
         });
 
@@ -152,8 +151,8 @@ return new class extends Migration {
 
         Schema::create('action_related', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Action::class,"action_id")->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Action::class,"related_action_id")->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Action::class, "action_id")->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Action::class, "related_action_id")->constrained()->cascadeOnDelete();
             $table->unique(['action_id', 'related_action_id']);
         });
 

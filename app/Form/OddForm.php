@@ -13,9 +13,15 @@ class OddForm
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 Forms\Components\FileUpload::make('icon')
                     ->label('Icone'),
+                Forms\Components\ColorPicker::make('color')
+                    ->label('Couleur'),
+                Forms\Components\TextInput::make('description')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
             ]);
     }
 }

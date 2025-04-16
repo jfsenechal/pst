@@ -40,7 +40,7 @@ class StrategicObjectiveResource extends Resource
             ->defaultSort('position')
             ->columns([
                 Tables\Columns\TextColumn::make('position')
-                    ->label('Ordre')
+                    ->label('Numéro')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')

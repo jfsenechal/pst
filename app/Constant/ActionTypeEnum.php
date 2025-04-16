@@ -32,6 +32,16 @@ enum ActionTypeEnum: string implements HasColor, HasLabel, HasDescription, HasIc
         };
     }
 
+    public static function findByName(string $name): ?self
+    {
+        return match ($name) {
+            'PST' => self::PST,
+            'Perenne' => self::PERENNIAL,
+            'Hors Champ' => self::OFF_SCREEN,
+            default => null,
+        };
+    }
+
     public function getColor(): string|array|null
     {
         return match ($this) {
