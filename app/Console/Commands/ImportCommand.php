@@ -39,19 +39,17 @@ class ImportCommand extends Command
 
     public function handle(): int
     {
-        $csvFileName = "test.csv";
         $csvFile = $this->dir.'pst.csv';
-        $this->readCSV($csvFile);
-
-        //  $this->importPartners();
-        //  $this->importServices();
-        //  $this->importOdd();
+        $this->importPartners();
+        $this->importServices();
+        $this->importOdd();
+        $this->importCsv($csvFile);
         $this->info('Update');
 
         return SfCommand::SUCCESS;
     }
 
-    public function readCSV($csvFile, $delimiter = ',')
+    public function importCsv($csvFile, $delimiter = ','): void
     {
         $file_handle = fopen($csvFile, 'r');
         while ($row = fgetcsv($file_handle, null, $delimiter)) {
@@ -127,6 +125,10 @@ class ImportCommand extends Command
         $road = $row[11];
         $synergy = $row[12];
         $cleanedString = "";
+
+        if (!$name) {
+            return;
+        }
 
         $this->info("---- ".$name);
         $state = null;
