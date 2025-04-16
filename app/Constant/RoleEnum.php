@@ -11,8 +11,8 @@ use Filament\Support\Contracts\HasLabel;
 enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
 {
     case ADMIN = "ROLE_ADMIN";
-    case AGENT = "ROLE_AGENT";
     case CHEF = "ROLE_CHEF";
+    case AGENT = "ROLE_AGENT";
     case MANDATAIRE = "ROLE_MANDATAIRE";
 
     public static function toArray(): array
@@ -40,18 +40,18 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
         return match ($this) {
             self::ADMIN => 'success',
             self::AGENT => 'warning',
-            self::MANDATAIRE => 'primary',
             self::CHEF => 'secondary',
+            self::MANDATAIRE => 'primary',
         };
     }
 
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::ADMIN => 'Accès à tout et peut paramètrer l\'application',
+            self::ADMIN => 'Accès total en écriture, peut aussi paramétrer l\'application (users,services...)',
             self::AGENT => 'Role standard',
-            self::MANDATAIRE => 'Ne peux que lire',
             self::CHEF => 'Chef de projet',
+            self::MANDATAIRE => 'Ne peux que lire, aucune modification possible',
         };
     }
 

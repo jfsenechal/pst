@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
-use App\Ldap\User;
+use App\Constant\DepartmentEnum;
+use App\Models\Role;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Model;
@@ -13,20 +15,13 @@ class UserForm
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')
-                    ->required()
-                    ->maxLength(120),
-                Forms\Components\TextInput::make('second_name')
-                    ->required()
-                    ->maxLength(120),
-                Forms\Components\TextInput::make('email')
-                    ->required()
-                    ->email()
-                    ->unique(ignoreRecord: true)
-                    ->label('Email address')
-                    ->maxLength(120),
                 Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name')
+                    ->label('Rôles')
+                    ->helperText(fn(Role $role) => $role->description)
+                    ->relationship('roles', 'name'),
+                Forms\Components\Select::make('departments')
+                    ->default(DepartmentEnum::VILLE->value)
+                    ->options(DepartmentEnum::class)
                     ->multiple()
                     ->preload(),
             ]);

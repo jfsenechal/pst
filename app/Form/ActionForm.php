@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Constant\ActionOddRoadmapEnum;
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionTypeEnum;
 use App\Models\OperationalObjective;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -101,9 +103,22 @@ class ActionForm
                 ->schema([
                     Forms\Components\Select::make('state')
                         ->label('Etat d\'avancement')
-                        ->default(ActionStateEnum::NEW->value)
+                        ->default(ActionStateEnum::TO_VALIDATE->value)
                         ->options(ActionStateEnum::class)
                         ->suffixIcon('tabler-ladder'),
+                    Forms\Components\Select::make('type')
+                        ->label('Type')
+                        ->default(ActionTypeEnum::PST->value)
+                        ->options(ActionTypeEnum::class)
+                        ->suffixIcon('tabler-type'),
+                    Forms\Components\Select::make('odd_roadmap')
+                        ->label('Odd feuille de route')
+                        ->required(false)
+                        ->options(ActionOddRoadmapEnum::class),
+                    Forms\Components\TextInput::make('state_percentage')
+                        ->label('Pourcentage d\'avancement')
+                        ->suffixIcon('tabler-percentage')
+                        ->integer(),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')
                         ->suffixIcon('tabler-calendar-stats'),
@@ -115,8 +130,18 @@ class ActionForm
     private static function fieldsTeam(): array
     {
         return [
-            Forms\Components\Select::make('users')
-                ->label('Agents')
+            Forms\Components\Select::make('action_mandatory')
+                ->label('Mandataires')
+                ->relationship(
+                    name: 'mandataries',
+                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
+                        ->orderBy('first_name'),
+                )
+                ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
+                ->searchable(['first_name', 'last_name'])
+                ->multiple(),
+            Forms\Components\Select::make('action_users')
+                ->label('Agents pilotes')
                 ->relationship(
                     name: 'users',
                     modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
@@ -125,14 +150,23 @@ class ActionForm
                 ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
                 ->searchable(['first_name', 'last_name'])
                 ->multiple(),
-            Forms\Components\Select::make('action_service')
-                ->label('Services')
-                ->relationship(name: 'services', titleAttribute: 'name')
+            Forms\Components\Select::make('action_service_leader')
+                ->label('Services porteurs')
+                ->relationship(name: 'leaderServices', titleAttribute: 'name')
+                ->preload()
+                ->multiple(),
+            Forms\Components\Select::make('action_service_partner')
+                ->label('Services partenaires')
+                ->relationship(name: 'partnerServices', titleAttribute: 'name')
                 ->preload()
                 ->multiple(),
             Forms\Components\Select::make('partners')
-                ->label('Partenaires')
+                ->label('Partenaires externes')
                 ->relationship(name: 'partners', titleAttribute: 'name')
+                ->multiple(),
+            Forms\Components\Select::make('action_related')
+                ->label('Actions liés')
+                ->relationship(name: 'linkedActions', titleAttribute: 'name')
                 ->multiple(),
         ];
     }

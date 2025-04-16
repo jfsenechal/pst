@@ -9,11 +9,10 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
 {
-    case CANCELED = "CANCELED";
-    case FINISHED = "FINISHED";
-    case NEW = "NEW";
+    case TO_VALIDATE = "TO_VALIDATE";
     case START = "START";
     case PENDING = "PENDING";
+    case FINISHED = "FINISHED";
     case SUSPENDED = "SUSPENDED";
 
     public static function toArray(): array
@@ -29,9 +28,8 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     public function getLabel(): string
     {
         return match ($this) {
-            self::CANCELED => 'Annulé',
-            self::NEW => 'Nouveau',
-            self::START => 'Démarré',
+            self::TO_VALIDATE => 'A valider',
+            self::START => 'A démarrer',
             self::PENDING => 'En cours',
             self::SUSPENDED => "Suspendu",
             self::FINISHED => "Terminé",
@@ -41,20 +39,18 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::CANCELED => 'danger',
-            self::NEW => 'success',
+            self::TO_VALIDATE => 'danger',
             self::START => 'success',
             self::FINISHED => 'success',
             self::PENDING => 'warning',
-            self::SUSPENDED => "warning",
+            self::SUSPENDED => "danger",
         };
     }
 
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::CANCELED => 'danger',
-            self::NEW => 'success',
+            self::TO_VALIDATE => 'success',
             self::START => 'success',
             self::FINISHED => "success",
             self::PENDING => 'warning',
@@ -65,9 +61,8 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasDescription, HasI
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::CANCELED => 'heroicon-m-clock',
             self::START => 'success',
-            self::NEW => 'heroicon-m-exclamation-circle',
+            self::TO_VALIDATE => 'heroicon-m-exclamation-circle',
             self::FINISHED => "heroicon-m-check",
             self::PENDING => 'heroicon-m-check',
             self::SUSPENDED => "heroicon-m-check",

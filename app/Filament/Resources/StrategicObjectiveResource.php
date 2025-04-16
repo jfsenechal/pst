@@ -22,21 +22,6 @@ class StrategicObjectiveResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return false;
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return false;
-    }
-
     public static function getModelLabel(): string
     {
         return 'Objectif Stratégique (OS)';

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Constant\SynergyEnum;
+use App\Constant\DepartmentEnum;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -21,10 +21,10 @@ class ServiceForm
                     ->maxLength(30),
                 Forms\Components\Select::make('synergy')
                     ->label('Synergie')
-                    ->default(SynergyEnum::COMMON->value)
-                    ->options(SynergyEnum::class),
+                    ->default(DepartmentEnum::COMMON->value)
+                    ->options(DepartmentEnum::class),
                 Forms\Components\Select::make('users')
-                    ->label('Agents')
+                    ->label('Agents membres')
                     ->relationship('users', 'first_name')
                     ->multiple()
                     ->columnSpanFull(),

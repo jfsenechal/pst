@@ -26,12 +26,12 @@ class PartnerResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return 'Partenaires';
+        return 'Partenaires externes';
     }
 
     public static function getModelLabel(): string
     {
-        return 'Partenaire';
+        return 'Partenaire externe';
     }
 
     public static function form(Form $form): Form

@@ -3,14 +3,19 @@
 namespace App\Models;
 
 use App\Constant\ActionStateEnum;
+use App\Models\Scopes\DepartmentScope;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
+#[ScopedBy([DepartmentScope::class])]
 class Action extends Model
 {
     use HasFactory, Notifiable;
@@ -18,7 +23,11 @@ class Action extends Model
     protected $fillable = [
         'name',
         'state',
+        'state_percentage',
+        'type',
+        'odd_roadmap',
         'note',
+        'department',
         'due_date',
         'description',
         'evaluation_indicator',
@@ -51,12 +60,40 @@ class Action extends Model
         return $this->belongsTo(OperationalObjective::class);
     }
 
+    public function linkedActions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Action::class,
+            'action_related',
+            'action_id',
+            'related_action_id'
+        );
+    }
+
     /**
      * @return BelongsToMany<Service>
      */
-    public function services(): BelongsToMany
+    public function leaderServices(): BelongsToMany
     {
-        return $this->belongsToMany(Service::class);
+        return $this->belongsToMany(
+            Service::class,
+            'action_service_leader',
+            'action_id',
+            'service_id'
+        );
+    }
+
+    /**
+     * @return BelongsToMany<Service>
+     */
+    public function partnerServices(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Service::class,
+            'action_service_partner',
+            'action_id',
+            'service_id'
+        );
     }
 
     /**
@@ -65,6 +102,16 @@ class Action extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function mandataries(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'action_mandatory',
+            'action_id',
+            'user_id'
+        );
     }
 
     /**
@@ -107,6 +154,12 @@ class Action extends Model
     public function histories(): HasMany
     {
         return $this->hasMany(History::class);
+    }
+
+    #[Scope]
+    public function department(Builder $query, string $department): void
+    {
+        $query->where('department', $department);
     }
 
 }

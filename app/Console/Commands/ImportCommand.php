@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Constant\ActionPriorityEnum;
 use App\Constant\ActionStateEnum;
-use App\Constant\SynergyEnum;
+use App\Constant\DepartmentEnum;
 use App\Models\Action;
 use App\Models\Odd;
 use App\Models\OperationalObjective;
@@ -93,6 +93,7 @@ class ImportCommand extends Command
         foreach ($data['Objectifs_D_veloppement_Durable_ODD_Liste'] as $row) {
             Odd::create([
                 'name' => $row["Objectif_de_D_veloppement_Durable_ODD"],
+                'department' => DepartmentEnum::VILLE->value,
                 'position' => $row["Ordre"],
                 'justification' => $row["Justifications_commentaires"],
                 'description' => $row["Fiche_projet_compl_te_Nom_du_projet"],
@@ -110,6 +111,7 @@ class ImportCommand extends Command
 
             StrategicObjective::create([
                 'name' => $row["Enjeu_strat_gique1"],
+                'department' => DepartmentEnum::VILLE->value,
                 'position' => $row["Ordre"],
                 'synergy' => $synergy,
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
@@ -141,6 +143,7 @@ class ImportCommand extends Command
             OperationalObjective::create([
                 'strategic_objective_id' => $strategicObjective->id,
                 'name' => $row["Enjeu_strat_gique1"],
+                'department' => DepartmentEnum::VILLE->value,
                 'position' => $row["Ordre"],
                 'synergy' => $synergy,
                 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
@@ -166,31 +169,19 @@ class ImportCommand extends Command
 
                 continue;
             }
-            $users = [];
-            //   "Nature_de_l_ch_ance": "Impérative",
-            //    "Agent_pilote": "BRASSEUR - Jean-Philippe",
-            //    "Justification_tat_d_avancement": "Action/projet terminé.",
-            //   "N_projet": "2",
-            //    "Objectifs_strat_giques_OS": "1 - Etre une commune attractive et rayonnante (Rôle moteur)",
-            //    "Objectifs_op_rationnels_OO": "5 - Développer l\u0027émergence du numérique et l\u0027innovation",
 
             $state = $this->findState($row["Etat_d_avancement"]);
-            $priority = $this->findPriority($row["Priorit"]);
 
-            if (!$priority) {
-                $this->warn('priority not found'.$row["Priorit"]);
-                continue;
-            }
             if (!$state) {
                 $this->warn('state not found'.$row["Etat_d_avancement"]);
                 continue;
             }
             Action::create([
                 'name' => $row["Nom_du_projet"],
+                'department' => DepartmentEnum::VILLE->value,
                 'description' => $row["Description_compl_te"],
                 'due_date' => $row["Ech_ance1"] ? Carbon::create($row["Ech_ance1"]) : null,
                 'state' => $state,
-                'priority' => $priority,
                 'operational_objective_id' => $operationalObjective->id,
             ]);
         }
@@ -199,31 +190,20 @@ class ImportCommand extends Command
     private function findSynergy(string $name): ?string
     {
         return match ($name) {
-            "Commune" => SynergyEnum::VILLE->value,
-            "Cpas" => SynergyEnum::CPAS->value,
-            "Commune et CPAS" => SynergyEnum::COMMON->value,
+            "Commune" => DepartmentEnum::VILLE->value,
+            "Cpas" => DepartmentEnum::CPAS->value,
+            "Commune et CPAS" => DepartmentEnum::COMMON->value,
             default => null,
-        };
-    }
-
-    private function findPriority(string $name): ?string
-    {
-        return match ($name) {
-            "Minimale" => ActionPriorityEnum::MINIMUM->value,
-            "Moyenne" => ActionPriorityEnum::AVERAGE->value,
-            "Maximale" => ActionPriorityEnum::MAXIMUM->value,
-            default => ActionPriorityEnum::UNDETERMINED->value,
         };
     }
 
     private function findState(string $name): ?string
     {
         return match ($name) {
-            "Supprimé" => ActionStateEnum::CANCELED->value,
             "Suspendu" => ActionStateEnum::SUSPENDED->value,
             "En cours de réalisation" => ActionStateEnum::PENDING->value,
             "Terminé" => ActionStateEnum::FINISHED->value,
-            default => ActionStateEnum::NEW->value,
+            default => ActionStateEnum::TO_VALIDATE->value,
         };
     }
 }

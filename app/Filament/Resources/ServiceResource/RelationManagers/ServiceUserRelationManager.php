@@ -10,6 +10,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+/**
+ * NOT USE !
+ */
 class ServiceUserRelationManager extends RelationManager
 {
     protected static string $relationship = 'users';

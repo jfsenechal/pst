@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use App\Constant\RoleEnum;
 use App\Models\StrategicObjective;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class StrategicObjectivePolicy
 {
@@ -29,7 +29,7 @@ class StrategicObjectivePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole(RoleEnum::ADMIN->value);
     }
 
     /**
@@ -37,7 +37,7 @@ class StrategicObjectivePolicy
      */
     public function update(User $user, StrategicObjective $strategicObjective): bool
     {
-        return false;
+        return $user->hasRole(RoleEnum::ADMIN->value);
     }
 
     /**
@@ -45,7 +45,7 @@ class StrategicObjectivePolicy
      */
     public function delete(User $user, StrategicObjective $strategicObjective): bool
     {
-        return false;
+        return $user->hasRole(RoleEnum::ADMIN->value);
     }
 
     /**

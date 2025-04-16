@@ -47,7 +47,7 @@ class ViewService extends ViewRecord
             Fieldset::make('actions')
                 ->label('Actions liés')
                 ->schema([
-                    RepeatableEntry::make('actions')
+                    RepeatableEntry::make('action_service_leader')
                         ->label(false)
                         ->columnSpanFull()
                         ->schema([

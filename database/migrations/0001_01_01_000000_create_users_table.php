@@ -16,6 +16,7 @@ return new class extends Migration {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->enum('name', RoleEnum::toArray())->unique()->default(RoleEnum::AGENT->value);
+            $table->string('description')->nullable();
         });
 
         Schema::create('users', function (Blueprint $table) {
@@ -27,6 +28,7 @@ return new class extends Migration {
             $table->string('extension')->nullable();
             $table->string('username')->unique()->nullable(false);
             $table->string('email')->unique();
+            $table->json('departments')->nullable(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->tinyInteger('mandatory')->default(0);

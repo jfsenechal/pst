@@ -11,7 +11,6 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Forms\Form;
 
 class ViewUser extends ViewRecord
 {
@@ -41,10 +40,13 @@ class ViewUser extends ViewRecord
             TextEntry::make('extension')
                 ->label('Extension')
                 ->icon('tabler-device-landline-phone'),
+            TextEntry::make('departments')
+                ->label('Départements')
+                ->icon('tabler-device-mobile'),
             Fieldset::make('actions')
                 ->label('Actions liés')
                 ->schema([
-                    RepeatableEntry::make('actions')
+                    RepeatableEntry::make('action_user')
                         ->label(false)
                         ->columnSpanFull()
                         ->schema([

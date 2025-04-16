@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Constant\RoleEnum;
+use App\Constant\DepartmentEnum;
 use App\Ldap\User as UserLdap;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Command\Command as SfCommand;
 
 class SyncUserCommand extends Command
@@ -36,13 +36,13 @@ class SyncUserCommand extends Command
         $this->agentRole = Role::where('name', RoleEnum::AGENT->value)->first();
 
         foreach (UserLdap::all() as $userLdap) {
-            if (!$userLdap->getAttributeValue('mail')) {
+            if (!$userLdap->getFirstAttribute('mail')) {
                 continue;
             }
             if (!$this->isActif($userLdap)) {
                 continue;
             }
-            $username = $userLdap->getAttributeValue('samaccountname')[0];
+            $username = $userLdap->getFirstAttribute('samaccountname');
             if (!$user = User::where('username', $username)->first()) {
                 $this->addUser($username, $userLdap);
             } else {
@@ -73,23 +73,31 @@ class SyncUserCommand extends Command
 
     private function data(UserLdap $userLdap, string $username): array
     {
+        $email = $userLdap->getFirstAttribute('mail');
+        $department = match (true) {
+            str_contains($email, 'cpas.marche') => DepartmentEnum::CPAS->value,
+            str_contains($email, 'ac.marche') => DepartmentEnum::VILLE->value,
+            default => DepartmentEnum::VILLE->value,
+        };
+
         return [
-            'first_name' => $userLdap->getAttributeValue('givenname')[0],
-            'last_name' => $userLdap->getAttributeValue('sn')[0],
-            'email' => $userLdap->getAttributeValue('mail')[0],
-            'mobile' => $userLdap->getAttributeValue('mobile')[0] ?? null,
-            'phone' => $userLdap->getAttributeValue('telephoneNumber')[0] ?? null,
-            'extension' => $userLdap->getAttributeValue('ipPhone')[0] ?? null,
+            'first_name' => $userLdap->getFirstAttribute('givenname'),
+            'last_name' => $userLdap->getFirstAttribute('sn'),
+            'email' => $email,
+            'departments' => [$department],
+            'mobile' => $userLdap->getFirstAttribute('mobile'),
+            'phone' => $userLdap->getFirstAttribute('telephoneNumber'),
+            'extension' => $userLdap->getFirstAttribute('ipPhone'),
             'uuid' => $this->getUuid($username),
         ];
     }
 
     private function getUuid(string $username): ?string
     {
-        $connection = DB::connection('intranet');
-        $users = $connection->select("SELECT * FROM users WHERE `username` = '$username'");
-        if (count($users) > 0) {
-            return $users[0]->uuid;
+        $user = User::where('username', $username)->first();
+
+        if ($user) {
+            return $user->uuid;
         }
 
         return null;
@@ -98,7 +106,7 @@ class SyncUserCommand extends Command
     private function removeOldUsers(): void
     {
         $ldapUsernames = array_map(function (UserLdap $userLdap) {
-            return $userLdap->getAttributeValue('samaccountname')[0];
+            return $userLdap->getFirstAttribute('samaccountname');
         }, UserLdap::all()->toArray());
         foreach (User::all() as $user) {
             if (in_array($user->username, $ldapUsernames)) {
@@ -110,9 +118,7 @@ class SyncUserCommand extends Command
 
     private function isActif(UserLdap $userLdap): bool
     {
-        $useraccountcontrol = $userLdap->getAttributeValue('userAccountControl')[0];
-
-        return 66050 != $useraccountcontrol;
+        return 66050 != $userLdap->getFirstAttribute('userAccountControl');
     }
 
 }

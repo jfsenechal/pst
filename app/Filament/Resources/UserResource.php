@@ -7,7 +7,6 @@ use App\Constant\RoleEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Form\UserForm;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -18,6 +17,12 @@ use Illuminate\Support\Facades\Auth;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
 
     public static function getNavigationGroup(): ?string
     {
@@ -28,8 +33,6 @@ class UserResource extends Resource
     {
         return 'Agents';
     }
-
-    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     public static function form(Form $form): Form
     {
@@ -58,6 +61,9 @@ class UserResource extends Resource
                     ->label('Extension')
                     ->icon('tabler-device-landline-phone'),
                 Tables\Columns\TextColumn::make('roles.name'),
+                Tables\Columns\TextColumn::make('departments')
+                    ->label('Départements')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('username')
                     ->label('Nom d\'utilisateur')
                     ->toggleable(isToggledHiddenByDefault: true),

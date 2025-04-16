@@ -1,7 +1,9 @@
 <?php
 
+use App\Constant\ActionOddRoadmapEnum;
 use App\Constant\ActionStateEnum;
-use App\Constant\SynergyEnum;
+use App\Constant\ActionTypeEnum;
+use App\Constant\DepartmentEnum;
 use App\Models\Action;
 use App\Models\Odd;
 use App\Models\OperationalObjective;
@@ -19,6 +21,7 @@ return new class extends Migration {
         Schema::create('strategic_objectives', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('department')->nullable(false);
             $table->integer('position')->default(0);
             $table->timestamps();
         });
@@ -27,6 +30,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(StrategicObjective::class)->constrained('strategic_objectives')->cascadeOnDelete();
             $table->string('name');
+            $table->string('department')->nullable(false);
             $table->integer('position')->default(0);
             $table->timestamps();
         });
@@ -35,12 +39,16 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
             $table->string('name');
+            $table->string('department')->nullable(false);
             $table->text('description')->nullable();
             $table->text('note')->nullable();
             $table->date('due_date')->nullable();
             $table->text('budget_estimate')->nullable();
             $table->text('financing_mode')->nullable();
-            $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::NEW->value);
+            $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::TO_VALIDATE->value);
+            $table->enum('type', ActionTypeEnum::toArray())->default(ActionTypeEnum::PST->value);
+            $table->enum('odd_roadmap', ActionOddRoadmapEnum::toArray())->nullable();
+            $table->integer('state_percentage')->nullable();
             $table->text('work_plan')->nullable();
             $table->text('evaluation_indicator')->nullable();
             $table->string('user_add');
@@ -61,13 +69,14 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('initials')->nullable();
-            $table->enum('synergy', SynergyEnum::toArray())->default(SynergyEnum::COMMON->value);
+            $table->enum('synergy', DepartmentEnum::toArray())->default(DepartmentEnum::COMMON->value);
             $table->timestamps();
         });
 
         Schema::create('odds', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('department')->nullable(false);
             $table->string('icone')->nullable();
             $table->integer('position')->default(0);
             $table->text('description')->nullable();
@@ -113,6 +122,13 @@ return new class extends Migration {
             $table->unique(['action_id', 'user_id']);
         });
 
+        Schema::create('action_mandatory', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->unique(['action_id', 'user_id']);
+        });
+
         Schema::create('action_partner', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
@@ -120,11 +136,25 @@ return new class extends Migration {
             $table->unique(['action_id', 'partner_id']);
         });
 
-        Schema::create('action_service', function (Blueprint $table) {
+        Schema::create('action_service_leader', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
             $table->unique(['action_id', 'service_id']);
+        });
+
+        Schema::create('action_service_partner', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Service::class)->constrained()->cascadeOnDelete();
+            $table->unique(['action_id', 'service_id']);
+        });
+
+        Schema::create('action_related', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(Action::class,"action_id")->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Action::class,"related_action_id")->constrained()->cascadeOnDelete();
+            $table->unique(['action_id', 'related_action_id']);
         });
 
         Schema::create('action_odd', function (Blueprint $table) {
@@ -151,9 +181,11 @@ return new class extends Migration {
         Schema::dropIfExists('partners');
         Schema::dropIfExists('actions');
         Schema::dropIfExists('followups');
-        Schema::dropIfExists('action_service');
-        Schema::dropIfExists('action_partner');
+        Schema::dropIfExists('action_service_leader');
+        Schema::dropIfExists('action_service_partner');
         Schema::dropIfExists('action_user');
+        Schema::dropIfExists('action_mandatory');
+        Schema::dropIfExists('action_partner');
         Schema::dropIfExists('action_odd');
         Schema::dropIfExists('service_user');
         Schema::dropIfExists('operational_objectives');

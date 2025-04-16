@@ -31,6 +31,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         'extension',
         'mobile',
         'username',
+        'departments',
         'uuid',
         'mandatory',
         'color_primary',
@@ -74,6 +75,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'roles' => 'array',
+            'departments' => 'array',
         ];
     }
 
@@ -142,6 +144,5 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
     public function getFilamentAvatarUrl(): ?string
     {
         return null;
-        return $this->avatar_url;//Filament will fall back to ui-avatars.com.
     }
 }
