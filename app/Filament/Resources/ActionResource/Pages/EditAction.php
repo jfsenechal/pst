@@ -25,20 +25,4 @@ class EditAction extends EditRecord
                 ->icon('tabler-eye'),
         ];
     }
-
-    public function beforeSave22(): void
-    {
-        foreach ($this->data['attachments'] ?? [] as $attachment) {
-            Media::create([
-                'action_id' => $this->data['action_id'], // Adjust as needed
-                'model_type' => self::class,
-                'model_id' => $this->record->id ?? null,
-                'name' => $this->file->getClientOriginalName(),
-                'file_name' => $this->file->hashName(),
-                'mime_type' => $this->file->getMimeType(),
-                'disk' => 'public',
-                'size' => $this->file->getSize(),
-            ]);
-        }
-    }
 }

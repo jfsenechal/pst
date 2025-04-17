@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource\Pages;
+use App\Filament\Resources\ActionResource\RelationManagers\MediasRelationManager;
 use App\Form\ActionForm;
 use App\Models\Action;
 use Filament\Forms\Form;
@@ -109,7 +110,7 @@ class ActionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MediasRelationManager::class,
         ];
     }
 

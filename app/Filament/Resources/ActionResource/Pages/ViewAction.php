@@ -9,7 +9,6 @@ use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
 use App\Infolists\Components\ProgressEntry;
-use App\Models\Media;
 use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
@@ -17,19 +16,14 @@ use App\Models\User;
 use Filament\Actions;
 use Filament\Actions\Action as ActionAction;
 use Filament\Actions\ActionGroup;
-use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
-use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
-use Illuminate\Database\Eloquent\Model;
 
 class ViewAction extends ViewRecord
 {
@@ -45,26 +39,6 @@ class ViewAction extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
-            ActionAction::make('add_media')
-                ->label('Ajouter un média')
-                ->icon('tabler-plus')
-                ->form(
-                    ActionForm::fieldsAttachment()
-                )
-                ->action(function (array $data) {
-                    Media::create([
-                        'action_id' => $this->record->id,
-                        'name' => $data['file_name'],
-                        'file_name' => $data['media'],
-                        'mime_type' => $data['file_mime'],
-                        'disk' => 'public',
-                        'size' => $data['file_size'],
-                    ]);
-                    Notification::make()
-                        ->title('Media added successfully')
-                        ->success()
-                        ->send();
-                }),
             ActionGroup::make([
                     ActionAction::make('rapport')
                         ->label('Rapport')
@@ -124,8 +98,36 @@ class ViewAction extends ViewRecord
                             ->label('Indicateur d\'évaluation')
                             ->html()
                             ->prose(),
+                        Fieldset::make('team')
+                            ->label('Team')
+                            ->schema([
+                                TextEntry::make('users')
+                                    ->label('Agents pilotes')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(User $state): string => $state->last_name.' '.$state->first_name
+                                    ),
+                                TextEntry::make('mandataries')
+                                    ->label('Mandataires')
+                                    ->badge()
+                                    ->formatStateUsing(
+                                        fn(User $state): string => $state->last_name.' '.$state->first_name
+                                    ),
+                                TextEntry::make('leaderServices')
+                                    ->label('Services porteurs')
+                                    ->badge()
+                                    ->formatStateUsing(fn(Service $state): string => $state->name),
+                                TextEntry::make('partnerServices')
+                                    ->label('Services partenaires')
+                                    ->badge()
+                                    ->formatStateUsing(fn(Service $state): string => $state->name),
+                                TextEntry::make('partners')
+                                    ->label('Partenaires')
+                                    ->badge()
+                                    ->formatStateUsing(fn(Partner $state): string => $state->name),
+                            ]),
                     ]),
-                    Section::make([
+                    Section::make('Etat')->schema([
                         TextEntry::make('state')
                             ->label('Etat d\'avancement')
                             ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')
@@ -146,31 +148,6 @@ class ViewAction extends ViewRecord
                 ])
                     ->columnSpanFull()
                     ->from('md'),
-                Fieldset::make('team')
-                    ->label('Team')
-                    ->schema([
-                        TextEntry::make('users')
-                            ->label('Agents pilotes')
-                            ->badge()
-                            ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
-                        TextEntry::make('mandataries')
-                            ->label('Mandataires')
-                            ->badge()
-                            ->formatStateUsing(fn(User $state): string => $state->last_name.' '.$state->first_name),
-                        TextEntry::make('leaderServices')
-                            ->label('Services porteurs')
-                            ->badge()
-                            ->formatStateUsing(fn(Service $state): string => $state->name),
-                        TextEntry::make('partnerServices')
-                            ->label('Services partenaires')
-                            ->badge()
-                            ->formatStateUsing(fn(Service $state): string => $state->name),
-                        TextEntry::make('partners')
-                            ->label('Partenaires')
-                            ->badge()
-                            ->formatStateUsing(fn(Partner $state): string => $state->name),
-                    ]),
-
                 Fieldset::make('odd_tab')
                     ->label('Objectifs de développement durable')
                     ->schema([
@@ -202,70 +179,6 @@ class ViewAction extends ViewRecord
                             ->label('Mode de financement')
                             ->prose(),
                     ]),
-                Fieldset::make('medias_tab')
-                    ->relationship('medias')
-                    ->label('Médias')
-                    ->schema([
-                        Grid::make(3)
-                            ->schema([
-                                TextEntry::make('name')
-                                    ->label('Nom')
-                                    ->suffixAction(
-                                        Action::make('download')
-                                            ->icon('tabler-download')
-                                            ->tooltip('Télécharger')
-                                            ->action(function (Media|Model $record) {
-                                                dd($record);
-                                            }),
-                                    ),
-                                TextEntry::make('mime_type')
-                                    ->label('Type'),
-                                TextEntry::make('size')
-                                    ->label('Size')->formatStateUsing(
-                                        fn($state) => number_format($state / 1024, 2).' KB'
-                                    ),
-                            ]),
-                    ]),
             ]);
-    }
-
-    private function tableft(): array
-    {
-        return [
-            Tabs::make('Tabs')
-                ->tabs([
-                    Tabs\Tab::make('Tab 1')
-                        ->schema([
-
-                        ]),
-                    Tabs\Tab::make('Tab 2')
-                        ->schema([
-                            // ...
-                        ]),
-                    Tabs\Tab::make('Budget')
-                        ->schema([
-                            TextEntry::make('budget_estimate'),
-                            TextEntry::make('financing_mode'),
-                        ]),
-                ]),
-
-            Section::make('Rate limiting')
-                ->description('Prevent abuse by limiting the number of requests per period')
-                ->schema([
-
-                    RepeatableEntry::make('services')
-                        ->schema([
-                            TextEntry::make('name'),
-                        ])
-                        ->columns(2),
-                ]),
-            TextEntry::make('description')->columnSpanFull(2),
-            TextEntry::make('due_date')->dateTime(),
-            TextEntry::make('evaluation_indicator'),
-            TextEntry::make('work_plan'),
-            TextEntry::make('state'),
-            TextEntry::make('users'),
-            TextEntry::make('partners'),
-        ];
     }
 }

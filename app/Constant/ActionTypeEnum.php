@@ -64,7 +64,7 @@ enum ActionTypeEnum: string implements HasColor, HasLabel, HasDescription, HasIc
     {
         return match ($this) {
             self::PST => 'heroicon-m-clock',
-            self::PERENNIAL => 'success',
+            self::PERENNIAL => 'tabler-eye',
             self::OFF_SCREEN => 'heroicon-m-exclamation-circle',
         };
     }

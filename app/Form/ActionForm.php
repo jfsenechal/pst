@@ -11,6 +11,7 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -93,32 +94,33 @@ class ActionForm
                 ->relationship(name: 'operationalObjective', titleAttribute: 'name')
                 ->searchable(['name'])
                 ->preload()
-                ->suffixIcon('tabler-ladder')
                 ->visible(fn() => $record === null),
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
                 ->required()
                 ->maxLength(150),
-            Forms\Components\Grid::make(2)
+            Forms\Components\Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
                         ->label('Etat d\'avancement')
                         ->default(ActionStateEnum::TO_VALIDATE->value)
                         ->options(ActionStateEnum::class)
                         ->suffixIcon('tabler-ladder'),
-                    Forms\Components\Select::make('type')
-                        ->label('Type')
-                        ->default(ActionTypeEnum::PST->value)
-                        ->options(ActionTypeEnum::class)
-                        ->suffixIcon('tabler-type'),
-                    Forms\Components\Select::make('odd_roadmap')
-                        ->label('Odd feuille de route')
-                        ->required(false)
-                        ->options(ActionOddRoadmapEnum::class),
                     Forms\Components\TextInput::make('state_percentage')
                         ->label('Pourcentage d\'avancement')
                         ->suffixIcon('tabler-percentage')
-                        ->integer(),
+                        ->integer()
+                        ->maxWidth(MaxWidth::ExtraSmall),
+                    Forms\Components\ToggleButtons::make('type')
+                        ->label('Type')
+                        ->default(ActionTypeEnum::PST->value)
+                        ->options(ActionTypeEnum::class)
+                        ->inline(),
+                    Forms\Components\ToggleButtons::make('odd_roadmap')
+                        ->label('Odd feuille de route')
+                        ->required(false)
+                        ->options(ActionOddRoadmapEnum::class)
+                        ->inline(),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')
                         ->suffixIcon('tabler-calendar-stats'),

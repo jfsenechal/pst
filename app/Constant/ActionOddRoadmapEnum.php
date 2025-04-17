@@ -8,7 +8,6 @@ enum ActionOddRoadmapEnum: string implements HasLabel
 {
     case YES = "TO_VALIDATE";
     case NO = "START";
-    case NULL = "";
 
     public static function toArray(): array
     {
@@ -25,7 +24,6 @@ enum ActionOddRoadmapEnum: string implements HasLabel
         return match ($this) {
             self::YES => 'Oui',
             self::NO => 'Non',
-            self::NULL => '',
         };
     }
 
