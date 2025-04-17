@@ -17,6 +17,8 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 
+//https://www.youtube.com/watch?v=85uRvsUvwJQ&list=PLqDySLfPKRn6fgrrdg4_SmsSxWzVlUQJo&index=23
+//https://filamentphp.com/content/leandrocfe-navigating-filament-pages-with-previous-and-next-buttons
 class ActionResource extends Resource
 {
     protected static ?string $model = Action::class;
@@ -61,9 +63,7 @@ class ActionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('state')
-                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')
-                    ->icon(fn(ActionStateEnum $state) => $state->getIcon())
-                    ->color(fn(ActionStateEnum $state) => $state->getColor()),
+                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')                   ,
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

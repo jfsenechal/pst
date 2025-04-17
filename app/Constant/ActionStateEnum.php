@@ -38,11 +38,11 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::TO_VALIDATE => 'danger',
+            self::TO_VALIDATE => 'warning',
             self::START => 'warning',
             self::FINISHED => 'primary',
             self::PENDING => 'success',
-            self::SUSPENDED => "secondary",
+            self::SUSPENDED => "danger",
         };
     }
 
@@ -52,8 +52,8 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
             self::START => 'heroicon-m-check',
             self::TO_VALIDATE => 'heroicon-m-exclamation-circle',
             self::FINISHED => "heroicon-m-check",
-            self::PENDING => 'heroicon-m-check',
-            self::SUSPENDED => "heroicon-m-check",
+            self::PENDING => 'tabler-hand-stop',
+            self::SUSPENDED => "tabler-cancel",
         };
     }
 }
