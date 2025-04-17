@@ -83,10 +83,10 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('followups', function (Blueprint $table) {
+        Schema::create('follow_ups', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
-            $table->string('content');
+            $table->text('content');
             $table->integer('pourcent')->nullable();
             $table->string('user_add');
             $table->timestamps();

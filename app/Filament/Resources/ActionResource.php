@@ -4,10 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource\Pages;
+use App\Filament\Resources\ActionResource\RelationManagers\FollowUpsRelationManager;
 use App\Filament\Resources\ActionResource\RelationManagers\MediasRelationManager;
 use App\Form\ActionForm;
 use App\Models\Action;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
@@ -63,7 +65,7 @@ class ActionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('state')
-                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown')                   ,
+                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -110,7 +112,11 @@ class ActionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            MediasRelationManager::class,
+            RelationGroup::make('group', [
+                MediasRelationManager::class,
+                FollowUpsRelationManager::class,
+            ]),
+
         ];
     }
 

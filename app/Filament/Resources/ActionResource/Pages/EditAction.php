@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ActionResource\Pages;
 
 use App\Filament\Resources\ActionResource;
-use App\Models\Media;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
