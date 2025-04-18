@@ -94,9 +94,7 @@ class ImportCommand extends Command
     private function addOo(array $row)
     {
         $name = $row[3];
-        preg_match_all('/\d+(\.\d+)?/', $row[1], $matches);
-        $number = end($matches[0]);
-
+        $number = substr(trim($row[1]), -1);
         $this->info('-- '.$name);
 
         $oo = OperationalObjective::create([
