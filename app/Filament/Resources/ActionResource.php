@@ -25,7 +25,7 @@ class ActionResource extends Resource
 {
     protected static ?string $model = Action::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-bolt';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?int $navigationSort = 3;
     protected static ?string $navigationLabel = 'Liste des actions';

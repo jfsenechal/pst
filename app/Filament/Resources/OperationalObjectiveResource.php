@@ -17,7 +17,7 @@ class OperationalObjectiveResource extends Resource
 {
     protected static ?string $model = OperationalObjective::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-target';
 
     protected static ?string $recordTitleAttribute = 'name';
 

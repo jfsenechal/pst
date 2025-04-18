@@ -51,9 +51,9 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
         return match ($this) {
             self::START => 'heroicon-m-check',
             self::TO_VALIDATE => 'heroicon-m-exclamation-circle',
-            self::FINISHED => "heroicon-m-check",
-            self::PENDING => 'tabler-hand-stop',
-            self::SUSPENDED => "tabler-cancel",
+            self::FINISHED => "tabler-bolt-filled",
+            self::PENDING => 'tabler-line-dashed',
+            self::SUSPENDED => "tabler-bolt-off",
         };
     }
 }
