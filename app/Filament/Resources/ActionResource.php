@@ -27,7 +27,7 @@ class ActionResource extends Resource
 
     protected static ?string $navigationIcon = 'tabler-bolt';
     protected static ?string $recordTitleAttribute = 'name';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
     protected static ?string $navigationLabel = 'Liste des actions';
 
     public static function shouldRegisterNavigation(): bool

@@ -18,7 +18,9 @@ class OddResource extends Resource
 {
     protected static ?string $model = Odd::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'tabler-trees';
+
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -27,11 +29,6 @@ class OddResource extends Resource
     public static function getModelLabel(): string
     {
         return 'Objectif de développement durable (ODD)';
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return NavigationGroupEnum::SETTINGS->getLabel();
     }
 
     public static function form(Form $form): Form

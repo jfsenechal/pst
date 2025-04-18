@@ -39,7 +39,7 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
     {
         return match ($this) {
             self::TO_VALIDATE => 'warning',
-            self::START => 'warning',
+            self::START => 'secondary',
             self::FINISHED => 'primary',
             self::PENDING => 'success',
             self::SUSPENDED => "danger",
