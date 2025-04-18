@@ -18,7 +18,8 @@
                             {{count($os->oos)}} Oos
                         </x-filament::badge>
                         <x-filament::button outlined
-                                            href=""
+                                            href="{{ route('filament.admin.resources.strategic-objectives.view', $os->id) }}"
+                                            style="z-index:1000"
                                             size="sm"
                                             color="info"
                                             icon="tabler-eye"
@@ -30,7 +31,7 @@
                 <div class="flex flex-col gap-y-3">
                     @foreach ($os->oos as $oo)
                         <a href="{{ route('filament.admin.resources.operational-objectives.view', $oo->id) }}"
-                        title="Voir">
+                           title="Voir">
                             {{$os->position}}.{{$oo->position}} {{$oo->name}}
                         </a>
                     @endforeach

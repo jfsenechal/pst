@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\StrategicObjectiveResource\Pages;
 
-use App\Filament\Exports\StrategicObjectiveExporter;
+use App\Filament\Exports\StrategicObjectiveExport;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use Filament\Actions;
-use Filament\Actions\ExportAction;
-use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListOs extends ListRecords
 {
@@ -20,7 +20,7 @@ class ListOs extends ListRecords
     /**
      * @var Collection|StrategicObjective[] $oss
      */
-    private Collection $oss;
+    private Collection|array $oss = [];
 
     public function getTitle(): string|Htmlable
     {
@@ -30,14 +30,11 @@ class ListOs extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            ExportAction::make()
+            Action::make('export')
                 ->label('Exporter en Xlsx')
                 ->icon('tabler-download')
                 ->color('secondary')
-                ->exporter(StrategicObjectiveExporter::class)
-                ->formats([
-                    ExportFormat::Xlsx,
-                ]),
+                ->action(fn() => Excel::download(new StrategicObjectiveExport, 'pst.xlsx')),
             Actions\CreateAction::make()
                 ->label('Ajouter un OS')
                 ->icon('tabler-plus'),
