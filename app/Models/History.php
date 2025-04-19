@@ -11,8 +11,7 @@ class History extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
-    protected $fillable = ['property', 'old_value', 'new_value', 'user_add'];
+    protected $fillable = ['action_id', 'body', 'property', 'old_value', 'new_value', 'user_add'];
 
     protected static function booted(): void
     {

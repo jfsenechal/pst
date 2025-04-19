@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Filament\Resources\ActionResource;
 use App\Models\Action;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -13,7 +14,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * https://maizzle.com/docs/components // todo
  */
-class ActionNew extends Mailable
+class ActionNewMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,6 +22,7 @@ class ActionNew extends Mailable
 
     public function __construct(public readonly Action $action)
     {
+        $this->subject = '[PST] Nouvelle action '.$this->action->id.' à valider';
     }
 
     /**
@@ -39,7 +41,6 @@ class ActionNew extends Mailable
      */
     public function content(): Content
     {
-        $content = '';
         $this->logo = public_path('images/Marche_logo.png');
         if (!file_exists($this->logo)) {
             $this->logo = null;
@@ -48,8 +49,8 @@ class ActionNew extends Mailable
         return new Content(
             markdown: 'mail.action.new',
             with: [
-                'content' => $content,
-                'url' => url('/'),
+                'action' => $this->action,
+                'url' => ActionResource::getUrl('view', ['record' => $this->action]),
                 'logo' => $this->logo,
             ],
         );

@@ -95,9 +95,10 @@ return new class extends Migration {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Action::class)->constrained()->cascadeOnDelete();
-            $table->string('property');
-            $table->string('old_value');
-            $table->integer('new_value')->nullable();
+            $table->string('property')->nullable();
+            $table->text('body')->nullable();
+            $table->text('old_value')->nullable();
+            $table->text('new_value')->nullable();
             $table->string('user_add');
             $table->timestamps();
         });

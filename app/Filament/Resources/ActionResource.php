@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource\Pages;
 use App\Filament\Resources\ActionResource\RelationManagers\FollowUpsRelationManager;
+use App\Filament\Resources\ActionResource\RelationManagers\HistoriesRelationManager;
 use App\Filament\Resources\ActionResource\RelationManagers\MediasRelationManager;
 use App\Form\ActionForm;
 use App\Models\Action;
@@ -115,6 +116,7 @@ class ActionResource extends Resource
             RelationGroup::make('group', [
                 MediasRelationManager::class,
                 FollowUpsRelationManager::class,
+                HistoriesRelationManager::class,
             ]),
 
         ];

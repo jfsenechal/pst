@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Constant\ActionStateEnum;
 use App\Models\Scopes\DepartmentScope;
+use App\Observers\ActionObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
 #[ScopedBy([DepartmentScope::class])]
+#[ObservedBy([ActionObserver::class])]
 class Action extends Model
 {
     use HasFactory, Notifiable;
@@ -48,7 +51,9 @@ class Action extends Model
     {
         static::creating(function (self $model) {
             if (Auth::check()) {
-                $model->user_add = Auth::user()->username;
+                $user = Auth::user();
+                $model->user_add = $user->username;
+                $model->department = $user->departments[0];
             }
         });
     }

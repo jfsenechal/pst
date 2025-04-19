@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\ActionProcessed;
-use App\Mail\ActionNew;
+use App\Mail\ActionNewMail;
 use App\Models\Action;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mime\Address;
@@ -20,7 +20,7 @@ class SendActionNewNotification
     {
         try {
             Mail::to(new Address('jf@marche.be'))
-                ->send(new ActionNew($action));
+                ->send(new ActionNewMail($action));
         } catch (\Exception $e) {
             dd($e->getMessage());
         }
