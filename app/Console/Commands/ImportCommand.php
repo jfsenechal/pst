@@ -56,7 +56,6 @@ class ImportCommand extends Command
             $osNum = $row[0];
             $ooNum = $row[1];
             $actionNum = $row[2];
-            $actionName = $row[3];
             /**
              *
              */
@@ -75,7 +74,7 @@ class ImportCommand extends Command
         fclose($file_handle);
     }
 
-    private function addOs(array $row)
+    private function addOs(array $row): void
     {
         $number = preg_replace('/\D/', '', $row[0]);
         $name = $row[3];
@@ -91,7 +90,7 @@ class ImportCommand extends Command
         $this->lastOs = $os->id;
     }
 
-    private function addOo(array $row)
+    private function addOo(array $row): void
     {
         $name = $row[3];
         $number = substr(trim($row[1]), -1);
@@ -108,7 +107,7 @@ class ImportCommand extends Command
         $this->lastOo = $oo->id;
     }
 
-    private function addAction(array $row)
+    private function addAction(array $row): void
     {
         $name = $row[3];
         $actionNum = $row[2];
@@ -146,7 +145,7 @@ class ImportCommand extends Command
             $type = ActionTypeEnum::findByName($typeAction);
         }
 
-        Action::create([
+        $action = Action::create([
             'name' => $name,
             'department' => DepartmentEnum::VILLE->value,
             'state' => $state,
@@ -154,6 +153,13 @@ class ImportCommand extends Command
             'user_add' => 'jfsenechal',
             'operational_objective_id' => $this->lastOo,
         ]);
+
+        foreach ($this->findMandatary($mandataires) as $mandatary) {
+            $action->mandataries()->attach($mandatary->id);
+        }
+        foreach ($this->findOdd($odds) as $odd) {
+            $action->odds()->attach($odd->id);
+        }
     }
 
     private function importPartners(): void
@@ -226,5 +232,68 @@ class ImportCommand extends Command
             "A démarrer" => ActionStateEnum::START->value,
             default => null,
         };
+    }
+
+    private function findMandatary(string $name): array
+    {
+        $users = [];
+        if (!$name) {
+            return [];
+        }
+        dump($name);
+        if (str_contains($name, ',')) {
+            $items = explode(',', $name);
+            foreach ($items as $item) {
+                list($prenom, $nom) = explode(' ', $item);
+                $user = User::where('last_name', trim($nom))->first();
+                if (!$user) {
+                    $this->warn('User not found: '.$nom);
+                } else {
+                    $users[] = $user;
+                }
+            }
+        } else {
+            $items = explode(' ', $name);
+            if (isset($items[1])) {
+                $nom = $items[1];
+                $user = User::where('last_name', trim($nom))->first();
+                if (!$user) {
+                    $this->warn('User not found: '.$nom);
+                } else {
+                    $users[] = $user;
+                }
+            }
+        }
+
+        return $users;
+    }
+
+    private function findOdd(string $name): array
+    {
+        $odds = [];
+        if (!$name) {
+            return [];
+        }
+        dump($name);
+        if (str_contains($name, ',')) {
+            $items = explode(',', $name);
+            foreach ($items as $nom) {
+                $odd = Odd::where('name', trim($nom))->first();
+                if (!$odd) {
+                    $this->warn('Odd not found: '.$nom);
+                } else {
+                    $odds[] = $odd;
+                }
+            }
+        } else {
+            $odd = Odd::where('name', trim($name))->first();
+            if (!$odd) {
+                $this->warn('Odd not found: '.$name);
+            } else {
+                $odds[] = $odd;
+            }
+        }
+
+        return $odds;
     }
 }
