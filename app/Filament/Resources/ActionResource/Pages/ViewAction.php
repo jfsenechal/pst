@@ -61,14 +61,19 @@ class ViewAction extends ViewRecord
                         ->label('Houspiller')
                         ->icon('tabler-school-bell')
                         ->modal()
+                        ->modalDescription('Envoyer un mail aux agents')
                         ->modalHeading('Où en sommes-nous actuellement ?')
                         ->modalContentFooter(new HtmlString('Un lien vers l\'action sera automatiquement ajouté'))
-                        ->modalDescription('Vous trouvez que le projet n\'avance pas. Houspiller les agents!')
+                        ->modalContent(
+                            view('filament.resources.action-resource.reminder-modal-description', [
+                                'emails' => ActionRepository::findByActionEmailAgents($this->record->id),
+                            ])
+                        )
                         ->form(
                             ActionForm::fieldsReminder()
                         )
                         ->action(function (array $data, ActionModel $action) {
-                            $emails = ActionRepository::findAgentEmails($action->id);
+                            $emails = ActionRepository::findByActionEmailAgents($action->id);
                             if ($emails->count() == 0) {
                                 $emails = ['jf@marche.be'];
                             }

@@ -27,7 +27,7 @@ class ActionRepository
      * @param int $actionId
      * @return Collection
      */
-    public static function findAgentEmails(int $actionId): Collection
+    public static function findByActionEmailAgents(int $actionId): Collection
     {
         return Action::where('id', $actionId)
             ->with('users')

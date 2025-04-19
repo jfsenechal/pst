@@ -3,6 +3,7 @@
 namespace App\Filament\Exports;
 
 use App\Models\StrategicObjective;
+use App\Repository\StrategicObjectiveRepository;
 use Filament\Actions\Exports\Models\Export;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -14,9 +15,7 @@ class StrategicObjectiveExport implements FromCollection
     public function collection(): Collection
     {
         $data = collect();
-        $strategicObjectives = StrategicObjective::with('oos.actions')
-            ->orderBy('position')
-            ->get();
+        $strategicObjectives = StrategicObjectiveRepository::findAllWithOosAndActions();
 
         foreach ($strategicObjectives as $strategic) {
             // Strategic Objective row
