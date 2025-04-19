@@ -7,9 +7,9 @@ use Spatie\LaravelPdf\Facades\Pdf;
 
 class PdfExport
 {
-    public function exportAcion(Action $action)
+    public static function exportAcion(Action $action)
     {
-        Pdf::html(view('pdf.test', [
+        Pdf::html(view('pdf.action', [
             'invoiceNumber' => '1234',
             'customerName' => 'Grumpy Cat',
 

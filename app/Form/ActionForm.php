@@ -238,9 +238,20 @@ class ActionForm
     {
         return
             [
+                Forms\Components\TextInput::make('subject')
+                    ->label('Sujet')
+                    ->required(),
                 Forms\Components\Textarea::make('content')
                     ->label('Contenu')
                     ->required(),
+            ];
+    }
+
+    public static function fieldsExportPdf(): array
+    {
+        return
+            [
+
             ];
     }
 }

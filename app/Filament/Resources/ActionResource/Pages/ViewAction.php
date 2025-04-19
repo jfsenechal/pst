@@ -3,16 +3,20 @@
 namespace App\Filament\Resources\ActionResource\Pages;
 
 use App\Constant\ActionStateEnum;
+use App\Filament\Exports\PdfExport;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
 use App\Infolists\Components\ProgressEntry;
+use App\Mail\ActionReminderMail;
+use App\Models\Action as ActionModel;
 use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
+use App\Repository\ActionRepository;
 use Filament\Actions;
 use Filament\Actions\Action as ActionAction;
 use Filament\Actions\ActionGroup;
@@ -24,6 +28,8 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\HtmlString;
 
 class ViewAction extends ViewRecord
 {
@@ -45,16 +51,34 @@ class ViewAction extends ViewRecord
                         ->icon('tabler-pdf')
                         ->modal()
                         ->modalHeading('Exporter en pdf')
-                        ->modalDescription('Export en pdf'),
+                        ->modalDescription('Export en pdf')->form(
+                            ActionForm::fieldsExportPdf()
+                        )
+                        ->action(function (ActionModel $action) {
+                            PdfExport::exportAcion($action);
+                        }),
                     ActionAction::make('reminder')
                         ->label('Houspiller')
                         ->icon('tabler-school-bell')
                         ->modal()
-                        ->modalHeading('Ou ça en est ?')
+                        ->modalHeading('Où en sommes-nous actuellement ?')
+                        ->modalContentFooter(new HtmlString('Un lien vers l\'action sera automatiquement ajouté'))
                         ->modalDescription('Vous trouvez que le projet n\'avance pas. Houspiller les agents!')
                         ->form(
                             ActionForm::fieldsReminder()
-                        ),
+                        )
+                        ->action(function (array $data, ActionModel $action) {
+                            $emails = ActionRepository::findAgentEmails($action->id);
+                            if ($emails->count() == 0) {
+                                $emails = ['jf@marche.be'];
+                            }
+                            try {
+                                Mail::to($emails)
+                                    ->send(new ActionReminderMail($action, $data));
+                            } catch (\Exception $e) {
+                                dd($e->getMessage());
+                            }
+                        }),
                     Actions\DeleteAction::make()
                         ->icon('tabler-trash'),
                 ]
