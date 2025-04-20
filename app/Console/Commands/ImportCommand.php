@@ -40,9 +40,9 @@ class ImportCommand extends Command
     public function handle(): int
     {
         $csvFile = $this->dir.'pst.csv';
-        $this->importPartners();
-        $this->importServices();
-        $this->importOdd();
+        /* $this->importPartners();
+         $this->importServices();
+         $this->importOdd();*/
         $this->importCsv($csvFile);
         $this->info('Update');
 
@@ -240,14 +240,14 @@ class ImportCommand extends Command
         if (!$name) {
             return [];
         }
-        dump($name);
+
         if (str_contains($name, ',')) {
             $items = explode(',', $name);
             foreach ($items as $item) {
                 list($prenom, $nom) = explode(' ', $item);
                 $user = User::where('last_name', trim($nom))->first();
                 if (!$user) {
-                    $this->warn('User not found: '.$nom);
+                    $this->warn('ERROR User not found: '.$nom);
                 } else {
                     $users[] = $user;
                 }
@@ -258,7 +258,7 @@ class ImportCommand extends Command
                 $nom = $items[1];
                 $user = User::where('last_name', trim($nom))->first();
                 if (!$user) {
-                    $this->warn('User not found: '.$nom);
+                    $this->warn('ERROR User not found: '.$nom);
                 } else {
                     $users[] = $user;
                 }
@@ -274,13 +274,13 @@ class ImportCommand extends Command
         if (!$name) {
             return [];
         }
-        dump($name);
+
         if (str_contains($name, ',')) {
             $items = explode(',', $name);
             foreach ($items as $nom) {
                 $odd = Odd::where('name', trim($nom))->first();
                 if (!$odd) {
-                    $this->warn('Odd not found: '.$nom);
+                    $this->warn('ERROR Odd not found: '.$nom);
                 } else {
                     $odds[] = $odd;
                 }
@@ -288,7 +288,7 @@ class ImportCommand extends Command
         } else {
             $odd = Odd::where('name', trim($name))->first();
             if (!$odd) {
-                $this->warn('Odd not found: '.$name);
+                $this->warn('ERROR Odd not found: '.$name);
             } else {
                 $odds[] = $odd;
             }

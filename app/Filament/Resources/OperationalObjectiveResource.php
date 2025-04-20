@@ -47,7 +47,12 @@ class OperationalObjectiveResource extends Resource
                     )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('actions_count')
+                    ->label('Actions')
+                    ->counts('actions')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -61,7 +66,6 @@ class OperationalObjectiveResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make()
                     ->icon('tabler-edit'),
                 Tables\Actions\DeleteAction::make()
