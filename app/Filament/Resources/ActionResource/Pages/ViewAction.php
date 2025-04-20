@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ActionResource\Pages;
 
 use App\Constant\ActionStateEnum;
-use App\Filament\Exports\PdfExport;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
@@ -47,16 +46,10 @@ class ViewAction extends ViewRecord
                 ->icon('tabler-edit'),
             ActionGroup::make([
                     ActionAction::make('rapport')
-                        ->label('Rapport')
+                        ->label('Export en pdf')
                         ->icon('tabler-pdf')
-                        ->modal()
-                        ->modalHeading('Exporter en pdf')
-                        ->modalDescription('Export en pdf')->form(
-                            ActionForm::fieldsExportPdf()
-                        )
-                        ->action(function (ActionModel $action) {
-                            PdfExport::exportAcion($action);
-                        }),
+                        ->url(fn(ActionModel $record) => route('download.action', $record))
+                        ->openUrlInNewTab(),
                     ActionAction::make('reminder')
                         ->label('Houspiller')
                         ->icon('tabler-school-bell')
