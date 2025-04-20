@@ -18,7 +18,8 @@ class UserForm
                 Forms\Components\Select::make('roles')
                     ->label('Rôles')
                     ->helperText(fn(Role $role) => $role->description)
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'name')
+                ->multiple(),
                 Forms\Components\Select::make('departments')
                     ->default(DepartmentEnum::VILLE->value)
                     ->options(DepartmentEnum::class)

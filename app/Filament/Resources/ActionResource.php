@@ -47,10 +47,14 @@ class ActionResource extends Resource
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->numeric()
+                    ->label('Numéro'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->label('Intitulé')
-                    ->limit(120)
+                    ->limit(110)
                     ->url(fn(Action $record) => ActionResource::getUrl('view', ['record' => $record->id]))
                     ->tooltip(function (TextColumn $column): ?string {
                         $state = $column->getState();

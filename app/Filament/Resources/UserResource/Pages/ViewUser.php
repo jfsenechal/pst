@@ -5,7 +5,9 @@ namespace App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\UserResource;
 use App\Models\Action;
+use App\Models\User;
 use Filament\Actions;
+use Filament\Facades\Filament;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -67,7 +69,15 @@ class ViewUser extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\Action::make('swith_user')
+                ->label('Voir en tant que')
+                ->action(function (User $user) {
+                    Filament::auth()->login($user);
+
+                    return redirect()->intended(Filament::getUrl());
+                }),
         ];
     }
 }
