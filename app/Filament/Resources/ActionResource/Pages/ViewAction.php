@@ -25,6 +25,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Enums\ActionSize;
 use Illuminate\Support\Facades\Mail;
@@ -49,7 +50,13 @@ class ViewAction extends ViewRecord
                         ->label('Export en pdf')
                         ->icon('tabler-pdf')
                         ->url(fn(ActionModel $record) => route('download.action', $record))
-                        ->openUrlInNewTab(),
+                        ->action(function (){
+                            Notification::make()
+                                ->title('Pdf exporté')
+                                ->success()
+                                ->send();
+                        }),
+                        //->openUrlInNewTab(),
                     ActionAction::make('reminder')
                         ->label('Houspiller')
                         ->icon('tabler-school-bell')

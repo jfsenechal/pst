@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Constant\ActionStateEnum;
 use App\Models\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -36,6 +37,21 @@ class ActionRepository
             ->pluck('email')
             ->unique()
             ->values();
+    }
+
+    public static function actionByStateCount(ActionStateEnum $state): int
+    {
+        return Action::query()->where('state', $state->value)->count();
+    }
+
+    public static function actionByState(ActionStateEnum $state): Collection
+    {
+        return Action::ofState($state->value)->get();
+    }
+
+    public static function all(): int
+    {
+        return Action::all()->count();
     }
 
 }

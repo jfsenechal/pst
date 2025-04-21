@@ -168,4 +168,10 @@ class Action extends Model
         $query->where('department', $department);
     }
 
+    #[Scope]
+    public static function byState(Builder $query, string $state): void
+    {
+        $query->where('state', $state);
+    }
+
 }
