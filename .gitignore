@@ -26,3 +26,5 @@ yarn-error.log
 git.sh
 /output
 *.sql
+composer.lock
+package-lock.json
