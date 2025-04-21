@@ -5,7 +5,6 @@ namespace App\Filament\Resources\OperationalObjectiveResource\RelationManagers;
 use App\Filament\Resources\ActionResource;
 use App\Form\ActionForm;
 use App\Models\Action;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -30,7 +29,8 @@ class ActionsRelationManager extends RelationManager
     {
         return $table
             ->defaultPaginationPageOption(50)
-            ->recordTitleAttribute('name')
+            ->defaultSort('name')
+            ->recordUrl(fn(Action $record) => ActionResource::getUrl('view', [$record]))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')
@@ -39,7 +39,7 @@ class ActionsRelationManager extends RelationManager
                     ->searchable(),
             ])
             ->filters([
-                //
+
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -48,22 +48,8 @@ class ActionsRelationManager extends RelationManager
                     ->form(fn(Form $form): Form => ActionForm::createForm($form, $this->ownerRecord)),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->url(
-                        fn(Action $record): string => ActionResource::getUrl(
-                            'view',
-                            ['record' => $record]
-                        )
-                    ),
                 Tables\Actions\EditAction::make()
                     ->icon('tabler-edit'),
-                Tables\Actions\DeleteAction::make()
-                    ->icon('tabler-trash'),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

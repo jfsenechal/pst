@@ -16,7 +16,10 @@ class OddForm
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('icon')
-                    ->label('Icone'),
+                    ->label('Icône')
+                    ->previewable(false)
+                    ->maxFiles(1)
+                    ->image(),
                 Forms\Components\ColorPicker::make('color')
                     ->label('Couleur'),
                 Forms\Components\TextInput::make('description')

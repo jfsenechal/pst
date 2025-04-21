@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\OddResource\Pages;
 
 use App\Filament\Resources\OddResource;
+use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewOdd extends ViewRecord
@@ -42,5 +42,13 @@ class ViewOdd extends ViewRecord
                     ->label('Justification')
                     ->columnSpanFull(),
             ]);
+    }
+
+    protected function getAllRelationManagers(): array
+    {
+        $relations = $this->getResource()::getRelations();
+        $relations[] = ActionsRelationManager::class;
+
+        return $relations;
     }
 }

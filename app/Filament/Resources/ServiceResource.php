@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
+use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\ServiceResource\Pages;
 use App\Form\ServiceForm;
 use App\Models\Service;
@@ -55,13 +56,6 @@ class ServiceResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //      ServiceUserRelationManager::class,
-        ];
     }
 
     public static function getPages(): array

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\ActionResource;
+use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource;
 use App\Models\Action;
 use App\Models\User;
@@ -20,7 +21,7 @@ class ViewUser extends ViewRecord
 
     public function getTitle(): string
     {
-        return $this->record->name() ?? 'Empty name';
+        return $this->record->name();
     }
 
     public function infolist(Infolist $infolist): Infolist
@@ -79,5 +80,13 @@ class ViewUser extends ViewRecord
                     return redirect()->intended(Filament::getUrl());
                 }),
         ];
+    }
+
+    protected function getAllRelationManagers(): array
+    {
+        $relations = $this->getResource()::getRelations();
+        $relations[] = ActionsRelationManager::class;
+
+        return $relations;
     }
 }

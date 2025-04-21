@@ -29,7 +29,7 @@
             <th class="text-gray-700 font-bold uppercase py-2">Type</th>
             <td class="py-4 text-gray-700">
                 @if($action->type)
-                    {{$action->type}}
+                    {{$action->type->getLabel()}}
                 @endif
             </td>
         </tr>

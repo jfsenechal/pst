@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Constant\DepartmentEnum;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,10 +18,6 @@ class ServiceForm
                     ->maxLength(255),
                 Forms\Components\TextInput::make('initials')
                     ->maxLength(30),
-                Forms\Components\Select::make('synergy')
-                    ->label('Synergie')
-                    ->default(DepartmentEnum::COMMON->value)
-                    ->options(DepartmentEnum::class),
                 Forms\Components\Select::make('users')
                     ->label('Agents membres')
                     ->relationship('users', 'first_name')

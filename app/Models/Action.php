@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionTypeEnum;
 use App\Models\Scopes\DepartmentScope;
 use App\Observers\ActionObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -45,6 +46,7 @@ class Action extends Model
         'medias' => 'array',
         'due_date' => 'datetime',
         'state' => ActionStateEnum::class,
+        'type' => ActionTypeEnum::class,
     ];
 
     protected static function booted(): void
@@ -81,12 +83,7 @@ class Action extends Model
      */
     public function leaderServices(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Service::class,
-            'action_service_leader',
-            'action_id',
-            'service_id'
-        );
+        return $this->belongsToMany(Service::class, 'action_service_leader');
     }
 
     /**
@@ -94,12 +91,7 @@ class Action extends Model
      */
     public function partnerServices(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Service::class,
-            'action_service_partner',
-            'action_id',
-            'service_id'
-        );
+        return $this->belongsToMany(Service::class, 'action_service_partner');
     }
 
     /**
@@ -112,12 +104,7 @@ class Action extends Model
 
     public function mandataries(): BelongsToMany
     {
-        return $this->belongsToMany(
-            User::class,
-            'action_mandatory',
-            'action_id',
-            'user_id'
-        );
+        return $this->belongsToMany(User::class, 'action_mandatory');
     }
 
     /**

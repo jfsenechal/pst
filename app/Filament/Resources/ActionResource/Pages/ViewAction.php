@@ -6,6 +6,7 @@ use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\Pages\Concerns\CanPaginateViewRecord;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
 use App\Infolists\Components\ProgressEntry;
@@ -33,6 +34,8 @@ use Illuminate\Support\HtmlString;
 
 class ViewAction extends ViewRecord
 {
+    use CanPaginateViewRecord;
+
     protected static string $resource = ActionResource::class;
 
     public function getTitle(): string
@@ -45,18 +48,20 @@ class ViewAction extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
+            //  PreviousAction::make(),
+            //  NextAction::make(),
             ActionGroup::make([
                     ActionAction::make('rapport')
                         ->label('Export en pdf')
                         ->icon('tabler-pdf')
                         ->url(fn(ActionModel $record) => route('download.action', $record))
-                        ->action(function (){
+                        ->action(function () {
                             Notification::make()
                                 ->title('Pdf exporté')
                                 ->success()
                                 ->send();
                         }),
-                        //->openUrlInNewTab(),
+                    //->openUrlInNewTab(),
                     ActionAction::make('reminder')
                         ->label('Houspiller')
                         ->icon('tabler-school-bell')

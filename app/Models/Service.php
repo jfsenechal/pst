@@ -23,11 +23,14 @@ class Service extends Model
         return $this->belongsToMany(User::class);
     }
 
-    /**
-     * @return BelongsToMany<Action>
-     */
-    public function actions(): BelongsToMany
+    public function leadingActions(): BelongsToMany
     {
-        return $this->belongsToMany(Action::class);
+        return $this->belongsToMany(Action::class, 'action_service_leader');
     }
+
+    public function partneringActions(): BelongsToMany
+    {
+        return $this->belongsToMany(Action::class, 'action_service_partner');
+    }
+
 }

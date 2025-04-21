@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\OperationalObjectiveResource\Pages;
-use App\Filament\Resources\OperationalObjectiveResource\RelationManagers\ActionsRelationManager;
 use App\Form\OperationalObjectiveForm;
 use App\Models\OperationalObjective;
 use Filament\Forms\Form;
@@ -38,6 +37,7 @@ class OperationalObjectiveResource extends Resource
         return $table
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
+            ->recordUrl(fn(OperationalObjective $record) => self::getUrl('view', [$record]))
             ->columns([
                 Tables\Columns\TextColumn::make('position')
                     ->label('Numéro')
@@ -76,13 +76,6 @@ class OperationalObjectiveResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            ActionsRelationManager::class,
-        ];
     }
 
     public static function getPages(): array

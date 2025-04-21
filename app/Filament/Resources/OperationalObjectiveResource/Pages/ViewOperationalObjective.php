@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OperationalObjectiveResource\Pages;
 
 use App\Filament\Resources\OperationalObjectiveResource;
+use App\Filament\Resources\OperationalObjectiveResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\StrategicObjectiveResource;
 use Filament\Actions;
 use Filament\Forms\Form;
@@ -29,6 +30,16 @@ class ViewOperationalObjective extends ViewRecord
         ];
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\EditAction::make()
+                ->icon('tabler-edit'),
+            Actions\DeleteAction::make()
+                ->icon('tabler-trash'),
+        ];
+    }
+
     /**
      * no form in view
      */
@@ -38,13 +49,11 @@ class ViewOperationalObjective extends ViewRecord
             ->schema([]);
     }
 
-    protected function getHeaderActions(): array
+    protected function getAllRelationManagers(): array
     {
-        return [
-            Actions\EditAction::make()
-                ->icon('tabler-edit'),
-            Actions\DeleteAction::make()
-                ->icon('tabler-trash'),
-        ];
+        $relations = $this->getResource()::getRelations();
+        $relations[] = ActionsRelationManager::class;
+
+        return $relations;
     }
 }
