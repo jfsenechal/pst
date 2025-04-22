@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Constant\RoleEnum;
+use App\Models\OperationalObjective;
 use App\Models\User;
 
 class OperationalObjectivePolicy
@@ -18,7 +19,7 @@ class OperationalObjectivePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, OperationalObjectivePolicy $operationalObjective): bool
+    public function view(User $user, OperationalObjective $operationalObjective): bool
     {
         return true;
     }
@@ -34,7 +35,7 @@ class OperationalObjectivePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, OperationalObjectivePolicy $operationalObjective): bool
+    public function update(User $user, OperationalObjective $operationalObjective): bool
     {
         return $this->hasRoles($user);
     }
@@ -42,7 +43,7 @@ class OperationalObjectivePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, OperationalObjectivePolicy $operationalObjective): bool
+    public function delete(User $user, OperationalObjective $operationalObjective): bool
     {
         return $this->hasRoles($user);
     }
@@ -50,7 +51,7 @@ class OperationalObjectivePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, OperationalObjectivePolicy $operationalObjective): bool
+    public function restore(User $user, OperationalObjective $operationalObjective): bool
     {
         return false;
     }
@@ -58,7 +59,7 @@ class OperationalObjectivePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, OperationalObjectivePolicy $operationalObjective): bool
+    public function forceDelete(User $user, OperationalObjective $operationalObjective): bool
     {
         return false;
     }

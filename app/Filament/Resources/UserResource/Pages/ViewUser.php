@@ -26,10 +26,6 @@ class ViewUser extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            TextEntry::make('first_name')
-                ->label('Prénom'),
-            TextEntry::make('last_name')
-                ->label('Nom'),
             TextEntry::make('email')
                 ->label('Email')
                 ->icon('tabler-mail'),
@@ -45,24 +41,9 @@ class ViewUser extends ViewRecord
             TextEntry::make('departments')
                 ->label('Départements')
                 ->icon('tabler-device-mobile'),
-            Fieldset::make('actions')
-                ->label('Actions liés')
-                ->schema([
-                    RepeatableEntry::make('action_user')
-                        ->label(false)
-                        ->columnSpanFull()
-                        ->schema([
-                            TextEntry::make('name')
-                                ->label('Nom')
-                                ->columnSpanFull()
-                                ->url(
-                                    fn(Action $record): string => ActionResource::getUrl(
-                                        'view',
-                                        ['record' => $record]
-                                    )
-                                ),
-                        ]),
-                ]),
+            TextEntry::make('roles.name')
+                ->label('Rôles')
+                ->icon('tabler-user-shield'),
         ]);
     }
 

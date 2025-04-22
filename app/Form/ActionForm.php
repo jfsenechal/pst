@@ -5,9 +5,11 @@ namespace App\Form;
 use App\Constant\ActionOddRoadmapEnum;
 use App\Constant\ActionStateEnum;
 use App\Constant\ActionTypeEnum;
+use App\Constant\RoleEnum;
 use App\Models\OperationalObjective;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
@@ -132,37 +134,56 @@ class ActionForm
     private static function fieldsTeam(): array
     {
         return [
-            Forms\Components\Select::make('action_mandatory')
-                ->label('Mandataires')
-                ->relationship(
-                    name: 'mandataries',
-                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
-                        ->orderBy('first_name'),
-                )
-                ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
-                ->searchable(['first_name', 'last_name'])
-                ->multiple(),
-            Forms\Components\Select::make('action_users')
-                ->label('Agents pilotes')
-                ->relationship(
-                    name: 'users',
-                    modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
-                        ->orderBy('first_name'),
-                )
-                ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
-                ->searchable(['first_name', 'last_name'])
-                ->multiple(),
-            Forms\Components\Select::make('action_service_leader')
-                ->label('Services porteurs')
-                ->relationship(name: 'leaderServices', titleAttribute: 'name')
-                ->preload()
-                ->multiple(),
-            Forms\Components\Select::make('action_service_partner')
-                ->label('Services partenaires')
-                ->relationship(name: 'partnerServices', titleAttribute: 'name')
-                ->preload()
-                ->multiple(),
-            Forms\Components\Select::make('partners')
+            Fieldset::make('Mandataires et agents')
+                ->schema([
+                    Forms\Components\Select::make('action_mandatory')
+                        ->label('Mandataires')
+                        ->relationship(
+                            name: 'mandataries',
+                            modifyQueryUsing: fn(Builder $query) => $query
+                                ->whereHas(
+                                    'roles',
+                                    fn(Builder $query) => $query->where('name', RoleEnum::MANDATAIRE->value)
+                                )
+                                ->orderBy('last_name')
+                                ->orderBy('first_name'),
+                        )
+                        ->getOptionLabelFromRecordUsing(
+                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                        )
+                        ->searchable(['first_name', 'last_name'])
+                        ->multiple()
+                        ->preload(),
+                    Forms\Components\Select::make('action_users')
+                        ->label('Agents pilotes')
+                        ->relationship(
+                            name: 'users',
+                            modifyQueryUsing: fn(Builder $query) => $query->orderBy('last_name')
+                                ->orderBy('first_name'),
+                        )
+                        ->getOptionLabelFromRecordUsing(
+                            fn(Model $record) => "{$record->first_name} {$record->last_name}"
+                        )
+                        ->searchable(['first_name', 'last_name'])
+                        ->multiple(),
+                ])
+                ->columns(3),
+            Fieldset::make('Services porteurs et partenaires')
+                ->schema([
+                    Forms\Components\Select::make('action_service_leader')
+                        ->label('Services porteurs')
+                        ->relationship(name: 'leaderServices', titleAttribute: 'name')
+                        ->preload()
+                        ->multiple(),
+                    Forms\Components\Select::make('action_service_partner')
+                        ->label('Services partenaires')
+                        ->relationship(name: 'partnerServices', titleAttribute: 'name')
+                        ->preload()
+                        ->multiple(),
+
+                ])
+                ->columns(2),
+             Forms\Components\Select::make('partners')
                 ->label('Partenaires externes')
                 ->relationship(name: 'partners', titleAttribute: 'name')
                 ->multiple(),
