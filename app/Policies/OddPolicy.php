@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Constant\RoleEnum;
-use App\Models\StrategicObjective;
+use App\Models\Odd;
 use App\Models\User;
 
-class StrategicObjectivePolicy
+class OddPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -19,7 +19,7 @@ class StrategicObjectivePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, StrategicObjective $strategicObjective): bool
+    public function view(User $user, Odd $odd): bool
     {
         return true;
     }
@@ -35,7 +35,7 @@ class StrategicObjectivePolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, StrategicObjective $strategicObjective): bool
+    public function update(User $user, Odd $odd): bool
     {
         return $this->hasRoles($user);
     }
@@ -43,7 +43,7 @@ class StrategicObjectivePolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, StrategicObjective $strategicObjective): bool
+    public function delete(User $user, Odd $odd): bool
     {
         return $this->hasRoles($user);
     }
@@ -51,7 +51,7 @@ class StrategicObjectivePolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, StrategicObjective $strategicObjective): bool
+    public function restore(User $user, Odd $odd): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ class StrategicObjectivePolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, StrategicObjective $strategicObjective): bool
+    public function forceDelete(User $user, Odd $odd): bool
     {
         return false;
     }
