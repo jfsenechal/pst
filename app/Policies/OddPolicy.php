@@ -66,6 +66,6 @@ class OddPolicy
 
     private function hasRoles(User $user): bool
     {
-        return $user->hasRoles([RoleEnum::ADMIN->value, RoleEnum::CHEF->value]);
+        return $user->hasRoles([RoleEnum::ADMIN->value, RoleEnum::MANAGER->value]);
     }
 }

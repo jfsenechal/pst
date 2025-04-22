@@ -20,6 +20,12 @@ class ListUsers extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('roles_help')
+                ->label('Les rôles')
+                ->icon('tabler-user-heart')
+                ->modal()
+                ->modalHeading('Explications des différents rôles')
+                ->modalContent(view('filament.resources.user-resource.pages.roles-help')),
         ];
     }
 }

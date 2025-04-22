@@ -104,6 +104,19 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
         return false;
     }
 
+    public function hasRoles(array $rolesToFind): bool
+    {
+        foreach ($rolesToFind as $roleToFind) {
+            foreach ($this->roles()->get() as $role) {
+                if ($role->name === $roleToFind) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function addRole(Role $role): void
     {
         $this->roles()->attach($role);
