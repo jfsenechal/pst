@@ -6,14 +6,13 @@ use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource;
 use App\Models\Action;
-use App\Models\User;
 use Filament\Actions;
-use Filament\Facades\Filament;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use STS\FilamentImpersonate\Pages\Actions\Impersonate;
 
 class ViewUser extends ViewRecord
 {
@@ -72,13 +71,7 @@ class ViewUser extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
-            Actions\Action::make('swith_user')
-                ->label('Voir en tant que')
-                ->action(function (User $user) {
-                    Filament::auth()->login($user);
-
-                    return redirect()->intended(Filament::getUrl());
-                }),
+            Impersonate::make(),
         ];
     }
 
