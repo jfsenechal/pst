@@ -83,7 +83,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('icon')->nullable();
             $table->string('color')->nullable();
-            $table->string('image_name');
+            $table->string('image_name')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

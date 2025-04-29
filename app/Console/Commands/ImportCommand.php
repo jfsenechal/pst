@@ -40,16 +40,16 @@ class ImportCommand extends Command
     public function handle(): int
     {
         $csvFile = $this->dir.'pst.csv';
-        /* $this->importPartners();
-         $this->importServices();
-         $this->importOdd();*/
+        //$this->importPartners();
+        //$this->importServices();
+        //$this->importOdd();
         $this->importCsv($csvFile);
         $this->info('Update');
 
         return SfCommand::SUCCESS;
     }
 
-    public function importCsv($csvFile, $delimiter = ','): void
+    public function importCsv($csvFile, $delimiter = '|'): void
     {
         $file_handle = fopen($csvFile, 'r');
         while ($row = fgetcsv($file_handle, null, $delimiter)) {
@@ -79,7 +79,7 @@ class ImportCommand extends Command
         $number = preg_replace('/\D/', '', $row[0]);
         $name = $row[3];
 
-        $this->info($name);
+        //   $this->info($name);
         $os = StrategicObjective::create([
             'name' => $name,
             'department' => DepartmentEnum::VILLE->value,
@@ -94,7 +94,7 @@ class ImportCommand extends Command
     {
         $name = $row[3];
         $number = substr(trim($row[1]), -1);
-        $this->info('-- '.$name);
+        //  $this->info('-- '.$name);
 
         $oo = OperationalObjective::create([
             'strategic_objective_id' => $this->lastOs,
@@ -127,7 +127,7 @@ class ImportCommand extends Command
             return;
         }
 
-        $this->info("---- ".$name);
+        $this->info("---- Action ".$actionNum." ".$name);
         $state = null;
         if ($etat) {
             $state = $this->findState($etat);
@@ -150,7 +150,7 @@ class ImportCommand extends Command
             'department' => DepartmentEnum::VILLE->value,
             'state' => $state,
             'type' => $type?->value,
-            'user_add' => 'jfsenechal',
+            'user_add' => 'import',
             'operational_objective_id' => $this->lastOo,
         ]);
 
@@ -159,6 +159,46 @@ class ImportCommand extends Command
         }
         foreach ($this->findOdd($odds) as $odd) {
             $action->odds()->attach($odd->id);
+        }
+        if ($servicesPorteur) {
+            if (str_contains($servicesPorteur, '/')) {
+                $services = explode('/', $servicesPorteur);
+                foreach ($services as $service) {
+                    $service = $this->findService(trim($service));
+                    if (!$service) {
+                        $this->warn("ERROR service not found ".$servicesPorteur);
+                    } else {
+                        $action->leaderServices()->attach($service->id);
+                    }
+                }
+            } else {
+                $service = $this->findService(trim($servicesPorteur));
+                if (!$service) {
+                    $this->warn("ERROR service not found ".$servicesPorteur);
+                } else {
+                    $action->leaderServices()->attach($service->id);
+                }
+            }
+        }
+        if ($servicesPartenaires) {
+            if (str_contains($servicesPartenaires, '/')) {
+                $services = explode('/', $servicesPartenaires);
+                foreach ($services as $service) {
+                    $service = $this->findService(trim($service));
+                    if (!$service) {
+                        $this->warn("ERROR service not found ".$servicesPartenaires);
+                    } else {
+                        $action->partnerServices()->attach($service->id);
+                    }
+                }
+            } else {
+                $service = $this->findService(trim($servicesPartenaires));
+                if (!$service) {
+                    $this->warn("ERROR service not found ".$servicesPartenaires);
+                } else {
+                    $action->partnerServices()->attach($service->id);
+                }
+            }
         }
     }
 
@@ -190,7 +230,6 @@ class ImportCommand extends Command
 
             $service = Service::create([
                 'name' => $row["Service_interne"],
-                'department' => $department,
             ]);
             foreach ($emails as $email) {
                 if ($user = User::where('email', $email)->first()) {
@@ -209,7 +248,6 @@ class ImportCommand extends Command
         foreach ($data['data'] as $row) {
             Odd::create([
                 'name' => $row["name"],
-                'department' => DepartmentEnum::VILLE->value,
             ]);
         }
     }
@@ -295,5 +333,10 @@ class ImportCommand extends Command
         }
 
         return $odds;
+    }
+
+    private function findService(string $service): ?Service
+    {
+        return Service::where('name', $service)->orWhere('initials', $service)->first();
     }
 }
