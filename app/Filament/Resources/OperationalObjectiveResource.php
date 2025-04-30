@@ -5,9 +5,9 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\OperationalObjectiveResource\Pages;
 use App\Form\OperationalObjectiveForm;
 use App\Models\OperationalObjective;
+use App\Tables\OperationalObjectiveTables;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -34,48 +34,7 @@ class OperationalObjectiveResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->defaultSort('position')
-            ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(OperationalObjective $record) => self::getUrl('view', [$record]))
-            ->columns([
-                Tables\Columns\TextColumn::make('position')
-                    ->label('Numéro')
-                    ->state(
-                        fn(OperationalObjective $objective): string => $objective->strategicObjective()->first(
-                            )->position.'.'.' '.$objective->position
-                    )
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('actions_count')
-                    ->label('Actions')
-                    ->counts('actions')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make()
-                    ->icon('tabler-edit'),
-                Tables\Actions\DeleteAction::make()
-                    ->icon('tabler-trash'),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        return OperationalObjectiveTables::table($table);
     }
 
     public static function getPages(): array

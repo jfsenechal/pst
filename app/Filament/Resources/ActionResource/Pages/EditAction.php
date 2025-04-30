@@ -13,6 +13,14 @@ class EditAction extends EditRecord
 
     protected static string $resource = ActionResource::class;
 
+    /**
+     * to remove word "editer"
+     */
+    public  function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
+
     protected function getHeaderActions(): array
     {
         return [

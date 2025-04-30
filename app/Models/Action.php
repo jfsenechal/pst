@@ -18,7 +18,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
-#[ScopedBy([DepartmentScope::class])]
+//#[ScopedBy([DepartmentScope::class])]
 #[ObservedBy([ActionObserver::class])]
 class Action extends Model
 {

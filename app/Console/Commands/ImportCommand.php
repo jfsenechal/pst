@@ -39,7 +39,7 @@ class ImportCommand extends Command
 
     public function handle(): int
     {
-        $csvFile = $this->dir.'pst.csv';
+        $csvFile = $this->dir.'pst-interne.csv';
         //$this->importPartners();
         //$this->importServices();
         //$this->importOdd();
@@ -52,6 +52,7 @@ class ImportCommand extends Command
     public function importCsv($csvFile, $delimiter = '|'): void
     {
         $file_handle = fopen($csvFile, 'r');
+        $this->lastOs = 6;
         while ($row = fgetcsv($file_handle, null, $delimiter)) {
             $osNum = $row[0];
             $ooNum = $row[1];
@@ -64,7 +65,7 @@ class ImportCommand extends Command
                 continue;
             }
             if ($osNum) {
-                $this->addOs($row);
+                //  $this->addOs($row);
                 continue;
             }
             if ($ooNum) {
@@ -82,7 +83,7 @@ class ImportCommand extends Command
         //   $this->info($name);
         $os = StrategicObjective::create([
             'name' => $name,
-            'department' => DepartmentEnum::VILLE->value,
+            'department' => DepartmentEnum::COMMON->value,
             'position' => $number,
             //'synergy' => $synergy,
             // 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
@@ -95,11 +96,11 @@ class ImportCommand extends Command
         $name = $row[3];
         $number = substr(trim($row[1]), -1);
         //  $this->info('-- '.$name);
-
+        $number = 99;
         $oo = OperationalObjective::create([
             'strategic_objective_id' => $this->lastOs,
             'name' => $name,
-            'department' => DepartmentEnum::VILLE->value,
+            'department' => DepartmentEnum::COMMON->value,
             'position' => $number,
             // 'synergy' => $synergy,
             // 'description' => $row["Fiche_compl_te_PST_Nom_du_projet"],
@@ -147,7 +148,7 @@ class ImportCommand extends Command
 
         $action = Action::create([
             'name' => $name,
-            'department' => DepartmentEnum::VILLE->value,
+            'department' => DepartmentEnum::COMMON->value,
             'state' => $state,
             'type' => $type?->value,
             'user_add' => 'import',
@@ -313,24 +314,28 @@ class ImportCommand extends Command
             return [];
         }
 
-        if (str_contains($name, ',')) {
-            $items = explode(',', $name);
-            foreach ($items as $nom) {
-                $odd = Odd::where('name', trim($nom))->first();
-                if (!$odd) {
-                    $this->warn('ERROR Odd not found: '.$nom);
-                } else {
-                    $odds[] = $odd;
-                }
-            }
-        } else {
-            $odd = Odd::where('name', trim($name))->first();
-            if (!$odd) {
-                $this->warn('ERROR Odd not found: '.$name);
-            } else {
-                $odds[] = $odd;
-            }
+        /*  if (str_contains($name, ',')) {
+              $items = explode(',', $name);
+              foreach ($items as $nom) {
+                  $odd = Odd::where('name', trim($nom))->first();
+                  if (!$odd) {
+                      $this->warn('ERROR Odd not found: '.$nom);
+                  } else {
+                      $odds[] = $odd;
+                  }
+              }*/
+        // } else {
+        $odd = Odd::where('name', trim($name))->first();
+        if ($name == '"Paix, justice et institutions efficaces"') {
+            $odd = Odd::find(16);
         }
+        if (!$odd) {
+            $this->warn('ERROR Odd not found: '.$name);
+        } else {
+            $odds[] = $odd;
+        }
+
+        //   }
 
         return $odds;
     }

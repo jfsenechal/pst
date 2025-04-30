@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::shouldBeStrict();
+        Model::automaticallyEagerLoadRelationships();
         if (!app()->environment('production')) {
             Mail::alwaysTo('jf@marche.be');
         }
