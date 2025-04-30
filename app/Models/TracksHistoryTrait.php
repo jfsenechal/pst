@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 //https://laravel.com/docs/12.x/eloquent#examining-attribute-changes
 trait TracksHistoryTrait
 {
-    protected function track(Model $model, callable $func = null, $table = null, $id = null)
+    protected function track(Model $model, ?callable $func = null, $table = null, $id = null)
     {
         $id = $id ?: $model->id;
         // Allow for customization of the history record if needed

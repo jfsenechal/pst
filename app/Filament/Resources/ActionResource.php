@@ -49,10 +49,12 @@ class ActionResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->searchable()
+                    ->sortable()
                     ->numeric()
                     ->label('Numéro'),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
+                    ->sortable()
                     ->label('Intitulé')
                     ->limit(110)
                     ->url(fn(Action $record) => ActionResource::getUrl('view', ['record' => $record->id]))

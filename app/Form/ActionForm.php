@@ -100,7 +100,7 @@ class ActionForm
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
                 ->required()
-                ->maxLength(150),
+                ->maxLength(250),
             Forms\Components\Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
@@ -183,13 +183,20 @@ class ActionForm
 
                 ])
                 ->columns(2),
-             Forms\Components\Select::make('partners')
+            Forms\Components\Select::make('partners')
                 ->label('Partenaires externes')
                 ->relationship(name: 'partners', titleAttribute: 'name')
                 ->multiple(),
             Forms\Components\Select::make('action_related')
                 ->label('Actions liés')
-                ->relationship(name: 'linkedActions', titleAttribute: 'name')
+                ->relationship(
+                    name: 'linkedActions',
+                    titleAttribute: 'name',
+                )
+                ->searchable(['actions.id', 'actions.name'])
+                ->getOptionLabelFromRecordUsing(
+                    fn(Model $record) => "{$record->id}. {$record->name}"
+                )
                 ->multiple(),
         ];
     }
