@@ -15,7 +15,7 @@ class ViewOdd extends ViewRecord
 
     public function getTitle(): string
     {
-        return $this->record->name ?? 'Empty name';
+        return $this->record->name;
     }
 
     protected function getHeaderActions(): array
@@ -32,14 +32,8 @@ class ViewOdd extends ViewRecord
     {
         return $infolist
             ->schema([
-                TextEntry::make('name')
-                    ->label('Nom')
-                    ->columnSpanFull(),
                 TextEntry::make('descripton')
-                    ->label('Description')
-                    ->columnSpanFull(),
-                TextEntry::make('justification')
-                    ->label('Justification')
+                    ->label(false)
                     ->columnSpanFull(),
             ]);
     }

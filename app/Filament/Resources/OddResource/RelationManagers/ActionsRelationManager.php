@@ -13,7 +13,7 @@ class ActionsRelationManager extends RelationManager
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
-        return $ownerRecord->actions()->count().' Actions';
+        return $ownerRecord->actions()->count().' Actions liées';
     }
 
     public function isReadOnly(): bool

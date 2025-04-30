@@ -55,6 +55,7 @@ class OddResource extends Resource
                                     Tables\Columns\ImageColumn::make('icon')
                                         ->height(150)
                                         ->width(120)
+                                        ->disk('public')
                                         ->extraImgAttributes([
                                             'class' => 'rounde44d-md',
                                         ]),
@@ -67,27 +68,7 @@ class OddResource extends Resource
                                     ->limit(120)
                                     ->searchable()
                                     ->color(fn(Odd $odd) => $odd->color)
-                                    ->tooltip(function (TextColumn $column): ?string {
-                                        $state = $column->getState();
-                                        if (strlen($state) <= $column->getCharacterLimit()) {
-                                            return null;
-                                        }
-
-                                        // Only render the tooltip if the column content exceeds the length limit.
-                                        return $state;
-                                    })
                                     ->weight(FontWeight::Medium),
-                                Tables\Columns\TextColumn::make('details_action')
-                                    ->default(fn(Odd $record) => new HtmlString(
-                                        Blade::render(
-                                            '<x-filament::button
-                                                    href="'.self::getUrl('view', [$record]).'"
-                                                    tag="a"
-                                                >
-                                                    Details
-                                                </x-filament::button>'
-                                        )
-                                    )),
                             ])->extraAttributes(['class' => 'space-y-2'])
                                 ->grow(),
                         ]),
@@ -98,10 +79,6 @@ class OddResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make()
-                    ->icon('tabler-edit'),
-                Tables\Actions\DeleteAction::make()
-                    ->icon('tabler-trash'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
