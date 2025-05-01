@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 
 class OperationalObjective extends Model
@@ -34,6 +36,23 @@ class OperationalObjective extends Model
     public function actions(): HasMany
     {
         return $this->hasMany(Action::class);
+    }
+
+    #[Scope]
+    public function department(Builder $query, string $department): void
+    {
+        $query->where('department', $department);
+    }
+
+    #[Scope]
+    public function byDepartment(Builder $builder, string $department): void
+    {
+        $user = auth()->user();
+        $departments = $user->departments ?? [];
+        if (count($departments) > 0) {
+            $department = $departments[0];
+        }
+        $builder->where('department', $department);
     }
 
 }

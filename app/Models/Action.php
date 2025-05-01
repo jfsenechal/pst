@@ -156,6 +156,17 @@ class Action extends Model
     }
 
     #[Scope]
+    public function allDepartment(Builder $builder): void
+    {
+        $user = auth()->user();
+        $departments = $user->departments ?? [];
+        if (count($departments) > 0) {
+            $department = $departments[0];
+        }
+        $builder->where('department', $department);
+    }
+
+    #[Scope]
     public static function byState(Builder $query, string $state): void
     {
         $query->where('state', $state);

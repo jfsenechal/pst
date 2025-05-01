@@ -20,4 +20,5 @@ class DepartmentScope implements Scope
         }
         $builder->where('department', $department);
     }
+
 }

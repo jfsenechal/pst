@@ -2,8 +2,10 @@
 
 namespace App\Tables;
 
+use App\Constant\DepartmentEnum;
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
+use App\Repository\OperationalObjectiveRepository;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -13,6 +15,9 @@ class OperationalObjectiveTables
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(
+                fn($query) => OperationalObjectiveRepository::findByDepartment($query, DepartmentEnum::VILLE->value)
+            )
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
             ->recordUrl(fn(OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))

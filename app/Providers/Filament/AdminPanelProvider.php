@@ -4,17 +4,18 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
+use App\Filament\Resources\StrategicObjectiveResource;
 use App\Filament\Widgets\ActionsWidget;
 use App\Http\Middleware\FilamentPanelColorMiddleware;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -45,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-              //  Widgets\AccountWidget::class,
+                //  Widgets\AccountWidget::class,
                 ActionsWidget::class,
             ])
             ->middleware([
@@ -58,11 +59,17 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                FilamentPanelColorMiddleware::class
+                FilamentPanelColorMiddleware::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('internal')
+                    ->icon('tabler-arrow-badge-left')
+                    ->label('Volet interne')
+                    ->url('/admin/strategic-objectives/internal'),
+                    //->url(StrategicObjectiveResource::getUrl('internal',panel: 'admin')),
             ]);
     }
 }
-

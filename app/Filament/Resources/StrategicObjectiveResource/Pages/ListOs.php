@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\StrategicObjectiveResource\Pages;
 
+use App\Constant\DepartmentEnum;
 use App\Filament\Exports\StrategicObjectiveExport;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
+use App\Repository\StrategicObjectiveRepository;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
@@ -17,6 +19,7 @@ class ListOs extends ListRecords
     protected static string $resource = StrategicObjectiveResource::class;
 
     protected static string $view = 'filament.resources.strategic-objective-list';
+
     /**
      * @var Collection|StrategicObjective[] $oss
      */
@@ -44,6 +47,6 @@ class ListOs extends ListRecords
     public function mount(): void
     {
         parent::mount();
-        $this->oss = StrategicObjective::with('oos')->get();
+        $this->oss = StrategicObjectiveRepository::findByDepartmentWithOosAndActions( DepartmentEnum::VILLE->value);
     }
 }

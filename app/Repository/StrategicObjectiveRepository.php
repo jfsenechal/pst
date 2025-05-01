@@ -17,4 +17,15 @@ class StrategicObjectiveRepository
             ->get();
 
     }
+
+    /**
+     * @return Collection|StrategicObjective[]
+     */
+    public static function findByDepartmentWithOosAndActions(string $department): Collection
+    {
+        return StrategicObjective::where('strategic_objectives.department', $department)
+            ->with('oos')
+            ->get();
+
+    }
 }

@@ -6,9 +6,9 @@ use App\Constant\NavigationGroupEnum;
 use App\Filament\Resources\PartnerResource\Pages;
 use App\Form\PartnerForm;
 use App\Models\Partner;
+use App\Tables\PartnerTables;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class PartnerResource extends Resource
@@ -41,33 +41,7 @@ class PartnerResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->defaultSort('name')
-            ->defaultPaginationPageOption(50)
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('initials')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('phone')
-                    ->label('Téléphone'),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        return PartnerTables::table($table);
     }
 
     public static function getRelations(): array

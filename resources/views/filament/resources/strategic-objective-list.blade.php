@@ -30,10 +30,16 @@
                 </x-slot>
                 <div class="flex flex-col gap-y-3">
                     @foreach ($os->oos as $oo)
-                        <a href="{{ route('filament.admin.resources.operational-objectives.view', $oo->id) }}"
-                           title="Voir">
-                            {{$os->position}}.{{$oo->position}} {{$oo->name}}
-                        </a>
+                        <div class="flex items-center justify-start flex-row gap-2">
+                            <a href="{{ route('filament.admin.resources.operational-objectives.view', $oo->id) }}"
+                               title="Voir" class="flex items-center justify-start flex-row gap-2">
+                                <span>{{$os->position}}.{{$oo->position}}</span>
+                                <span>{{$oo->name}}</span>
+                            </a>
+                            <x-filament::badge icon="tabler-bolt">
+                                {{count($oo->actions)}} actions
+                            </x-filament::badge>
+                        </div>
                     @endforeach
                 </div>
             </x-filament::section>

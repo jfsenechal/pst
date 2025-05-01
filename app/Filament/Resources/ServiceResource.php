@@ -3,14 +3,13 @@
 namespace App\Filament\Resources;
 
 use App\Constant\NavigationGroupEnum;
-use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\ServiceResource\Pages;
 use App\Form\ServiceForm;
 use App\Models\Service;
+use App\Tables\ServiceTables;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 
 class ServiceResource extends Resource
 {
@@ -30,32 +29,7 @@ class ServiceResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->defaultPaginationPageOption(50)
-            ->defaultSort('name')
-            ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('initials')
-                    ->label('Initiales')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('users_count')
-                    ->label('Agents')
-                    ->counts('users'),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        return ServiceTables::table($table);
     }
 
     public static function getPages(): array
