@@ -96,7 +96,7 @@ class ActionTables
             ]);
     }
 
-    public static function actionsInline(Table $table): Table
+    public static function actionsInline(Table $table, int $limit = 120): Table
     {
         return $table
             ->defaultSort('name')
@@ -105,7 +105,7 @@ class ActionTables
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Intitulé')
-                    ->limit(120)
+                    ->limit($limit)
                     ->sortable(),
             ])
             ->filters([

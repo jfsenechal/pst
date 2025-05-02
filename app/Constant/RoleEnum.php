@@ -10,7 +10,7 @@ use Filament\Support\Contracts\HasLabel;
 enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
 {
     case ADMIN = "ROLE_ADMIN";
-    case MANAGER = "ROLE_CHEF";
+    case MANAGER = "ROLE_MANAGER";
     case AGENT = "ROLE_AGENT";
     case MANDATAIRE = "ROLE_MANDATAIRE";
 
@@ -30,7 +30,7 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
             self::ADMIN => 'Administrateur',
             self::AGENT => 'Agent',
             self::MANDATAIRE => 'Mandataire',
-            self::MANAGER => 'Chef de projet',
+            self::MANAGER => 'Manageur',
         };
     }
 
@@ -47,9 +47,9 @@ enum RoleEnum: string implements HasColor, HasLabel, HasDescription, HasIcon
     public function getDescription(): ?string
     {
         return match ($this) {
-            self::ADMIN => 'Gestion des utilisateurs, des services et partenaires)',
+            self::ADMIN => 'Gestion des utilisateurs et des services',
             self::AGENT => 'Rôle standard, gestion des actions',
-            self::MANAGER => 'Gestion des OS,OO et ODD',
+            self::MANAGER => 'Gestion des OS,OO,ODD et partenaires',
             self::MANDATAIRE => 'Accès en lecture seul',
         };
     }

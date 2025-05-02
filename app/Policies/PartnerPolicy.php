@@ -66,6 +66,6 @@ class PartnerPolicy
 
     private function hasRoles(User $user): bool
     {
-        return $user->hasRoles([RoleEnum::ADMIN->value]);
+        return $user->hasRoles([RoleEnum::MANAGER->value]);
     }
 }

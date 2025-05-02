@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Models\Scopes\DepartmentScope;
 use App\Models\StrategicObjective;
 use Illuminate\Support\Collection;
 
@@ -24,7 +25,9 @@ class StrategicObjectiveRepository
     public static function findByDepartmentWithOosAndActions(string $department): Collection
     {
         return StrategicObjective::where('strategic_objectives.department', $department)
-            ->with('oos')
+            ->withoutGlobalScope(DepartmentScope::class)
+            //->with('oos')
+            ->with(['oos' => fn ($query) => $query->withoutGlobalScope(DepartmentScope::class)])
             ->get();
 
     }

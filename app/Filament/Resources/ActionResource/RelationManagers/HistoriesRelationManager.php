@@ -15,6 +15,11 @@ class HistoriesRelationManager extends RelationManager
     protected static ?string $title = 'Historique';
     protected static ?string $label = 'Historique';
 
+    public function isReadOnly(): bool
+    {
+        return true;
+    }
+
     public function form(Form $form): Form
     {
         return $form

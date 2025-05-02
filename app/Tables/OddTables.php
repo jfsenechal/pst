@@ -2,21 +2,21 @@
 
 namespace App\Tables;
 
+use App\Filament\Resources\OddResource;
 use App\Models\Odd;
 use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Table;
 use Filament\Tables;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\HtmlString;
+use Filament\Tables\Table;
 
 class OddTables
 {
+    //https://github.com/LaravelDaily/FilamentExamples-Projects/blob/main/tables/table-as-grid-with-cards/app/Filament/Resources/UserResource.php
     public static function table(Table $table): Table
     {
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
-            ->recordUrl(fn(Odd $record) => self::getUrl('view', [$record]))
+            ->recordUrl(fn(Odd $record) => OddResource::getUrl('view', [$record]))
             ->columns([
                 Tables\Columns\Layout\Grid::make()
                     ->columns(1)

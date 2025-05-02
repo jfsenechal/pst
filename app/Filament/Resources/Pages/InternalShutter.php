@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Filament\Resources\StrategicObjectiveResource\Pages;
+namespace App\Filament\Resources\Pages;
 
 use App\Constant\DepartmentEnum;
-use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use App\Repository\StrategicObjectiveRepository;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
 
-class InternalShutter extends ListRecords
+class InternalShutter extends Page
 {
+    protected static ?int $navigationSort = 5;
+
     /**
      * @var Collection|StrategicObjective[] $oss
      */
-    private Collection|array $oss = [];
-    protected static ?int $navigationSort = 5;
-    protected static string $resource = StrategicObjectiveResource::class;
+    public Collection|array $oss = [];
 
     public static function getNavigationLabel(): string
     {
@@ -36,9 +35,13 @@ class InternalShutter extends ListRecords
         return ' Volet interne';
     }
 
-    public function mount(): void
+    public function getSubheading(): string|Htmlable|null
     {
-        parent::mount();
-        $this->oss = StrategicObjectiveRepository::findByDepartmentWithOosAndActions( DepartmentEnum::COMMON->value);
+        return 'Tout ce qui est en commun Ville/Cpas';
+    }
+
+    public function __construct()
+    {
+        $this->oss = StrategicObjectiveRepository::findByDepartmentWithOosAndActions(DepartmentEnum::COMMON->value);
     }
 }

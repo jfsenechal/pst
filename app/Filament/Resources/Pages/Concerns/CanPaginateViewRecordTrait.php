@@ -7,7 +7,7 @@ use App\Filament\Actions\PreviousAction;
 use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 
-trait CanPaginateViewRecord
+trait CanPaginateViewRecordTrait
 {
     protected function configureAction(Action $action): void
     {

@@ -47,7 +47,6 @@ class StrategicObjectiveResource extends Resource
     {
         return [
             'index' => Pages\ListOs::route('/'),
-            'internal' => Pages\InternalShutter::route('/internal'),
             'create' => Pages\CreateStrategicObjective::route('/create'),
             'view' => Pages\ViewStrategicObjective::route('/{record}'),
             'edit' => Pages\EditStrategicObjective::route('/{record}/edit'),

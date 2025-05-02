@@ -6,7 +6,7 @@ use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OperationalObjectiveResource;
-use App\Filament\Resources\Pages\Concerns\CanPaginateViewRecord;
+use App\Filament\Resources\Pages\Concerns\CanPaginateViewRecordTrait;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Form\ActionForm;
 use App\Infolists\Components\ProgressEntry;
@@ -34,7 +34,7 @@ use Illuminate\Support\HtmlString;
 
 class ViewAction extends ViewRecord
 {
-    use CanPaginateViewRecord;
+    use CanPaginateViewRecordTrait;
 
     protected static string $resource = ActionResource::class;
 

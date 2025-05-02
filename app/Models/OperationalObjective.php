@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\DepartmentScope;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 
+#[ScopedBy([DepartmentScope::class])]
 class OperationalObjective extends Model
 {
     use HasFactory, Notifiable;
@@ -27,6 +30,13 @@ class OperationalObjective extends Model
     public function strategicObjective(): BelongsTo
     {
         return $this->belongsTo(StrategicObjective::class);
+    }
+
+    public function strategicObjectiveWithoutScope(): ?StrategicObjective
+    {
+        return $this->strategicObjective()
+            ->withoutGlobalScope(DepartmentScope::class)
+            ->first();
     }
 
     /**

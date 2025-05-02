@@ -17,11 +17,17 @@ class UserForm
                 Forms\Components\CheckboxList::make('roles')
                     ->label('Rôles')
                     ->relationship('roles', 'name'),
-                Forms\Components\Select::make('departments')
+                Forms\Components\ToggleButtons::make('departments')
+                    ->label('Département(s)')
                     ->default(DepartmentEnum::VILLE->value)
-                    ->options(DepartmentEnum::class)
+                    ->options(
+                        [
+                            DepartmentEnum::VILLE->value => DepartmentEnum::VILLE->getLabel(),
+                            DepartmentEnum::CPAS->value => DepartmentEnum::CPAS->getLabel(),
+                        ]
+                    )
                     ->multiple()
-                    ->preload(),
+                    ->required(),
             ]);
     }
 

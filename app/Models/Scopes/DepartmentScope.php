@@ -2,6 +2,7 @@
 
 namespace App\Models\Scopes;
 
+use App\Repository\UserRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -13,11 +14,7 @@ class DepartmentScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        $user = auth()->user();
-        $departments = $user->departments ?? [];
-        if (count($departments) > 0) {
-            $department = $departments[0];
-        }
+        $department = UserRepository::departmentSelected();
         $builder->where('department', $department);
     }
 
