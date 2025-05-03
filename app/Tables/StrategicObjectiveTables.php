@@ -2,9 +2,13 @@
 
 namespace App\Tables;
 
+use App\Filament\Resources\StrategicObjectiveResource;
+use App\Models\StrategicObjective;
+use App\Repository\UserRepository;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class StrategicObjectiveTables
 {
@@ -12,7 +16,11 @@ class StrategicObjectiveTables
     {
         return $table
             ->defaultPaginationPageOption(50)
+            ->modifyQueryUsing(
+                fn(Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+            )
             ->recordTitleAttribute('name')
+            ->recordUrl(fn(StrategicObjective $record) => StrategicObjectiveResource::getUrl('view', [$record]))
             ->defaultSort('position')
             ->columns([
                 Tables\Columns\TextColumn::make('position')
@@ -37,6 +45,10 @@ class StrategicObjectiveTables
                     ->label('Objectifs Opérationnels (OO)')
                     ->tooltip('Objectif Opérationnel')
                     ->counts('oos'),
+                Tables\Columns\TextColumn::make('department')
+                    ->label('Département')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

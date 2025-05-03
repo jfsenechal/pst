@@ -5,11 +5,13 @@ namespace App\Tables;
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
 use App\Models\Action;
+use App\Repository\UserRepository;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActionTables
 {
@@ -18,6 +20,10 @@ class ActionTables
         return $table
             ->defaultSort('name')
             ->defaultPaginationPageOption(50)
+            ->modifyQueryUsing(
+                fn(Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+            )
+            ->recordUrl(fn(Action $record) => ActionResource::getUrl('view', [$record]))
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->searchable()
@@ -30,7 +36,7 @@ class ActionTables
                     ->tooltip(function (TextColumn $column): ?string {
                         $record = $column->getRecord();
 
-                        return $record->operationalObjective->name;
+                        return $record->operationalObjective?->name;
                     }),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -47,12 +53,17 @@ class ActionTables
 
                         return $state;
                     }),
+                Tables\Columns\TextColumn::make('state')
+                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                Tables\Columns\TextColumn::make('department')
+                    ->label('Département')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('due_date')
+                    ->label('Date échéance')
                     ->date()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('state')
-                    ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

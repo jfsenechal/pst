@@ -4,15 +4,13 @@ namespace App\Models;
 
 use App\Models\Scopes\DepartmentScope;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 
-#[ScopedBy([DepartmentScope::class])]
 class OperationalObjective extends Model
 {
     use HasFactory, Notifiable;
@@ -32,6 +30,9 @@ class OperationalObjective extends Model
         return $this->belongsTo(StrategicObjective::class);
     }
 
+    /**
+     * not use
+     */
     public function strategicObjectiveWithoutScope(): ?StrategicObjective
     {
         return $this->strategicObjective()
@@ -49,19 +50,8 @@ class OperationalObjective extends Model
     }
 
     #[Scope]
-    public function department(Builder $query, string $department): void
-    {
-        $query->where('department', $department);
-    }
-
-    #[Scope]
     public function byDepartment(Builder $builder, string $department): void
     {
-        $user = auth()->user();
-        $departments = $user->departments ?? [];
-        if (count($departments) > 0) {
-            $department = $departments[0];
-        }
         $builder->where('department', $department);
     }
 

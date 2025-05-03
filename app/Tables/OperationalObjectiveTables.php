@@ -4,9 +4,11 @@ namespace App\Tables;
 
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
+use App\Repository\UserRepository;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OperationalObjectiveTables
 {
@@ -15,13 +17,15 @@ class OperationalObjectiveTables
         return $table
             ->defaultSort('position')
             ->defaultPaginationPageOption(50)
+            ->modifyQueryUsing(
+                fn(Builder $query) => $query->where('department', '=', UserRepository::departmentSelected())
+            )
             ->recordUrl(fn(OperationalObjective $record) => OperationalObjectiveResource::getUrl('view', [$record]))
             ->columns([
                 Tables\Columns\TextColumn::make('position')
                     ->label('Numéro')
                     ->state(
-                        fn(OperationalObjective $objective): string => $objective->strategicObjectiveWithoutScope(
-                            )?->position.'.'.' '.$objective->position
+                        fn(OperationalObjective $objective): string => $objective->strategicObjective?->position.'.'.' '.$objective->position
                     )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('os')
@@ -30,7 +34,7 @@ class OperationalObjectiveTables
                     ->tooltip(function (TextColumn $column): ?string {
                         $record = $column->getRecord();
 
-                        return $record->strategicObjectiveWithoutScope()?->name;
+                        return $record->strategicObjective?->name;
                     }),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -49,6 +53,10 @@ class OperationalObjectiveTables
                     ->label('Actions')
                     ->counts('actions')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('department')
+                    ->label('Département')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

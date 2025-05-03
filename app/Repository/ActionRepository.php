@@ -54,4 +54,9 @@ class ActionRepository
         return Action::all()->count();
     }
 
+    public static function department(Builder $builder, string $department)
+    {
+        return ActionRepository::department($builder, $department);
+    }
+
 }

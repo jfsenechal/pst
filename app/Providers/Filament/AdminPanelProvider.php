@@ -94,7 +94,7 @@ class AdminPanelProvider extends PanelProvider
 }
 
 FilamentView::registerRenderHook(
-    PanelsRenderHook::SIDEBAR_NAV_START,
+    PanelsRenderHook::TOPBAR_START,
     function (): View {
         return view('filament.sidebar', ['department' => UserRepository::departmentSelected()]);
     }

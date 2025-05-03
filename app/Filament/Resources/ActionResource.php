@@ -12,8 +12,11 @@ use App\Tables\ActionTables;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 //https://www.youtube.com/watch?v=85uRvsUvwJQ&list=PLqDySLfPKRn6fgrrdg4_SmsSxWzVlUQJo&index=23
@@ -35,6 +38,49 @@ class ActionResource extends Resource
     public static function form(Form $form): Form
     {
         return ActionForm::createForm($form, null);
+    }
+
+    public static function table22(Table $table): Table
+    {
+        return $table
+            ->defaultSort('name')
+            ->defaultPaginationPageOption(50)
+            ->modifyQueryUsing(fn(Builder $query) => $query->where('department', '=', 'VILLE'))
+            ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->sortable()
+                    ->numeric()
+                    ->label('Numéro'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->label('Intitulé')
+                    ->limit(110)
+                    ->url(fn(Action $record) => ActionResource::getUrl('view', ['record' => $record->id]))
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $state = $column->getState();
+
+                        if (strlen($state) <= $column->getCharacterLimit()) {
+                            return null;
+                        }
+
+                        return $state;
+                    }),
+                Tables\Columns\TextColumn::make('oo')
+                    ->label('Oo')
+                    ->state(fn() => 'Oo')
+                    ->tooltip(function (TextColumn $column): ?string {
+                        $record = $column->getRecord();
+
+                        return $record->operationalObjective?->name;
+                    }),
+                Tables\Columns\TextColumn::make('department')
+                    ->searchable()
+                    ->sortable()
+                    ->label('Département'),
+
+            ]);
     }
 
     public static function table(Table $table): Table

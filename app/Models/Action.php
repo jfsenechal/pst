@@ -4,11 +4,10 @@ namespace App\Models;
 
 use App\Constant\ActionStateEnum;
 use App\Constant\ActionTypeEnum;
-use App\Models\Scopes\DepartmentScope;
 use App\Observers\ActionObserver;
+use App\Repository\UserRepository;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +17,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 
-#[ScopedBy([DepartmentScope::class])]
 #[ObservedBy([ActionObserver::class])]
 class Action extends Model
 {
@@ -150,20 +148,9 @@ class Action extends Model
     }
 
     #[Scope]
-    public function department(Builder $query, string $department): void
+    public function departmentSelected(Builder $query): void
     {
-        $query->where('department', $department);
-    }
-
-    #[Scope]
-    public function allDepartment(Builder $builder): void
-    {
-        $user = auth()->user();
-        $departments = $user->departments ?? [];
-        if (count($departments) > 0) {
-            $department = $departments[0];
-        }
-        $builder->where('department', $department);
+        $query->where('department', UserRepository::departmentSelected());
     }
 
     #[Scope]

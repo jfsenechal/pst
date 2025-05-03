@@ -2,14 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\DepartmentScope;
-use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
-#[ScopedBy([DepartmentScope::class])]
 class StrategicObjective extends Model
 {
     use HasFactory, Notifiable;
