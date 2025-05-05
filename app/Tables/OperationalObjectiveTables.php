@@ -103,9 +103,9 @@ class OperationalObjectiveTables
                     ->label('Ajouter un Oo')
                     ->icon('tabler-plus')
                     ->before(function (array $data): array {
+                        // va pas
                         $strategicObjective = StrategicObjective::find($data['strategic_objective_id']);
                         $data['department'] = $strategicObjective->department;
-
                         return $data;
                     }),
             ])

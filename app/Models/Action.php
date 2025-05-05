@@ -6,6 +6,7 @@ use App\Constant\ActionStateEnum;
 use App\Constant\ActionTypeEnum;
 use App\Observers\ActionObserver;
 use App\Repository\UserRepository;
+use Auth;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
 
 #[ObservedBy([ActionObserver::class])]
 class Action extends Model
@@ -53,7 +53,6 @@ class Action extends Model
             if (Auth::check()) {
                 $user = Auth::user();
                 $model->user_add = $user->username;
-                $model->department = $user->departments[0];
             }
         });
     }

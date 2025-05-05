@@ -32,9 +32,4 @@ class OosRelationManager extends RelationManager
     {
         return OperationalObjectiveTables::tableInline($table);
     }
-
-    public function beforeCreate()
-    {
-        dd(123);
-    }
 }

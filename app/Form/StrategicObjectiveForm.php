@@ -23,7 +23,8 @@ class StrategicObjectiveForm
                     ->columns(4)
                     ->default(UserRepository::departmentSelected())
                     ->options(DepartmentEnum::class)
-                    ->enum(DepartmentEnum::class),
+                    ->enum(DepartmentEnum::class)
+                    ->visible($form->getOperation() === 'create'),
                 Forms\Components\TextInput::make('position')
                     ->required()
                     ->numeric(),

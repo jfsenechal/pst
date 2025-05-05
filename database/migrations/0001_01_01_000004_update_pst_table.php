@@ -10,21 +10,18 @@ return new class extends Migration {
     {
         Schema::table('strategic_objectives', function (Blueprint $table) {
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false)
                 ->change();
         });
 
         Schema::table('operational_objectives', function (Blueprint $table) {
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false)
                 ->change();
         });
 
         Schema::table('actions', function (Blueprint $table) {
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false)
                 ->change();
         });

@@ -23,6 +23,8 @@ class OperationalObjectiveForm
                     ->label('Objectif Opérationnel')
                     ->default($owner?->id)
                     ->required(),
+                Forms\Components\Hidden::make('department')
+                    ->default($owner->department),
             ]);
     }
 }

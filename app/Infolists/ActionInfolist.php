@@ -82,6 +82,8 @@ class ActionInfolist
                             ->dateTime(),
                         TextEntry::make('user_add')
                             ->label('Créé par'),
+                        TextEntry::make('department')
+                            ->label('Département'),
                     ])->grow(false),
                 ])
                     ->columnSpanFull()
