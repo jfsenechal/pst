@@ -98,18 +98,6 @@ class ActionTables
             ->actions([
                 Tables\Actions\EditAction::make()
                     ->icon('tabler-edit')
-                    ->before(function (array $data) : array {
-
-                        dd($data);
-                        if (isset($data['operational_objective_id'])) {
-                            $department = OperationalObjective::find($data['operational_objective_id'])?->department;
-                        } else {
-                            $department = $owner->department;
-                        }
-                        $data['department'] = $department;
-
-                        return $data;
-                    }),
             ])
             ->headerActions(
                 [
@@ -172,6 +160,7 @@ class ActionTables
                     ->icon('tabler-plus')
                     ->form(fn(Form $form): Form => ActionForm::createForm($form, $owner))
                     ->before(function (array $data) use ($owner): array {
+                        //va pas
                         $department = $owner->department;
                         $data['department'] = $department;
 

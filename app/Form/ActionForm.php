@@ -20,16 +20,18 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ActionForm
 {
-    public static function createForm(Form $form, Model|OperationalObjective|null $record): Form
+    public static function createForm(Form $form, Model|OperationalObjective|null $owner): Form
     {
         return $form
             ->columns(1)
             ->schema([
+                Forms\Components\Hidden::make('department')
+                    ->default($owner->department),
                 Wizard::make([
                     Wizard\Step::make('project')
                         ->label('Projet')
                         ->schema(
-                            self::fieldsProject($record),
+                            self::fieldsProject($owner),
                         ),
                     Wizard\Step::make('team')
                         ->label('Equipes')
@@ -66,7 +68,7 @@ class ActionForm
             ]);
     }
 
-    private static function fieldsProject(Model|OperationalObjective|null $record): array
+    private static function fieldsProject(Model|OperationalObjective|null $owner): array
     {
         return [
             Forms\Components\Select::make('operational_objective_id')
@@ -74,7 +76,7 @@ class ActionForm
                 ->relationship(name: 'operationalObjective', titleAttribute: 'name')
                 ->searchable(['name'])
                 ->preload()
-                ->visible(fn() => $record === null),
+                ->visible(fn() => $owner === null),
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
                 ->required()
