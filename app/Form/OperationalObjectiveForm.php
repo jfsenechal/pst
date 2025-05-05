@@ -9,17 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class OperationalObjectiveForm
 {
-    public static function createForm(Form $form, Model|OperationalObjective |null $record = null): Form
+    public static function formRelation(Form $form, Model|OperationalObjective|null $owner = null): Form
     {
         return $form
+            ->columns(1)
             ->schema([
-                Forms\Components\Select::make('strategic_objective_id')
-                    ->label('Objectif Stratégique (OS)')
-                    ->relationship('strategicObjective', 'name')
-                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->label('Intitulé')
                     ->maxLength(255),
+                Forms\Components\Select::make('strategic_objective_id')
+                    ->relationship('strategicObjective', 'name')
+                    ->label('Objectif Opérationnel')
+                    ->default($owner?->id)
+                    ->required(),
             ]);
     }
 }

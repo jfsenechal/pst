@@ -13,6 +13,7 @@ class ActionsTableWidget extends BaseWidget
     {
         $user = auth()->user();
         $table
+            ->description('Actions liés à votre nom ou service')
             ->query(
                 ActionRepository::findByUser($user->id)
             );

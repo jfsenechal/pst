@@ -17,4 +17,12 @@ class EditOperationalObjective extends EditRecord
                 ->icon('tabler-eye'),
         ];
     }
+
+    /**
+     * to remove word "editer"
+     */
+    public  function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
 }

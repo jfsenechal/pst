@@ -24,4 +24,12 @@ class EditStrategicObjective extends EditRecord
         return [];
     }
 
+    /**
+     * to remove word "editer"
+     */
+    public  function getTitle(): string
+    {
+        return $this->getRecord()->name;
+    }
+
 }

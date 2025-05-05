@@ -30,8 +30,8 @@ enum ActionStateEnum: string implements HasColor, HasLabel, HasIcon
             self::TO_VALIDATE => 'A valider',
             self::START => 'A démarrer',
             self::PENDING => 'En cours',
-            self::SUSPENDED => "Suspendu",
-            self::FINISHED => "Terminé",
+            self::SUSPENDED => "Suspendue",
+            self::FINISHED => "Terminée",
         };
     }
 

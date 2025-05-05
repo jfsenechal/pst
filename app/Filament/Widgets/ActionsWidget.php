@@ -2,6 +2,10 @@
 
 namespace App\Filament\Widgets;
 
+use App\Constant\ActionStateEnum;
+use App\Models\Action;
+use App\Repository\UserRepository;
+use DB;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -9,17 +13,21 @@ class ActionsWidget extends BaseWidget
 {
     protected function getStats(): array
     {
-        return [
-            Stat::make('Actions finies', 5)
-                ->icon('tabler-mood-smile')
-                ->description('Géniale :-)')
-                ->color('success'),
+        $department = UserRepository::departmentSelected();
+        $actions = Action::select('state', DB::raw('count(*) as total'))
+            ->where('actions.department','=',$department)
+            ->groupBy('state')
+            ->pluck('total', 'state');
 
-            Stat::make('Actions en cours', 25)
-                ->description('Courage')
-                ->icon('tabler-mood-smile-beam')
-                ->color('warning'),
+        $stats = [];
 
-        ];
+        foreach ($actions as $stateKey => $count) {
+            $state = ActionStateEnum::from($stateKey);
+            $stats[] = Stat::make($state->getLabel(), $count ?? 0)
+                ->icon($state->getIcon())
+                ->color($state->getColor());
+        }
+
+        return $stats;
     }
 }

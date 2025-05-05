@@ -4,6 +4,7 @@ namespace App\Tables;
 
 use App\Filament\Resources\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
+use App\Models\StrategicObjective;
 use App\Repository\UserRepository;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -25,7 +26,8 @@ class OperationalObjectiveTables
                 Tables\Columns\TextColumn::make('position')
                     ->label('Numéro')
                     ->state(
-                        fn(OperationalObjective $objective): string => $objective->strategicObjective?->position.'.'.' '.$objective->position
+                        fn(OperationalObjective $objective
+                        ): string => $objective->strategicObjective?->position.'.'.' '.$objective->position
                     )
                     ->sortable(),
                 Tables\Columns\TextColumn::make('os')
@@ -74,6 +76,49 @@ class OperationalObjectiveTables
                     ->icon('tabler-edit'),
                 Tables\Actions\DeleteAction::make()
                     ->icon('tabler-trash'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function tableInline(Table $table): Table
+    {
+        return $table
+            ->defaultPaginationPageOption(50)
+            ->recordTitleAttribute('name')
+            ->columns([
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('actions_count')
+                    ->label('Actions')
+                    ->counts('actions'),
+            ])
+            ->filters([
+                //
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Ajouter un Oo')
+                    ->icon('tabler-plus')
+                    ->before(function (array $data): array {
+                        $strategicObjective = StrategicObjective::find($data['strategic_objective_id']);
+                        $data['department'] = $strategicObjective->department;
+
+                        return $data;
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make()
+                    ->url(
+                        fn(OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
+                            'view',
+                            ['record' => $record]
+                        )
+                    ),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

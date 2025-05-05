@@ -37,7 +37,7 @@ class InternalShutter extends Page
 
     public function getSubheading(): string|Htmlable|null
     {
-        return 'Tout ce qui est en commun Ville/Cpas';
+        return 'Actions communes Ville/Cpas';
     }
 
     public function __construct()

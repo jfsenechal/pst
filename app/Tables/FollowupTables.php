@@ -1,32 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ActionResource\RelationManagers;
+namespace App\Tables;
 
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables;
 
-class FollowUpsRelationManager extends RelationManager
+class FollowupTables
 {
-    protected static string $relationship = 'followups';
-    protected static ?string $title = 'Suivis';
-    protected static ?string $label = 'Suivi';
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Forms\Components\RichEditor::make('content')
-                    ->label('Contenu')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
-    }
-
-    public function table(Table $table): Table
+ public static function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('name')

@@ -4,14 +4,18 @@ namespace App\Tables;
 
 use App\Constant\ActionStateEnum;
 use App\Filament\Resources\ActionResource;
+use App\Form\ActionForm;
 use App\Models\Action;
+use App\Models\OperationalObjective;
 use App\Repository\UserRepository;
+use Filament\Forms\Form;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class ActionTables
 {
@@ -130,6 +134,50 @@ class ActionTables
                             ['record' => $record]
                         )
                     ),
+            ]);
+    }
+
+
+    public static function tableRelation(Table $table, Model|OperationalObjective $owner): Table
+    {
+        return $table
+            ->defaultPaginationPageOption(50)
+            ->defaultSort('name')
+            ->recordUrl(fn(Action $record) => ActionResource::getUrl('view', [$record]))
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Intitulé')
+                    ->limit(120)
+                    ->sortable()
+                    ->searchable(),
+            ])
+            ->filters([
+
+            ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()
+                    ->label('Ajouter une action')
+                    ->icon('tabler-plus')
+                    ->form(fn(Form $form): Form => ActionForm::createForm($form, $owner))
+                    ->before(function (array $data) use ($owner): array {
+                        $department = $owner->department;
+                        $data['department'] = $department;
+
+                        return $data;
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make()
+                    ->icon('tabler-edit')->before(function (array $data) use ($owner): array {
+                        if (isset($data['operational_objective_id'])) {
+                            $department = OperationalObjective::find($data['operational_objective_id'])?->department;
+                        } else {
+                            $department = $owner->department;
+                        }
+                        $data['department'] = $department;
+
+                        return $data;
+                    }),
             ]);
     }
 }

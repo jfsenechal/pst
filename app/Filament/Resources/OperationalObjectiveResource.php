@@ -27,11 +27,6 @@ class OperationalObjectiveResource extends Resource
         return 'Objectif Opérationnel (OO)';
     }
 
-    public static function form(Form $form): Form
-    {
-        return OperationalObjectiveForm::createForm($form);
-    }
-
     public static function table(Table $table): Table
     {
         return OperationalObjectiveTables::table($table);

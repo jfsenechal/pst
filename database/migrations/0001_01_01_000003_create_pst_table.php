@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false);
             $table->integer('position')->default(0);
             $table->timestamps();
@@ -33,7 +32,6 @@ return new class extends Migration {
             $table->foreignIdFor(StrategicObjective::class)->constrained('strategic_objectives')->cascadeOnDelete();
             $table->string('name');
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false);
             $table->integer('position')->default(0);
             $table->timestamps();
@@ -44,7 +42,6 @@ return new class extends Migration {
             $table->foreignIdFor(OperationalObjective::class)->constrained('operational_objectives')->cascadeOnDelete();
             $table->string('name');
             $table->enum('department', DepartmentEnum::toArray())
-                ->default(DepartmentEnum::VILLE->value)
                 ->nullable(false);
             $table->text('description')->nullable();
             $table->text('note')->nullable();

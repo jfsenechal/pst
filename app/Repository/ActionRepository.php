@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 
 class ActionRepository
 {
-
     /**
      *
      */
