@@ -26,7 +26,7 @@ class ActionForm
             ->columns(1)
             ->schema([
                 Forms\Components\Hidden::make('department')
-                    ->default($owner->department),
+                    ->default($owner?->department),
                 Wizard::make([
                     Wizard\Step::make('project')
                         ->label('Projet')
@@ -76,6 +76,7 @@ class ActionForm
                 ->relationship(name: 'operationalObjective', titleAttribute: 'name')
                 ->searchable(['name'])
                 ->preload()
+                ->required()
                 ->visible(fn() => $owner === null),
             Forms\Components\TextInput::make('name')
                 ->label('Intitulé')
