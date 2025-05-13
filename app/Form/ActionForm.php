@@ -2,8 +2,9 @@
 
 namespace App\Form;
 
-use App\Constant\ActionOddRoadmapEnum;
+use App\Constant\ActionRoadmapEnum;
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Constant\RoleEnum;
 use App\Models\OperationalObjective;
@@ -99,10 +100,15 @@ class ActionForm
                         ->default(ActionTypeEnum::PST->value)
                         ->options(ActionTypeEnum::class)
                         ->inline(),
-                    Forms\Components\ToggleButtons::make('odd_roadmap')
-                        ->label('Odd feuille de route')
+                    Forms\Components\ToggleButtons::make('roadmap')
+                        ->label('Feuille de route')
                         ->required(false)
-                        ->options(ActionOddRoadmapEnum::class)
+                        ->options(ActionRoadmapEnum::class)
+                        ->inline(),
+                    Forms\Components\ToggleButtons::make('synergy')
+                        ->label('Synergie CPAS / VILLLE')
+                        ->required(false)
+                        ->options(ActionSynergyEnum::class)
                         ->inline(),
                     Forms\Components\DatePicker::make('due_date')
                         ->label('Date d\'échéance')

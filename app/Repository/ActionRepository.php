@@ -38,12 +38,12 @@ class ActionRepository
             ->values();
     }
 
-    public static function actionByStateCount(ActionStateEnum $state): int
+    public static function byStateAndDepartment(ActionStateEnum $state, string $department): Builder
     {
-        return Action::query()->where('state', $state->value)->count();
+        return Action::query()->where('state', $state->value)->where('department', $department);
     }
 
-    public static function actionByState(ActionStateEnum $state): Collection
+    public static function byState(ActionStateEnum $state): Collection
     {
         return Action::ofState($state->value)->get();
     }
@@ -53,9 +53,9 @@ class ActionRepository
         return Action::all()->count();
     }
 
-    public static function department(Builder $builder, string $department)
+    public static function byDepartment(string $department): Collection
     {
-        return ActionRepository::department($builder, $department);
+        return Action::query()->where('department', $department)->get();
     }
 
 }

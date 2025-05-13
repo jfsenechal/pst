@@ -3,6 +3,7 @@
 namespace App\Tables;
 
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionTypeEnum;
 use App\Filament\Resources\ActionResource;
 use App\Form\ActionForm;
 use App\Models\Action;
@@ -59,6 +60,9 @@ class ActionTables
                     }),
                 Tables\Columns\TextColumn::make('state')
                     ->formatStateUsing(fn(ActionStateEnum $state) => $state->getLabel() ?? 'Unknown'),
+                Tables\Columns\TextColumn::make('type')
+                    ->formatStateUsing(fn(ActionTypeEnum $state) => $state->getLabel() ?? 'Unknown')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('department')
                     ->label('Département')
                     ->sortable()
@@ -89,15 +93,23 @@ class ActionTables
                             ->mapWithKeys(fn(ActionStateEnum $action) => [$action->value => $action->getLabel()])
                             ->toArray()
                     ),
+                SelectFilter::make('type')
+                    ->label('Type')
+                    ->options(
+                        collect(ActionTypeEnum::cases())
+                            ->mapWithKeys(fn(ActionTypeEnum $action) => [$action->value => $action->getLabel()])
+                            ->toArray()
+                    ),
                 SelectFilter::make('users')
                     ->label('Agents')
                     ->relationship('users', 'first_name'),
 
             ])
+            ->filtersFormColumns(3)
             ->filtersFormWidth(MaxWidth::ThreeExtraLarge)
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->icon('tabler-edit')
+                    ->icon('tabler-edit'),
             ])
             ->headerActions(
                 [

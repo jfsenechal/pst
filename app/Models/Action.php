@@ -27,7 +27,7 @@ class Action extends Model
         'state',
         'state_percentage',
         'type',
-        'odd_roadmap',
+        'roadmap',
         'note',
         'department',
         'due_date',

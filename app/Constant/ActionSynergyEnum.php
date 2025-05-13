@@ -2,12 +2,10 @@
 
 namespace App\Constant;
 
-use Filament\Support\Contracts\HasLabel;
-
-enum ActionOddRoadmapEnum: string implements HasLabel
+enum ActionSynergyEnum: string
 {
-    case YES = "TO_VALIDATE";
-    case NO = "START";
+    case YES = "YES";
+    case NO = "NO";
 
     public static function toArray(): array
     {
@@ -26,5 +24,4 @@ enum ActionOddRoadmapEnum: string implements HasLabel
             self::NO => 'Non',
         };
     }
-
 }

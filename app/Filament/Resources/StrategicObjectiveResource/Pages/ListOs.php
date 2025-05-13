@@ -7,6 +7,7 @@ use App\Filament\Exports\StrategicObjectiveExport;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use App\Repository\StrategicObjectiveRepository;
+use App\Repository\UserRepository;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
@@ -37,7 +38,12 @@ class ListOs extends ListRecords
                 ->label('Exporter en Xlsx')
                 ->icon('tabler-download')
                 ->color('secondary')
-                ->action(fn() => Excel::download(new StrategicObjectiveExport, 'pst.xlsx')),
+                ->action(
+                    fn() => Excel::download(
+                        new StrategicObjectiveExport(UserRepository::departmentSelected()),
+                        'pst.xlsx'
+                    )
+                ),
             Actions\CreateAction::make()
                 ->label('Ajouter un OS')
                 ->icon('tabler-plus'),
@@ -47,6 +53,6 @@ class ListOs extends ListRecords
     public function mount(): void
     {
         parent::mount();
-        $this->oss = StrategicObjectiveRepository::findByDepartmentWithOosAndActions( DepartmentEnum::VILLE->value);
+        $this->oss = StrategicObjectiveRepository::findByDepartmentWithOosAndActions(DepartmentEnum::VILLE->value);
     }
 }

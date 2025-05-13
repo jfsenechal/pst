@@ -25,6 +25,13 @@ class StrategicObjectiveRepository
         return StrategicObjective::where('department', $department)
             //->withoutGlobalScope(DepartmentScope::class)
             ->with('oos')
+            ->with('oos.actions')
+            ->with('oos.actions.leaderServices')
+            ->with('oos.actions.partnerServices')
+            ->with('oos.actions.mandataries')
+            ->with('oos.actions.users')
+            ->with('oos.actions.partners')
+            ->with('oos.actions.odds')
             // ->with(['oos' => fn ($query) => $query->withoutGlobalScope(DepartmentScope::class)])
             ->get();
     }

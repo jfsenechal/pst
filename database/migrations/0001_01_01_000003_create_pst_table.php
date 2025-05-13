@@ -1,7 +1,8 @@
 <?php
 
-use App\Constant\ActionOddRoadmapEnum;
+use App\Constant\ActionRoadmapEnum;
 use App\Constant\ActionStateEnum;
+use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Constant\DepartmentEnum;
 use App\Models\Action;
@@ -50,7 +51,8 @@ return new class extends Migration {
             $table->text('financing_mode')->nullable();
             $table->enum('state', ActionStateEnum::toArray())->default(ActionStateEnum::TO_VALIDATE->value);
             $table->enum('type', ActionTypeEnum::toArray())->nullable();
-            $table->enum('odd_roadmap', ActionOddRoadmapEnum::toArray())->nullable();
+            $table->enum('roadmap', ActionRoadmapEnum::toArray())->nullable();
+            $table->enum('synergy', ActionSynergyEnum::toArray())->nullable();
             $table->integer('state_percentage')->nullable();
             $table->text('work_plan')->nullable();
             $table->text('evaluation_indicator')->nullable();
