@@ -12,10 +12,10 @@ use App\Models\Action as ActionModel;
 use Filament\Actions;
 use Filament\Actions\Action as ActionAction;
 use Filament\Actions\ActionGroup;
-use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Support\Enums\ActionSize;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Size;
 
 class ViewAction extends ViewRecord
 {
@@ -53,7 +53,7 @@ class ViewAction extends ViewRecord
             )
                 ->label('Autres actions')
                 ->button()
-                ->size(ActionSize::Large)
+                ->size(Size::Large)
                 ->color('secondary'),
         ];
     }
@@ -72,7 +72,7 @@ class ViewAction extends ViewRecord
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $infolist): Schema
     {
         return ActionInfolist::infolist($infolist);
     }

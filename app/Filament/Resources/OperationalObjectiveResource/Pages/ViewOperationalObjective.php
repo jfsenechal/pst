@@ -6,8 +6,9 @@ use App\Filament\Resources\OperationalObjectiveResource;
 use App\Filament\Resources\OperationalObjectiveResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\StrategicObjectiveResource;
 use Filament\Actions;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Schema;
 
 class ViewOperationalObjective extends ViewRecord
 {
@@ -43,9 +44,9 @@ class ViewOperationalObjective extends ViewRecord
     /**
      * no form in view
      */
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([]);
     }
 

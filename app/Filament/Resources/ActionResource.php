@@ -9,9 +9,9 @@ use App\Filament\Resources\ActionResource\RelationManagers\MediasRelationManager
 use App\Form\ActionForm;
 use App\Models\Action;
 use App\Tables\ActionTables;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +22,7 @@ class ActionResource extends Resource
 {
     protected static ?string $model = Action::class;
 
-    protected static ?string $navigationIcon = 'tabler-bolt';
+    protected static string|null|\BackedEnum $navigationIcon = 'tabler-bolt';
     protected static ?string $recordTitleAttribute = 'name';
     protected static ?int $navigationSort = 4;
     protected static ?string $navigationLabel = 'Liste des actions';
@@ -32,9 +32,9 @@ class ActionResource extends Resource
         return true;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return ActionForm::createForm($form, null);
+        return ActionForm::createForm($schema, null);
     }
 
     public static function table(Table $table): Table

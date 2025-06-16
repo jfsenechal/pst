@@ -8,15 +8,16 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Form\UserForm;
 use App\Models\User;
 use App\Tables\UserTables;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-users';
 
     public static function canCreate(): bool
     {
@@ -33,9 +34,9 @@ class UserResource extends Resource
         return 'Agents';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return UserForm::createForm($form);
+        return UserForm::createForm($schema);
     }
 
     public static function table(Table $table): Table

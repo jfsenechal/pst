@@ -6,8 +6,8 @@ use App\Filament\Resources\OddResource;
 use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use Filament\Actions;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Schema;
 
 class ViewOdd extends ViewRecord
 {
@@ -28,7 +28,7 @@ class ViewOdd extends ViewRecord
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([

@@ -8,20 +8,22 @@ use App\Constant\ActionSynergyEnum;
 use App\Constant\ActionTypeEnum;
 use App\Constant\RoleEnum;
 use App\Models\OperationalObjective;
+use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Form;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ActionForm
 {
-    public static function createForm(Form $form, Model|OperationalObjective|null $owner): Form
+    public static function createForm(Schema $form, Model|OperationalObjective|null $owner): Schema
     {
         return $form
             ->columns(1)
@@ -83,7 +85,7 @@ class ActionForm
                 ->label('Intitulé')
                 ->required()
                 ->maxLength(250),
-            Forms\Components\Grid::make(3)
+            Grid::make(3)
                 ->schema([
                     Forms\Components\Select::make('state')
                         ->label('Etat d\'avancement')
@@ -94,7 +96,7 @@ class ActionForm
                         ->label('Pourcentage d\'avancement')
                         ->suffixIcon('tabler-percentage')
                         ->integer()
-                        ->maxWidth(MaxWidth::ExtraSmall),
+                        ->maxWidth(Width::ExtraSmall),
                     Forms\Components\ToggleButtons::make('type')
                         ->label('Type')
                         ->default(ActionTypeEnum::PST->value)
@@ -240,7 +242,7 @@ class ActionForm
                     //->preserveFilenames()
                     ->downloadable()
                     ->maxSize(10240)
-                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                    ->afterStateUpdated(function ($state, Set $set) {
                         if ($state instanceof TemporaryUploadedFile) {
                             $set('file_mime', $state->getMimeType());
                             $set('file_size', $state->getSize());

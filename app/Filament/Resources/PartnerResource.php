@@ -7,9 +7,9 @@ use App\Filament\Resources\PartnerResource\Pages;
 use App\Form\PartnerForm;
 use App\Models\Partner;
 use App\Tables\PartnerTables;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Schemas\Schema;
 
 class PartnerResource extends Resource
 {
@@ -17,7 +17,7 @@ class PartnerResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationIcon = 'tabler-user-share';
+    protected static string|null|\BackedEnum $navigationIcon = 'tabler-user-share';
 
     public static function getNavigationGroup(): ?string
     {
@@ -34,9 +34,9 @@ class PartnerResource extends Resource
         return 'Partenaire externe';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return PartnerForm::createForm($form);
+        return PartnerForm::createForm($schema);
     }
 
     public static function table(Table $table): Table

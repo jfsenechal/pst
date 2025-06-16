@@ -6,11 +6,11 @@ use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\PartnerResource;
 use App\Models\Action;
 use Filament\Actions;
-use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 
 class ViewPartner extends ViewRecord
 {
@@ -31,7 +31,7 @@ class ViewPartner extends ViewRecord
         return $this->record->name.' '.$this->record->initials ?? 'Empty name';
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Actions;
 
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Set;
+use Filament\Actions\Action;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Str;
 
 class GeneratePasswordAction extends Action

@@ -3,23 +3,23 @@
 namespace App\Filament\Pages\Auth;
 
 use App\Repository\FilamentColorRepository;
-use Filament\Forms\Components\Component;
+use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
+use Filament\Schemas\Components\Component;
 
 class EditProfile extends BaseEditProfile
 {
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-document-text';
 
     public function getTitle(): string|Htmlable
     {
         return $this->getUser()->first_name.' '.$this->getUser()->first_name;
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([

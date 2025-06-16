@@ -9,16 +9,16 @@ use App\Models\Odd;
 use App\Models\Partner;
 use App\Models\Service;
 use App\Models\User;
-use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\Layout\Split;
 
 class ActionInfolist
 {
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $infolist): Schema
     {
         return $infolist
             ->schema([

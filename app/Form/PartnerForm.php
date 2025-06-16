@@ -4,12 +4,12 @@ namespace App\Form;
 
 use App\Models\Partner;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class PartnerForm
 {
-    public static function createForm(Form $form, Model|Partner|null $record = null): Form
+    public static function createForm(Schema $form, Model|Partner|null $record = null): Schema
     {
         return $form
           //  ->fill($record->attributesToArray())

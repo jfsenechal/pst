@@ -2,17 +2,10 @@
 
 namespace App\Filament\Resources\StrategicObjectiveResource\Pages;
 
-use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\StrategicObjectiveResource;
-use App\Models\Action;
-use App\Models\User;
 use Filament\Actions;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Schema;
 
 class ViewStrategicObjective extends ViewRecord
 {
@@ -45,9 +38,9 @@ class ViewStrategicObjective extends ViewRecord
     /**
      * no form in view
      */
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([]);
     }
 

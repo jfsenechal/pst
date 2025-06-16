@@ -7,7 +7,7 @@ use App\Filament\Resources\ServiceResource\Pages;
 use App\Form\ServiceForm;
 use App\Models\Service;
 use App\Tables\ServiceTables;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 
@@ -15,16 +15,16 @@ class ServiceResource extends Resource
 {
     protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'tabler-users-group';
+    protected static string|null|\BackedEnum $navigationIcon = 'tabler-users-group';
 
     public static function getNavigationGroup(): ?string
     {
         return NavigationGroupEnum::SETTINGS->getLabel();
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return ServiceForm::createForm($form);
+        return ServiceForm::createForm($schema);
     }
 
     public static function table(Table $table): Table

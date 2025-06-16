@@ -6,10 +6,10 @@ use App\Filament\Resources\ServiceResource;
 use App\Filament\Resources\ServiceResource\RelationManagers\ActionsRelationManager;
 use App\Models\User;
 use Filament\Actions;
-use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Schema;
 
 class ViewService extends ViewRecord
 {
@@ -30,7 +30,7 @@ class ViewService extends ViewRecord
         ];
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $infolist): Schema
     {
         return $infolist->schema([
             Fieldset::make('users_tab')

@@ -9,11 +9,11 @@ use App\Filament\Resources\Pages\InternalShutter;
 use App\Filament\Widgets\ActionsWidget;
 use App\Http\Middleware\FilamentPanelColorMiddleware;
 use App\Repository\UserRepository;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
@@ -79,12 +79,12 @@ class AdminPanelProvider extends PanelProvider
                 //->url(StrategicObjectiveResource::getUrl('internal',panel: 'admin')),
             ])
             ->userMenuItems([
-                MenuItem::make()
+                Action::make()
                     ->label('Ville')
                     ->url(fn() => route('select.department', ['department' => DepartmentEnum::VILLE->value]))
                     ->icon('tabler-switch')
                     ->visible(fn() => count(auth()->user()->departments) > 1),
-                MenuItem::make()
+                Action::make()
                     ->label('Cpas')
                     ->url(fn() => route('select.department', ['department' => DepartmentEnum::CPAS->value]))
                     ->icon('tabler-switch')

@@ -7,8 +7,9 @@ use App\Filament\Resources\StrategicObjectiveResource\RelationManagers\OosRelati
 use App\Form\StrategicObjectiveForm;
 use App\Models\StrategicObjective;
 use App\Tables\StrategicObjectiveTables;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class StrategicObjectiveResource extends Resource
 {
     protected static ?string $model = StrategicObjective::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?int $navigationSort = 1;
 
@@ -26,9 +27,9 @@ class StrategicObjectiveResource extends Resource
         return 'Objectif Stratégique (OS)';
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return StrategicObjectiveForm::createForm($form);
+        return StrategicObjectiveForm::createForm($schema);
     }
 
     public static function table(Table $table): Table

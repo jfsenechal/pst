@@ -7,8 +7,8 @@ use App\Filament\Resources\ActionResource;
 use App\Repository\ActionRepository;
 use App\Repository\UserRepository;
 use Filament\Actions;
-use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
 

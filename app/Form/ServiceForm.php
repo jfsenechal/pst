@@ -5,12 +5,13 @@ namespace App\Form;
 use App\Models\Service;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceForm
 {
-    public static function createForm(Form $form, Model|Service|null $record = null): Form
+    public static function createForm(Schema $form, Model|Service|null $record = null): Schema
     {
         return $form
             ->schema([

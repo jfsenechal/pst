@@ -6,7 +6,7 @@ use App\Filament\Resources\OperationalObjectiveResource\Pages;
 use App\Form\OperationalObjectiveForm;
 use App\Models\OperationalObjective;
 use App\Tables\OperationalObjectiveTables;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
@@ -16,7 +16,7 @@ class OperationalObjectiveResource extends Resource
 {
     protected static ?string $model = OperationalObjective::class;
 
-    protected static ?string $navigationIcon = 'tabler-target';
+    protected static string|null|\BackedEnum $navigationIcon = 'tabler-target';
 
     protected static ?string $recordTitleAttribute = 'name';
 

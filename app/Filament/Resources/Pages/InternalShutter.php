@@ -28,7 +28,7 @@ class InternalShutter extends Page
         return 'tabler-list';
     }
 
-    protected static string $view = 'filament.resources.strategic-objective-list';
+    protected  string $view = 'filament.resources.strategic-objective-list';
 
     public function getTitle(): string|Htmlable
     {

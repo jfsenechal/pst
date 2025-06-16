@@ -5,11 +5,11 @@ namespace App\Form;
 use App\Constant\DepartmentEnum;
 use App\Repository\UserRepository;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 
 class StrategicObjectiveForm
 {
-    public static function createForm(Form $form): Form
+    public static function createForm(Schema $form): Schema
     {
         return $form
             ->schema([

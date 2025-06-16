@@ -2,17 +2,12 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
-use App\Filament\Resources\ActionResource;
 use App\Filament\Resources\OddResource\RelationManagers\ActionsRelationManager;
 use App\Filament\Resources\UserResource;
-use App\Models\Action;
 use Filament\Actions;
-use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use STS\FilamentImpersonate\Pages\Actions\Impersonate;
+use Filament\Schemas\Schema;
 
 class ViewUser extends ViewRecord
 {
@@ -23,9 +18,9 @@ class ViewUser extends ViewRecord
         return $this->record->name();
     }
 
-    public function infolist(Infolist $infolist): Infolist
+    public function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
+        return $schema->schema([
             TextEntry::make('email')
                 ->label('Email')
                 ->icon('tabler-mail'),
@@ -52,7 +47,7 @@ class ViewUser extends ViewRecord
         return [
             Actions\EditAction::make()
                 ->icon('tabler-edit'),
-            Impersonate::make(),
+          //  Impersonate::make(),
         ];
     }
 

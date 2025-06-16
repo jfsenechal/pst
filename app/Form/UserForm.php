@@ -5,12 +5,12 @@ namespace App\Form;
 use App\Constant\DepartmentEnum;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
 class UserForm
 {
-    public static function createForm(Form $form, Model|User|null $record = null): Form
+    public static function createForm(Schema $form, Model|User|null $record = null): Schema
     {
         return $form
             ->schema([

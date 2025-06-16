@@ -4,12 +4,12 @@ namespace App\Filament\Pages\Auth;
 
 use App\Auth\LdapAuthService;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Pages\Auth\Login as BasePage;
+use Filament\Schemas\Components\Component;
+use Filament\Auth\Pages\Login as BasePage;
 
 class Login extends BasePage
 {

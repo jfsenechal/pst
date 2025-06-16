@@ -9,7 +9,7 @@ use App\Form\ActionForm;
 use App\Models\Action;
 use App\Models\OperationalObjective;
 use App\Repository\UserRepository;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;

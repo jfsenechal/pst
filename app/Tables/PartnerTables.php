@@ -4,7 +4,7 @@ namespace App\Tables;
 
 use App\Form\PartnerForm;
 use App\Models\Partner;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Form;
 use Filament\Tables;
 use Filament\Tables\Table;
 
