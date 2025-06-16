@@ -6,10 +6,16 @@ use App\Filament\Resources\OperationalObjectiveResource;
 use App\Models\OperationalObjective;
 use App\Models\StrategicObjective;
 use App\Repository\UserRepository;
+use Filament\Actions\DeleteAction;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 
 class OperationalObjectiveTables
 {
@@ -71,15 +77,15 @@ class OperationalObjectiveTables
             ->filters([
 
             ])
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->recordActions([
+                EditAction::make()
                     ->icon('tabler-edit'),
-                Tables\Actions\DeleteAction::make()
+                DeleteAction::make()
                     ->icon('tabler-trash'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -99,7 +105,7 @@ class OperationalObjectiveTables
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Ajouter un Oo')
                     ->icon('tabler-plus')
                     ->before(function (array $data): array {
@@ -109,20 +115,20 @@ class OperationalObjectiveTables
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->url(
                         fn(OperationalObjective $record): string => OperationalObjectiveResource::getUrl(
                             'view',
                             ['record' => $record]
                         )
                     ),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -9,8 +9,13 @@ use App\Form\ActionForm;
 use App\Models\Action;
 use App\Models\OperationalObjective;
 use App\Repository\UserRepository;
-use Filament\Schemas\Components\Form;
-use Filament\Support\Enums\MaxWidth;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Schemas\Schema;
+use Filament\Support\Enums\Width;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -106,19 +111,14 @@ class ActionTables
 
             ])
             ->filtersFormColumns(3)
-            ->filtersFormWidth(MaxWidth::ThreeExtraLarge)
-            ->actions([
-                Tables\Actions\EditAction::make()
+            ->filtersFormWidth(Width::ThreeExtraLarge)
+            ->recordActions([
+                EditAction::make()
                     ->icon('tabler-edit'),
             ])
-            ->headerActions(
-                [
-
-                ]
-            )
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -138,8 +138,8 @@ class ActionTables
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()
+            ->recordActions([
+                ViewAction::make()
                     ->url(
                         fn(Action $record): string => ActionResource::getUrl(
                             'view',
@@ -167,10 +167,10 @@ class ActionTables
 
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
+                CreateAction::make()
                     ->label('Ajouter une action')
                     ->icon('tabler-plus')
-                    ->form(fn(Form $form): Form => ActionForm::createForm($form, $owner))
+                    ->schema(fn(Schema $schema): Schema => ActionForm::createForm($schema, $owner))
                     ->before(function (array $data) use ($owner): array {
                         //va pas
                         $department = $owner->department;
@@ -178,9 +178,6 @@ class ActionTables
 
                         return $data;
                     }),
-            ])
-            ->actions([
-
             ]);
     }
 }

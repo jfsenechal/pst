@@ -4,6 +4,9 @@ namespace App\Tables;
 
 use App\Filament\Resources\OddResource;
 use App\Models\Odd;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -26,7 +29,7 @@ class OddTables
                                 ->columns(1)
                                 ->schema([
                                     Tables\Columns\ImageColumn::make('icon')
-                                        ->height(150)
+                                        ->imageHeight(150)
                                         ->width(120)
                                         ->disk('public')
                                         ->extraImgAttributes([
@@ -50,12 +53,12 @@ class OddTables
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -5,9 +5,12 @@ namespace App\Tables;
 use App\Filament\Resources\StrategicObjectiveResource;
 use App\Models\StrategicObjective;
 use App\Repository\UserRepository;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class StrategicObjectiveTables
@@ -57,12 +60,12 @@ class StrategicObjectiveTables
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

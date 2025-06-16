@@ -2,9 +2,10 @@
 
 namespace App\Tables;
 
-use App\Form\PartnerForm;
-use App\Models\Partner;
-use Filament\Schemas\Components\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -29,20 +30,20 @@ class PartnerTables
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-             /*   Tables\Actions\Action::make('edit_modal')
-                    ->label('Modifier rapide')
-                    ->modal(true)
-                    ->form(fn(Form $form, Partner $record) => PartnerForm::createForm($form, $record))
-                    ->action(function (array $data, Partner $record): void {
-                        $record->save();
-                    }),*/
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                /*   Action::make('edit_modal')
+                       ->label('Modifier rapide')
+                       ->modal(true)
+                       ->form(fn(Form $form, Partner $record) => PartnerForm::createForm($form, $record))
+                       ->action(function (array $data, Partner $record): void {
+                           $record->save();
+                       }),*/
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
